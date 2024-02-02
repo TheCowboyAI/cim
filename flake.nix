@@ -70,6 +70,8 @@
               nodePackages.webpack
               nodePackages.webpack-cli
               nodePackages.npm
+              sass
+              tailwindcss
             ];
             
             RUST_SRC_PATH = rustPlatform.rustLibSrc;
