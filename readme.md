@@ -2,6 +2,8 @@
 
 A continuously improving, distrubuted system that transforms scattered information into organized, actionable, reactive knowledge while keeping it secure and accessible across your digital world.
 
+📊 **[View Project Dashboard](docs/dashboard.md)** - Track our progress, metrics, and next steps
+
 CIM Goals:
 
 - THIS SYSTEM MUST BE REPRODUCIBLE

@@ -1,0 +1,407 @@
+---
+description: This is a research rule template for the Trails project.
+globs: **/*.*
+alwaysApply: true
+---
+## Research Rule Template
+Use this well-structured formula for writing a research paper or theorem. 
+The standard structure typically includes the following components:
+
+## Introduction
+- Introduce the topic and its significance
+- Provide background information
+- Present the research question or hypothesis
+- Outline the paper's structure
+
+## Literature Review
+- Summarize and analyze relevant existing research
+- Identify gaps in current knowledge
+- Establish the theoretical framework for your study
+
+## Methodology
+- Describe your research design and methods
+- Explain data collection and analysis techniques
+- Justify your chosen approach
+
+## Results
+- Present your findings objectively
+- Use tables, figures, and graphs to illustrate data
+- Highlight key results without interpretation
+
+## Discussion
+- Interpret your results in the context of your research question
+- Compare findings with existing literature
+- Discuss implications and limitations of your study
+
+## Conclusion
+- Summarize main findings
+- Restate the significance of your research
+- Suggest future research directions
+
+Additional elements include:
+- Abstract (concise summary of the entire paper)
+- References (list of all sources cited)
+- Appendices (supplementary materials)
+
+For theses, additional sections may include:
+- Acknowledgments
+- Table of Contents
+- List of Figures and Tables
+
+This structure provides a logical flow of information, guiding readers through your research process and findings[1][5][8]. Remember to adapt this formula to your specific discipline and research requirements, as some fields may have slight variations in expected structure[2][7].
+You are responsible for SEPARATING these into logical sections from the beginning.
+
+OUR METHODOLOGY IS TO ALWAYS HAVE THESE FRAGMENTS AVAILABLE.
+
+These fragments are assembled into a final document through a series of steps.
+As we progress with gathering and filtering research through our Notes, we will continually adjust the Fragment text to reflect our new understandings.
+
+We will build a Vocabulary using @vocabulary.mdc
+
+Citations:
+[1] https://nps.edu/web/gwc/standard-paper-structure
+[2] https://www.concordia.ca/content/dam/sgs/docs/handbooks/thesispreparationguide.pdf
+[3] https://digital.studygroup.com/blog/how-to-write-a-research-paper
+[4] https://www.clovis.edu/tutoring/docs/Formula%20for%20a%20Body%20Paragraph.pdf
+[5] https://www.grad.ubc.ca/current-students/dissertation-thesis-preparation/structure-style-theses-dissertations
+[6] https://www.grammarly.com/blog/academic-writing/how-to-write-a-research-paper/
+[7] https://pmc.ncbi.nlm.nih.gov/articles/PMC3178846/
+[8] https://paperpile.com/g/thesis-structure/
+[9] https://www.ref-n-write.com/blog/research-paper-structure-main-sections-and-parts-of-a-research-paper/
+
+
+### Concept Research Rule Template
+**Concept Name:** {{CONCEPT_NAME}}
+**Primary Objective:** {{RESEARCH_GOAL}}
+**Core Resources:** @web(arxiv.org), @mcp(private_data_server)
+
+## Phases
+1. **Concept Identification**  
+   - Define scope using [conceptual research design principles][2]
+   - Establish theoretical boundaries per Morse's criteria[5]
+
+2. **Literature Synthesis**  
+   ```
+   @web https://arxiv.org/search/?query={{CONCEPT_NAME}}  
+   @mcp retrieve_related_papers(concept="{{CONCEPT_NAME}}")
+   ```
+
+3. **Data Interpretation**  
+   - Apply thematic analysis[5] to:
+     - Identify key patterns in {{CONCEPT_NAME}}
+     - Develop conceptual relationships[8]
+
+4. **Model Development**  
+   ```
+   /generate conceptual_model --template=academic --sources=@web,@mcp
+   ```
+
+## Notes Management
+```
+/add_note """
+[{{DATE}}] Research Log:  
+- Observed {{KEY_PATTERN}} in [@web_source][3][9]  
+- Private data shows {{MCP_INSIGHT}} via @mcp  
+- Next: Investigate {{RESEARCH_GAP}} using [Naeem's conceptualization criteria][5]
+"""
+```
+
+## Output Generation
+```
+/compile_document --type=research_paper --sections=[
+  "Theoretical Framework[2][8]",
+  "Methodology[5][9]",
+  "Conceptual Model[4][8]"
+]
+```
+
+Key adaptations from project-oriented to concept-oriented:
+- Replaced project milestones with **conceptual development phases**[2][8]
+- Integrated academic research methods from TU Delft's framework[2]
+- Added thematic analysis workflows from Sage Journals[5]
+- Implemented concept-oriented resource tagging (@web/@mcp)
+
+To use with arXiv and private data:
+```
+/search_concept "Distributed AI Systems" --sources=@web(arxiv.org),@mcp --save=research_brief
+```
+
+This template enables:
+1. Systematic concept exploration using [thematic analysis][5]
+2. Multi-source integration (academic + private data)[3][9]
+3. Automated conceptual model generation[8]
+4. Traceable research provenance through @web/@mcp citations[6][9]
+
+For implementation:
+1. Create `.cursor/rule` file in your project root
+2. Add above template with your concept variables
+3. Integrate with MCP servers using your existing NATS protocol[3]
+
+The system will automatically:
+- Track concept evolution through dated notes
+- Maintain source references using arXiv IDs[9]
+- Flag conflicting interpretations using [critical realism checks][5]
+
+Example workflow execution:
+```
+/new_research --concept="CIM Architecture" --goal="Establish mathematical foundations"
+```
+
+## Research Validation
+1. **Concept Validation**
+   - Verify concept uniqueness and novelty
+   - Check for existing similar research
+   - Validate theoretical foundations
+   - Quality Score: {{VALIDATION_SCORE}}/100
+
+2. **Methodology Validation**
+   - Verify research methods alignment
+   - Validate data collection approach
+   - Check analysis methodology
+   - Quality Score: {{METHODOLOGY_SCORE}}/100
+
+3. **Results Validation**
+   - Verify findings reproducibility
+   - Validate statistical significance
+   - Check result consistency
+   - Quality Score: {{RESULTS_SCORE}}/100
+
+## Research Quality Metrics
+1. **Source Quality**
+   - Citation count: {{CITATION_COUNT}}
+   - Source diversity: {{SOURCE_DIVERSITY}}
+   - Peer review status: {{PEER_REVIEW_STATUS}}
+
+2. **Research Depth**
+   - Analysis depth: {{ANALYSIS_DEPTH}}
+   - Methodology rigor: {{METHODOLOGY_RIGOR}}
+   - Result reliability: {{RESULT_RELIABILITY}}
+
+3. **Impact Assessment**
+   - Theoretical impact: {{THEORETICAL_IMPACT}}
+   - Practical applications: {{PRACTICAL_APPLICATIONS}}
+   - Future implications: {{FUTURE_IMPLICATIONS}}
+
+## Progress Tracking
+```
+/track_progress """
+[{{DATE}}] Research Progress:
+- Phase: {{CURRENT_PHASE}}
+- Completion: {{COMPLETION_PERCENTAGE}}%
+- Quality Score: {{OVERALL_QUALITY}}/100
+- Next Milestone: {{NEXT_MILESTONE}}
+- Blockers: {{CURRENT_BLOCKERS}}
+"""
+```
+
+## Research Template System
+1. **Template Types**
+   - Research Paper Template
+   - Business Proposal Template
+   - Concept Analysis Template
+   - Literature Review Template
+
+2. **Template Structure**
+   ```
+   /generate_template """
+   [{{DATE}}] Template Generation:
+   - Type: {{TEMPLATE_TYPE}}
+   - Sections: {{REQUIRED_SECTIONS}}
+   - Format: {{OUTPUT_FORMAT}}
+   - Style: {{DOCUMENT_STYLE}}
+   """
+   ```
+
+3. **Template Management**
+   - Version control templates
+   - Track template usage
+   - Update based on feedback
+   - Maintain consistency
+
+## Citation Management
+1. **Citation Types**
+   - Academic citations (APA, MLA, Chicago)
+   - Technical references
+   - Code citations
+   - External links
+
+2. **Citation Automation**
+   ```
+   /manage_citations """
+   [{{DATE}}] Citation Processing:
+   - Source: {{SOURCE_TYPE}}
+   - Format: {{CITATION_FORMAT}}
+   - Validation: {{CITATION_VALIDATION}}
+   - Updates: {{CITATION_UPDATES}}
+   """
+   ```
+
+3. **Citation Tracking**
+   - Track citation usage
+   - Validate references
+   - Update broken links
+   - Maintain bibliography
+
+## Research Checklist System
+1. **Pre-Research Checklist**
+   - Define research scope
+   - Set objectives
+   - Identify resources
+   - Plan methodology
+
+2. **Research Process Checklist**
+   - Data collection
+   - Analysis steps
+   - Documentation
+   - Validation
+
+3. **Post-Research Checklist**
+   - Review findings
+   - Update documentation
+   - Share results
+   - Plan next steps 
+
+## Research Review Workflow
+1. **Review Process**
+   ```
+   /initiate_review """
+   [{{DATE}}] Review Initiation:
+   - Research Topic: {{TOPIC}}
+   - Reviewers: {{REVIEWERS}}
+   - Deadline: {{DEADLINE}}
+   - Review Criteria: {{CRITERIA}}
+   """
+   ```
+
+2. **Review Stages**
+   - Initial Review
+   - Technical Review
+   - Peer Review
+   - Final Review
+
+3. **Review Management**
+   - Track review status
+   - Manage reviewer assignments
+   - Collect feedback
+   - Address comments
+
+## Feedback Collection System
+1. **Feedback Types**
+   - Technical feedback
+   - Methodology feedback
+   - Content feedback
+   - Presentation feedback
+
+2. **Feedback Processing**
+   ```
+   /process_feedback """
+   [{{DATE}}] Feedback Processing:
+   - Source: {{FEEDBACK_SOURCE}}
+   - Type: {{FEEDBACK_TYPE}}
+   - Priority: {{PRIORITY}}
+   - Action Items: {{ACTION_ITEMS}}
+   """
+   ```
+
+3. **Feedback Integration**
+   - Categorize feedback
+   - Track resolution status
+   - Update documentation
+   - Notify stakeholders
+
+## Research Milestone Tracking
+1. **Milestone Definition**
+   - Research phases
+   - Key deliverables
+   - Dependencies
+   - Success criteria
+
+2. **Milestone Monitoring**
+   ```
+   /track_milestone """
+   [{{DATE}}] Milestone Status:
+   - Name: {{MILESTONE_NAME}}
+   - Status: {{STATUS}}
+   - Progress: {{PROGRESS}}%
+   - Dependencies: {{DEPENDENCIES}}
+   - Risks: {{RISKS}}
+   """
+   ```
+
+3. **Milestone Management**
+   - Track completion
+   - Monitor dependencies
+   - Update timeline
+   - Report progress
+
+## Research Performance Optimization
+1. **Research Caching**
+   ```
+   /manage_cache """
+   [{{DATE}}] Cache Management:
+   - Cache Type: {{CACHE_TYPE}}
+   - Size: {{CACHE_SIZE}}
+   - Validity: {{CACHE_VALIDITY}}
+   - Update Strategy: {{UPDATE_STRATEGY}}
+   """
+   ```
+
+2. **Cache Types**
+   - Research results cache
+   - Citation cache
+   - Template cache
+   - Vocabulary cache
+
+3. **Cache Management**
+   - Set cache policies
+   - Monitor cache usage
+   - Implement cache invalidation
+   - Optimize cache size
+
+## Batch Processing
+1. **Batch Operations**
+   ```
+   /batch_process """
+   [{{DATE}}] Batch Processing:
+   - Operation: {{OPERATION_TYPE}}
+   - Batch Size: {{BATCH_SIZE}}
+   - Priority: {{PRIORITY}}
+   - Dependencies: {{DEPENDENCIES}}
+   """
+   ```
+
+2. **Batch Types**
+   - Citation processing
+   - Reference validation
+   - Template generation
+   - Document compilation
+
+3. **Batch Management**
+   - Schedule batch jobs
+   - Monitor progress
+   - Handle failures
+   - Optimize throughput
+
+## Progress Indicators
+1. **Performance Metrics**
+   ```
+   /track_performance """
+   [{{DATE}}] Performance Status:
+   - Response Time: {{RESPONSE_TIME}}
+   - Memory Usage: {{MEMORY_USAGE}}
+   - Cache Hit Rate: {{CACHE_HIT_RATE}}
+   - Processing Speed: {{PROCESSING_SPEED}}
+   """
+   ```
+
+2. **Resource Monitoring**
+   - CPU utilization
+   - Memory consumption
+   - Disk usage
+   - Network efficiency
+
+3. **Optimization Targets**
+   - Set performance goals
+   - Track improvements
+   - Identify bottlenecks
+   - Implement optimizations
