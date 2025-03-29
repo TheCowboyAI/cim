@@ -56,6 +56,10 @@ alwaysApply: true
 - comments/: Directory for specific comments and decisions
 
 ## comments Structure
+- DOCUMENTS READY FOR INSPECTION IN /docs/claims
+  - These are documents that are ready for inspection by the system to add to the memory bank.
+  - we will extract invididual "claims" and add them to the memory bank as decisions.
+
 - Store in docs/comments/
 - Categories:
   - decisions/: Technical and architectural decisions
