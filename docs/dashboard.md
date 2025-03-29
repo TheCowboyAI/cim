@@ -5,7 +5,7 @@
 ```mermaid
 gantt
     title CIM Development Progress
-    dateFormat  YYYY-MM-DD
+    dateFormat YYYY-MM-DD
     section Foundation
     Vocabulary Structure    :done, vocab, 2024-03-29, 1d
     Domain Organization     :done, domain, 2024-03-29, 1d
@@ -102,19 +102,28 @@ pie
 ## Risk Assessment
 
 ```mermaid
-quadrantChart
-    title Risk Assessment Matrix
-    x-axis Low Impact --> High Impact
-    y-axis Low Probability --> High Probability
-    quadrant-1 Monitor
-    quadrant-2 High Priority
-    quadrant-3 Low Priority
-    quadrant-4 Immediate Action
-    "Knowledge Integration": [0.8, 0.6]
-    "Security Implementation": [0.9, 0.4]
-    "Agent Coordination": [0.7, 0.7]
-    "Data Consistency": [0.6, 0.8]
-    "Resource Allocation": [0.4, 0.5]
+graph TD
+    subgraph High Priority
+    KI[Knowledge Integration]
+    AC[Agent Coordination]
+    DC[Data Consistency]
+    end
+    
+    subgraph Monitor
+    SI[Security Implementation]
+    end
+    
+    subgraph Low Priority
+    RA[Resource Allocation]
+    end
+
+    classDef highPriority fill:#ff9999
+    classDef monitor fill:#99ff99
+    classDef lowPriority fill:#9999ff
+    
+    class KI,AC,DC highPriority
+    class SI monitor
+    class RA lowPriority
 ```
 
 ## Resource Allocation
