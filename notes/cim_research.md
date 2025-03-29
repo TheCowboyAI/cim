@@ -19,7 +19,7 @@ Focuses on integration and enhancement rather than replacement:
 - Uses existing message transport systems
 - Leverages existing data storage solutions
 - Utilizes existing query and alerting systems
-- Builds on existing reporting capabilities
+- Builds on existing capabilities
 
 ## Core Concepts
 
@@ -106,9 +106,10 @@ Focuses on integration and enhancement rather than replacement:
   - Subject-based communication
   - Monitoring and control features
 
-## Pod Architecture
+## Modular Architecture
 
-### AI Pod (pod.ai.cim)
+### AI Module (module.ai.cim)
+- Installable as a NixOS Module
 - Provides local LLM capabilities through Ollama integration
 - Supports multiple models (Mistral, Llama2, CodeLlama, etc.)
 - Features:
@@ -119,7 +120,7 @@ Focuses on integration and enhancement rather than replacement:
   - Settings management
   - Event-driven architecture with NATS integration
 
-### Communications Pod (pod.comms.cim)
+### Communications Module (module.comms.cim)  
 - Manages internal and external communications
 - Features:
   - Matrix for external messaging
@@ -131,20 +132,20 @@ Focuses on integration and enhancement rather than replacement:
   - Profile management
   - Federation support
 
-### Other Pods
-- pod.apis.cim: API management
-- pod.db.cim: Database services
-- pod.docs.cim: Documentation management
-- pod.feeds.cim: Feed processing
-- pod.git.cim: Git integration
-- pod.mail.cim: Email services
-- pod.ns.cim: Namespace services
-- pod.notes.cim: Note management
-- pod.policy.cim: Policy enforcement
-- pod.search.cim: Search capabilities
-- pod.vault.cim: Secure storage
-- pod.web.cim: Web interface
-- pod.wf.cim: Workflow management
+### Other Modules
+- module.apis.cim: API management
+- module.db.cim: Database services
+- module.docs.cim: Documentation management
+- module.feeds.cim: Feed processing
+- module.git.cim: Git integration
+- module.mail.cim: Email services
+    - module.ns.cim: Namespace services
+- module.notes.cim: Note management
+- module.policy.cim: Policy enforcement
+- module.search.cim: Search capabilities
+- module.vault.cim: Secure storage
+- module.web.cim: Web interface
+- module.wf.cim: Workflow management
 
 ## Domain Structure
 
@@ -207,8 +208,16 @@ A CIM operates on Domains, which represent unique ideas and concepts that cannot
 
 ## CIM Implementations
 
+### Primary Implementation (Cowboy AI)
+- Core reference implementation by CIM creators
+- Defines standard architecture and patterns
+- Provides foundational tooling and documentation
+- Establishes best practices and patterns
+- Drives core development and innovation
+- Maintains primary documentation and specifications
+
 ### Set-Top Box (cim-stb)
-- Custom set-top box implementation using NixOS on NanoPC T4
+- Custom set-top box implementation using NixOS on NanoPC T4 OR OTHER ARM devices
 - Features:
   - Integration with streaming services (Plex, Netflix, Amazon Prime)
   - RSS feed control system
@@ -223,7 +232,7 @@ A CIM operates on Domains, which represent unique ideas and concepts that cannot
 - Public-facing interface components
 - Style customization capabilities
 
-### Domain-Specific Implementations
+### Customer Implementations
 1. thecowboy.ai
    - Focus on compute and network infrastructure
    - Modular architecture with specialized components
@@ -231,16 +240,15 @@ A CIM operates on Domains, which represent unique ideas and concepts that cannot
    - Implementation tooling specifications
    - Hardware configuration management
 
-2. kecocapital.com
-   - Business-oriented CIM implementation
-   - Agent-based architecture
-   - Comprehensive domain management
-   - Network and compute resource organization
-   - Boot device configuration
-   - Asset management system
+2. Keco Capital
+   - Enterprise implementation of CIM
+   - Custom domain management for financial services
+   - Specialized security and compliance features
+   - Integration with financial systems
+   - Asset and portfolio management focus
 
 3. sebastion.org
-   - Virtual host management
+   - Virtual STB management
    - Domain-specific documentation
    - Compute resource organization
    - Flake-based configuration
@@ -257,4 +265,95 @@ A CIM operates on Domains, which represent unique ideas and concepts that cannot
   - Event and Object stores
   - Ontology management
   - Library system
-  - Fabricator component 
+  - Fabricator component
+
+## Domain Objects
+
+### Core Aggregates
+- **CIM System**
+  - Definition: A distributed system transforming information into organized, actionable knowledge
+  - Relationships: Contains(Modules), Manages(Information), Implements(Domains)
+  - Usage Context: Primary system aggregate
+
+- **Information Unit**
+  - Definition: Atomic piece of managed information with metadata
+  - Relationships: Part-Of(CIM System), Contains(Content, Metadata)
+  - Usage Context: Basic unit of information management
+
+### Entities
+- **Module**
+  - Definition: Self-contained functional unit providing specific services
+  - Types: AI, Communications, Documentation, etc.
+  - Relationships: Part-Of(CIM System), Manages(Services)
+
+- **Domain**
+  - Definition: Unique set of ideas and concepts that cannot be further reduced
+  - Relationships: Part-Of(CIM System), Contains(Facts, Claims, Theories)
+  - Usage Context: Organizational unit for knowledge
+
+### Value Objects
+- **Event**
+  - Definition: Immutable record of system state change
+  - Relationships: Part-Of(Event Store), Triggers(State Changes)
+
+- **Content Address**
+  - Definition: Unique identifier based on content hash
+  - Relationships: Identifies(Information Unit), Part-Of(Storage System)
+
+## Technical Concepts
+
+### Architecture Patterns
+- **Event-Driven Architecture**
+  - Definition: System design based on event production and consumption
+  - Relationships: Implements(Event Store), Uses(NATS)
+
+- **Domain-Driven Design**
+  - Definition: Design approach matching software to domain expertise
+  - Relationships: Shapes(System Design), Influences(Domain Structure)
+
+### Protocols
+- **Model Context Protocol (MCP)**
+  - Definition: Protocol for AI systems to communicate with data sources
+  - Components: Host, Clients, Servers, Resources
+  - Relationships: Enables(AI Integration), Uses(Standardized Interfaces)
+
+### Storage Taxonomy
+- **Object Storage**
+  - Primary Buckets: cim-objects, cim-events
+  - Operations: Content-addressing, Version tracking
+  - Relationships: Implements(Storage Operations), Manages(Data Integrity)
+
+## Business Concepts
+
+### Processes
+- **Research Workflow**
+  - Steps: Initiation, Collection, Analysis, Documentation, Review
+  - Relationships: Uses(AI Assistant), Produces(Documentation)
+
+### Implementation Types
+- **Reference Implementation**
+  - Owner: Cowboy AI
+  - Purpose: Define standards and patterns
+  - Relationships: Guides(Customer Implementations)
+
+- **Customer Implementations**
+  - Types: Enterprise, Specialized, Virtual
+  - Examples: Keco Capital (Financial Services), sebastion.org (Virtual STB)
+  - Relationships: Extends(Reference Implementation)
+
+## Cross-Cutting Terms
+
+### Security
+- **Authentication Methods**
+  - Types: mTLS, YubiKey, OpenPGP
+  - Relationships: Protects(System Access), Implements(Security Policy)
+
+### Configuration
+- **Nix Flakes**
+  - Purpose: Reproducible builds and organization
+  - Relationships: Manages(Dependencies), Enables(Reproducibility)
+
+### Monitoring
+- **Event Store**
+  - Purpose: Track system changes and state
+  - Relationships: Implements(Monitoring), Maintains(History) 

@@ -1,7 +1,7 @@
 operator: 
   - cowboyai: cowboyai
 accounts:
-  - keco: keco
   - cowboyai: cowboyai
+  - keco: keco
 users: 
   - steele: steele
