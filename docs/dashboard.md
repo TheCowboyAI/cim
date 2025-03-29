@@ -4,21 +4,24 @@
 
 ```mermaid
 gantt
-    title CIM Development Progress
-    dateFormat YYYY-MM-DD
+    dateFormat  YYYY-MM-DD
+    title       CIM Development Progress
+    excludes    weekends
     
-    Foundation :milestone, m1, 2024-03-29, 0d
-    Vocabulary Structure :done, vocab, 2024-03-29, 1d
-    Domain Organization :done, domain, after vocab, 1d
-    Project Setup :done, setup, after domain, 1d
+    section Foundation
+    Vocabulary Structure :done, 2024-03-29, 1d
+    Domain Organization  :done, 2024-03-29, 1d
+    Project Setup       :done, 2024-03-29, 1d
     
-    Knowledge Management :active, knowledge, after setup, 7d
-    Domain Implementation :active, impl, after knowledge, 14d
-    Agent Development :active, agent, after impl, 21d
+    section Current
+    Knowledge Management    :active, 2024-03-30, 7d
+    Domain Implementation   :active, 2024-04-06, 14d
+    Agent Development      :active, 2024-04-20, 21d
     
-    Integration Layer :wait, integration, after agent, 14d
-    Security Framework :wait, security, after integration, 14d
-    Distribution System :wait, dist, after security, 21d
+    section Upcoming
+    Integration Layer      :2024-05-11, 14d
+    Security Framework     :2024-05-25, 14d
+    Distribution System    :2024-06-08, 21d
 ```
 
 ## Domain Completion Status
