@@ -92,4 +92,40 @@
   * Processes: Message Streams
   * Implements: Data Transformation
 - **Usage Context**: Stream processing and data transformation
-- **Code Reference**: `cim/src/benthos` 
+- **Code Reference**: `cim/src/benthos`
+
+### Term: MessageHandling
+- **Category**: Technical Concept
+- **Type**: Service
+- **Taxonomy**: Communication
+- **Definition**: A system component responsible for processing, routing, and managing messages throughout the CIM ecosystem.
+- **Relationships**:
+  * Uses: Message, DomainContent
+  * Implements: Message Processing Pipeline
+  * Manages: Message Lifecycle
+- **Usage Context**: Core message processing and handling
+- **Code Reference**: `cim/src/comms/handling`
+
+### Term: SubjectBasedRouting
+- **Category**: Technical Concept
+- **Type**: Service
+- **Taxonomy**: Communication
+- **Definition**: A routing mechanism that uses hierarchical subject strings to determine message destinations and processing rules.
+- **Relationships**:
+  * Uses: Subject
+  * Implements: Message Routing
+  * Part-Of: Comms
+- **Usage Context**: Message routing and distribution
+- **Code Reference**: `cim/src/comms/routing`
+
+### Term: EventObjectStorage
+- **Category**: Technical Concept
+- **Type**: Service
+- **Taxonomy**: Storage
+- **Definition**: A combined storage system that manages both events and content objects with consistent addressing and retrieval.
+- **Relationships**:
+  * Contains: Event Store, Object Store
+  * Implements: Unified Storage Interface
+  * Uses: Content Address (CID)
+- **Usage Context**: Unified storage management
+- **Code Reference**: `cim/src/storage/unified` 

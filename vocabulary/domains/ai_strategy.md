@@ -104,4 +104,40 @@
   * Represents: Semantic Content
   * Enables: Similarity Comparison
 - **Usage Context**: Semantic analysis and retrieval
-- **Code Reference**: `cim/src/ai/embedding` 
+- **Code Reference**: `cim/src/ai/embedding`
+
+### Term: AIAgent
+- **Category**: Domain Object
+- **Type**: Entity
+- **Taxonomy**: AI Architecture
+- **Definition**: An autonomous software entity capable of perceiving its environment, making decisions, and taking actions to achieve specific goals.
+- **Relationships**:
+  * Uses: Conceptual Space, Strategy Component
+  * Implements: Decision Making
+  * Contains: AI Components
+- **Usage Context**: Autonomous decision-making and task execution
+- **Code Reference**: `cim/src/ai/agent`
+
+### Term: DecisionStrategy
+- **Category**: Technical Concept
+- **Type**: Service
+- **Taxonomy**: Decision Making
+- **Definition**: A service that implements decision-making algorithms combining game theory, conceptual spaces, and utility optimization.
+- **Relationships**:
+  * Uses: Utility Function, Game Theory
+  * Implements: Strategic Planning
+  * Produces: Decisions
+- **Usage Context**: Strategic decision-making and planning
+- **Code Reference**: `cim/src/ai/strategy`
+
+### Term: GameTheoryEngine
+- **Category**: Technical Concept
+- **Type**: Service
+- **Taxonomy**: Game Theory
+- **Definition**: A computational engine that applies game theory principles to optimize multi-agent interactions and resource allocation.
+- **Relationships**:
+  * Uses: Cooperative Game Theory, Non-Cooperative Game Theory
+  * Implements: Game Analysis
+  * Produces: Strategic Solutions
+- **Usage Context**: Game-theoretic analysis and optimization
+- **Code Reference**: `cim/src/gametheory/engine` 

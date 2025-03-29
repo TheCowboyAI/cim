@@ -12,7 +12,6 @@ THESE ARE SUGGESTIONS, NOT DEPENDENCIES
   - [Anthropic](https://www.anthropic.com/)
   - [Perplexity](https://perplexity.com)
 ### APIs
-  - [wasmCloud](https://wasmCloud.com)
   - [Stream Processing with Redpanda](https://www.redpanda.com/)
   - [Rust](https://www.rust-lang.org)
 ### Comms

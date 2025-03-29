@@ -22,18 +22,6 @@
 - **Usage Context**: Backend architecture and data management
 - **Code Reference**: `cim/src/ecs`
 
-### Term: wasmCloud
-- **Category**: Technical Concept
-- **Type**: Technology
-- **Taxonomy**: Runtime
-- **Definition**: A distributed runtime for WebAssembly that enables secure, portable, and composable applications using actors and capability providers.
-- **Relationships**:
-  * Contains: Actor, Capability Provider, Lattice
-  * Uses: WebAssembly
-  * Enables: Distributed Computing
-- **Usage Context**: Runtime environment and application deployment
-- **Code Reference**: `cim/src/wasmcloud`
-
 ### Term: NATS JetStream
 - **Category**: Technical Concept
 - **Type**: Technology

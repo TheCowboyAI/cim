@@ -10,17 +10,17 @@
 - **Usage Context**: System deployment and configuration
 - **Code Reference**: `cim/src/infrastructure/nixos`
 
-### Term: wasmCloud
+### Term: WebAssemblyRuntime
 - **Category**: Technical Concept
 - **Type**: Platform
 - **Taxonomy**: Runtime
-- **Definition**: A distributed WebAssembly runtime that enables secure, portable, and composable applications through actors and capability providers.
+- **Definition**: A distributed WebAssembly runtime that enables secure, portable, and composable applications through components and capability providers.
 - **Relationships**:
   * Uses: WebAssembly
-  * Contains: Actors, Providers
+  * Contains: Components, Providers
   * Implements: Distributed Computing
 - **Usage Context**: Application runtime and deployment
-- **Code Reference**: `cim/src/infrastructure/wasmcloud`
+- **Code Reference**: `cim/src/infrastructure/wasm_runtime`
 
 ### Term: Ollama
 - **Category**: Technical Concept
@@ -104,4 +104,40 @@
   * Implements: Privacy Protection
   * Used-By: Search System
 - **Usage Context**: Privacy-focused search functionality
-- **Code Reference**: `cim/src/search/searx` 
+- **Code Reference**: `cim/src/search/searx`
+
+### Term: CorePlatform
+- **Category**: Technical Concept
+- **Type**: Platform
+- **Taxonomy**: Infrastructure
+- **Definition**: The foundational platform components (NixOS and WebAssembly Runtime) that provide the base infrastructure for the system.
+- **Relationships**:
+  * Contains: NixOS, WebAssemblyRuntime
+  * Implements: System Foundation
+  * Provides: Runtime Environment
+- **Usage Context**: Core system infrastructure
+- **Code Reference**: `cim/src/infrastructure/core`
+
+### Term: DevelopmentTools
+- **Category**: Technical Concept
+- **Type**: Tool
+- **Taxonomy**: Development
+- **Definition**: A collection of tools and utilities used for system development, testing, and deployment.
+- **Relationships**:
+  * Contains: Build Tools, Test Framework
+  * Implements: Development Workflow
+  * Used-By: Developers
+- **Usage Context**: Development and testing
+- **Code Reference**: `cim/src/infrastructure/tools`
+
+### Term: SecurityInfrastructure
+- **Category**: Technical Concept
+- **Type**: Service
+- **Taxonomy**: Security
+- **Definition**: The security components and services that provide authentication, authorization, and data protection.
+- **Relationships**:
+  * Contains: VaultWarden, Matrix
+  * Implements: Security Policies
+  * Provides: Security Services
+- **Usage Context**: System security management
+- **Code Reference**: `cim/src/infrastructure/security` 

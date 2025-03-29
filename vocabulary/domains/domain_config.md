@@ -104,4 +104,40 @@
   * Used-By: Domain Model
   * Produces: Projections
 - **Usage Context**: State retrieval and data access
-- **Code Reference**: `cim/src/domain/query` 
+- **Code Reference**: `cim/src/domain/query`
+
+### Term: DomainModeling
+- **Category**: Technical Concept
+- **Type**: Process
+- **Taxonomy**: Domain Organization
+- **Definition**: The process of identifying, analyzing, and structuring domain concepts and their relationships to create effective domain models.
+- **Relationships**:
+  * Produces: Domain Model
+  * Uses: Bounded Context
+  * Implements: Business Requirements
+- **Usage Context**: Domain analysis and design
+- **Code Reference**: `cim/src/domain/modeling`
+
+### Term: ConfigurationManagement
+- **Category**: Technical Concept
+- **Type**: Service
+- **Taxonomy**: System Management
+- **Definition**: A system service responsible for managing, validating, and applying configuration changes across the system.
+- **Relationships**:
+  * Manages: Configuration
+  * Uses: Nix Flake
+  * Implements: System Setup
+- **Usage Context**: System configuration and maintenance
+- **Code Reference**: `cim/src/config/management`
+
+### Term: DomainEventProcessing
+- **Category**: Technical Concept
+- **Type**: Service
+- **Taxonomy**: Communication
+- **Definition**: A service responsible for processing and managing the lifecycle of domain events, commands, and queries.
+- **Relationships**:
+  * Processes: Domain Event, Domain Command, Domain Query
+  * Implements: Event Processing Pipeline
+  * Uses: Event Store
+- **Usage Context**: Domain event handling and processing
+- **Code Reference**: `cim/src/domain/processing` 

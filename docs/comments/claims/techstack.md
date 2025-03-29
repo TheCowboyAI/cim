@@ -83,23 +83,8 @@ Ollama provides a capability to use many LLM Models in a common way. It also giv
 - [Rust Teacher](https://k33g.hashnode.dev/create-a-genai-rust-teacher)
 - [Rust Ollama By Example](https://youtu.be/OcH-zT5VNgM)
 
-# [wasmCloud](https://wasmcloud.com/docs/concepts/)
-wasmCloud is the component system we use for Agents.
 
-this allows us:
-  - [Components](https://wasmcloud.com/docs/concepts/components)
-  - Actors
-  - Interfaces
-  - [Providers](https://wasmcloud.com/docs/concepts/providers)
-  - Hosts
-  - nats connectivity through [lattice](https://wasmcloud.com/docs/concepts/lattice)
-
-and a methodology already tuned to follow [Functional Reactive Programming](https://www.freecodecamp.org/news/functional-reactive-programming-frp-imperative-vs-declarative-vs-reactive-style-84878272c77f/) and [Domain Driven Design](https://www.youtube.com/watch?v=L3SvIKdLt88).
-
-### Training
-- [Examples](https://wasmcloud.com/docs/tour/hello-world)
-- [Video](https://youtu.be/bhKqr-mrhb4)
-- [Hello Universe](https://wasmcloud.com/docs/tour/why-wasmcloud)
+A methodology already tuned to follow [Functional Reactive Programming](https://www.freecodecamp.org/news/functional-reactive-programming-frp-imperative-vs-declarative-vs-reactive-style-84878272c77f/) and [Domain Driven Design](https://www.youtube.com/watch?v=L3SvIKdLt88).
 
 # DNS
 DNS is responsible for managing the Domain Naming System, Internet Domain Names, Object Names, indexing, and forwarding those names to external providers such as Cloudflare.

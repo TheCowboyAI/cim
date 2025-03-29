@@ -1,6 +1,6 @@
 ### **Guidance for System Developers and Architects: CIM - Composable Information Machine**
 
-The **Composable Information Machine (CIM)** represents a cutting-edge approach to building distributed systems that prioritize modularity, scalability, and adaptability. Designed for modern system developers and architects, CIM leverages concepts from **composable architecture**, **reactive systems**, and **ECS (Entity-Component-System)** principles, while integrating advanced technologies like **NATS JetStream**, **wasmCloud**, and AI-driven agents. Below, we outline CIM’s architecture and its application as a transformative framework for building intelligent, distributed systems.
+The **Composable Information Machine (CIM)** represents a cutting-edge approach to building distributed systems that prioritize modularity, scalability, and adaptability. Designed for modern system developers and architects, CIM leverages concepts from **composable architecture**, **reactive systems**, and **ECS (Entity-Component-System)** principles, while integrating advanced technologies like **NATS JetStream**, and MCP Enabled AI-driven agents. Below, we outline CIM’s architecture and its application as a transformative framework for building intelligent, distributed systems.
 
 ![CIM Leaf Node](./CIM-Leaf.svg)
 
@@ -11,8 +11,8 @@ CIM is a **Composable Architecture Framework** designed to enable the creation o
 At its core, CIM combines:
 1. **Composable Architecture Principles**: Modular, reusable components with clear APIs.
 2. **Reactive Systems**: Fine-grained state management for real-time responsiveness.
-3. **ECS-inspired Backend**: A distributed backend using wasmCloud actors and NATS JetStream for event-driven communication.
-4. **AI Agents**: Intelligent agents that enhance system functionality by embedding reasoning, decision-making, and automation capabilities.
+3. **ECS-inspired Backend**: A distributed backend using NATS JetStream for event-driven communication.
+4. **AI Agents**: Intelligent agents that enhance MCP (model-context-protocol) and system functionality by embedding reasoning, decision-making, and automation capabilities.
 
 ---
 
@@ -40,11 +40,11 @@ This reactive architecture ensures that user interfaces remain responsive even i
 
 ### **3. ECS-Inspired Backend**
 The backend of CIM is inspired by the Entity-Component-System (ECS) pattern:
-- **Entities**: Represented as lightweight wasmCloud actors deployed across a distributed lattice.
-- **Components**: Implemented as wasmCloud capability providers (e.g., storage, messaging, AI inference).
+- **Entities**: Represented as lightweight NATS actors deployed across a distributed lattice.
+- **Components**: Implemented as nats Subjects and capability providers (e.g., storage, messaging, AI inference).
 - **Systems**: Encapsulated as actor logic or capability providers that process entity-component interactions.
 
-Using wasmCloud’s lattice architecture on top of NATS JetStream provides:
+Using NATS JetStream provides:
 - **Dynamic Scalability**: Actors and providers can scale horizontally across hosts.
 - **Event-Driven Communication**: Publish-subscribe messaging ensures decoupled interactions.
 - **State Durability**: NATS JetStream persists state changes for fault tolerance and replayability.
@@ -83,7 +83,6 @@ AI agents are first-class citizens in CIM’s architecture:
 
 ### For System Architects:
 1. **Scalability by Design**:
-   - wasmCloud’s lattice scales across cloud and edge environments seamlessly.
    - NATS JetStream ensures fault tolerance with persistent message streams.
 
 2. **Interoperability Across Domains**:
@@ -117,7 +116,7 @@ The Composable Information Machine (CIM) is a transformative framework for build
 2. Seamless integration of reactive frontends with event-driven backends.
 3. Advanced intelligence via dynamically composable AI agents.
 
-By adopting CIM’s principles and leveraging its technologies (e.g., wasmCloud, NATS JetStream), organizations can future-proof their systems while accelerating development cycles and enhancing operational efficiency.
+By adopting CIM’s principles and leveraging its technologies (e.g., NATS JetStream), organizations can future-proof their systems while accelerating development cycles and enhancing operational efficiency.
 
 Citations:
 [1] https://www.splunk.com/en_us/blog/learn/cim-common-information-model.html
@@ -201,7 +200,7 @@ With Nix, you can package each "Lego block" as a deterministic container that is
 
 ---
 
-### **Why This Approach is the Holy Grail**
+### **Why This Approach is like the Holy Grail**
 The combination of these methodologies creates a system where modular components ("Lego blocks") are not just theoretical constructs but practical tools that:
 1. Are aligned with business needs (via DDD).
 2. Maintain their own state independently (via Event Sourcing).

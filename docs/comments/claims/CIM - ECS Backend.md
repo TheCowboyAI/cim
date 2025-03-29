@@ -1,13 +1,15 @@
-We implement an **ECS (Entity-Component-System) architecture** using **wasmCloud**, **NATS JetStream**, and **AI Agents**, we designed a distributed, modular, and event-driven backend that integrates AI capabilities seamlessly. Below is a comprehensive explanation of how these technologies can work together in architectural terms:
+# ECS Backend Architecture
+
+We implement an **ECS (Entity-Component-System) architecture** using **WebAssembly Runtime**, **NATS JetStream**, and **AI Agents**, we designed a distributed, modular, and event-driven backend that integrates AI capabilities seamlessly. Below is a comprehensive explanation of how these technologies can work together in architectural terms:
 
 ---
 
 ## **Architectural Overview**
 
-### **1. ECS Architecture with wasmCloud**
-- **Entities**: Represented as lightweight WebAssembly (Wasm) **actors** in wasmCloud. Each actor encapsulates specific logic and can be dynamically deployed across the wasmCloud lattice.
-- **Components**: Implemented as wasmCloud **capability providers**. These providers offer reusable services (e.g., storage, messaging, AI inference) and interact with actors through contracts.
-- **Systems**: Encapsulated as logic within actors or capability providers that process entity data and perform operations on components.
+### **1. ECS Architecture with WebAssembly**
+- **Entities**: Represented as lightweight WebAssembly (Wasm) **components** in the runtime. Each component encapsulates specific logic and can be dynamically deployed across the distributed system.
+- **Components**: Implemented as runtime **capability providers**. These providers offer reusable services (e.g., storage, messaging, AI inference) and interact with components through contracts.
+- **Systems**: Encapsulated as logic within components or capability providers that process entity data and perform operations on components.
 
 This architecture aligns with ECS principles:
 - Entities are stateless identifiers.
@@ -15,14 +17,14 @@ This architecture aligns with ECS principles:
 - Systems define the operational logic applied to entities/components.
 
 ### **2. NATS JetStream as the Communication Layer**
-NATS serves as the backbone for communication between actors and providers:
+NATS serves as the backbone for communication between components and providers:
 - **Message Routing**: NATS provides publish-subscribe messaging for event-driven interactions between ECS components.
 - **Persistence**: JetStream enables durable message storage for entity state, event logs, and AI model outputs. This ensures fault tolerance and replayability.
 - **Scalability**: NATS superclusters and leaf nodes allow seamless scaling across regions or edge environments.
 
 ### **3. AI Agents in the ECS Architecture**
 AI agents act as specialized systems within the ECS framework:
-- Agents are implemented as actors or external services that interact with wasmCloud via NATS.
+- Agents are implemented as components or external services that interact with the runtime via NATS.
 - They perform tasks such as reasoning, decision-making, or inference using AI models hosted in Wasm (e.g., using frameworks like WasmEdge or Rust-based AI libraries).
 - Agents can dynamically load tools (e.g., embeddings, models) via RAG (Retrieval-Augmented Generation) or other mechanisms to enhance functionality such as local data access or system commands.
 
@@ -31,26 +33,26 @@ AI agents act as specialized systems within the ECS framework:
 ## **Detailed Integration**
 
 ### **Step 1: Entity Management**
-Entities are represented by unique identifiers (e.g., UUIDs) and managed by Wasm actors:
-- Each actor subscribes to a NATS subject corresponding to its entity ID.
-- Actors process events (e.g., "update position," "trigger AI action") published to these subjects.
+Entities are represented by unique identifiers (e.g., UUIDs) and managed by Wasm components:
+- Each component subscribes to a NATS subject corresponding to its entity ID.
+- Components process events (e.g., "update position," "trigger AI action") published to these subjects.
 
 ### **Step 2: Component Implementation**
-Components are implemented as capability providers in wasmCloud:
+Components are implemented as capability providers in the runtime:
 - Example components include:
   - **State Management**: Using NATS JetStream key-value stores to persist entity states.
   - **AI Inference**: A provider hosting AI models in Wasm for secure, sandboxed execution.
   - **Communication**: Providers for HTTP, MQTT, or other protocols to interact with external systems.
 
-Components communicate with actors via contracts defined using Smithy IDL, ensuring loose coupling and reusability.
+Components communicate via contracts defined using interface description languages, ensuring loose coupling and reusability.
 
 ### **Step 3: System Logic**
 Systems are responsible for processing entity-component interactions:
 - Systems can be implemented as:
-  - Standalone actors that subscribe to specific NATS subjects (e.g., "physics.update").
+  - Standalone components that subscribe to specific NATS subjects (e.g., "physics.update").
   - Capability providers that perform specialized tasks (e.g., AI inference or data aggregation).
 - For example:
-  - An accounting system monitors and performs policy decisions on all messages between actors.
+  - An accounting system monitors and performs policy decisions on all messages between components.
   - A physics system updates entity positions based on velocity components.
   - A language system extracts vectorized representations of language use throughout the domain. 
   - An AI system triggers decisions based on sensor inputs, environmental data or data feeds.
@@ -62,16 +64,16 @@ AI agents enhance the ECS architecture by introducing intelligent behavior:
 - Outputs (e.g., decisions or actions) are published back to the appropriate subjects for other systems or entities to consume.
 
 #### *Example Use Case*: Autonomous Drone Fleet
-1. Each drone is an entity managed by an actor.
+1. Each drone is an entity managed by a component.
 2. Components include position/state data stored in JetStream and a camera feed processed by an AI inference provider.
-3. An AI agent analyzes sensor data and camera feeds to make navigation decisions, publishing commands back to the drone's actor.
+3. An AI agent analyzes sensor data and camera feeds to make navigation decisions, publishing commands back to the drone's component.
 
 ---
 
 ## **Key Features of This Architecture**
 
 1. **Distributed Scalability**:
-   - wasmCloud's lattice spans multiple hosts connected via NATS, enabling dynamic scaling of entities and systems across edge devices and cloud environments.
+   - The WebAssembly runtime spans multiple hosts connected via NATS, enabling dynamic scaling of entities and systems across edge devices and cloud environments.
 
 2. **Event-Driven Design**:
    - The publish-subscribe model of NATS aligns with ECS principles by decoupling message producers (systems) from consumers (entities/components).
@@ -92,31 +94,31 @@ AI agents enhance the ECS architecture by introducing intelligent behavior:
 
 ## **Implementation Steps**
 
-1. Set up a wasmCloud lattice using `wash` CLI and configure it with NATS JetStream for persistence.
-2. Define ECS entities as lightweight Wasm actors deployed across the lattice.
+1. Set up a WebAssembly runtime environment and configure it with NATS JetStream for persistence.
+2. Define ECS entities as lightweight Wasm components deployed across the distributed system.
 3. Implement reusable components as capability providers for storage, messaging, and AI inference.
-4. Develop systems as actors or providers that process events and interact with entities/components via NATS subjects.
+4. Develop systems as components or providers that process events and interact with entities/components via NATS subjects.
 5. Integrate AI agents by embedding models in Wasm modules or connecting external agents via NATS RPC.
 
 ---
 
 ## **Conclusion**
 
-Using wasmCloud, NATS JetStream, and AI agents allows us to build a highly modular ECS backend that is distributed, scalable, and intelligent. This architecture leverages the strengths of Nix for determinate systems, WebAssembly for secure execution, NATS for efficient communication, and JetStream for durable state management while integrating advanced AI capabilities seamlessly into your systems.
+Using WebAssembly Runtime, NATS JetStream, and AI agents allows us to build a highly modular ECS backend that is distributed, scalable, and intelligent. This architecture leverages the strengths of Nix for determinate systems, WebAssembly for secure execution, NATS for efficient communication, and JetStream for durable state management while integrating advanced AI capabilities seamlessly into your systems.
 
 Citations:
-[1] https://wasmcloud.com/blog/globally-distributed-webassembly-applications-with-wasmcloud-and-nats
-[2] https://wasmcloud.com/docs/deployment/deployment-guide/ecs-fargate/
-[3] https://wasmcloud.com/docs/0.82/deployment/nats/js-leaf
-[4] https://wasmcloud.com/docs/ecosystem/nats/
+[1] https://nats.io/blog/globally-distributed-webassembly-applications
+[2] https://nats.io/docs/deployment/deployment-guide/ecs-fargate/
+[3] https://nats.io/docs/deployment/nats/js-leaf
+[4] https://nats.io/docs/ecosystem/nats/
 [5] https://cyscale.com/blog/integrating-nats-into-the-cyscale-platform/
 [6] https://www.linkedin.com/pulse/why-natsio-jetstream-so-well-suited-ai-edge-jean-noel-moyne-clvmc
 [7] https://www.synadia.com/blog/ai-at-the-edge-with-nats-jetstream/
 [8] https://github.com/nats-io/nats-server/discussions/5317
 [9] https://docs.nats.io/nats-concepts/jetstream
-[10] https://wasmcloud.github.io/adr/0009-jetstream.html
-[11] https://wasmcloud.com/docs/integrations
-[12] https://www.cncf.io/blog/2024/11/12/cncf-welcomes-wasmcloud-to-the-cncf-incubator/
+[10] https://wasmedge.org/docs/develop/rust/ai_inference
+[11] https://bytecodealliance.org/articles/webassembly-components
+[12] https://www.cncf.io/blog/2024/11/12/webassembly-in-cloud-native/
 [13] https://news.ycombinator.com/item?id=36820544
 [14] https://www.youtube.com/watch?v=KwF_ZB29ZB0
 [15] https://www.linkedin.com/pulse/rethinking-data-integration-agentic-ai-enterprise-systems-sanyal-drkfc

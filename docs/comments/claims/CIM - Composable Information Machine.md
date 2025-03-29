@@ -113,7 +113,7 @@ Leverage conceptual spaces for product innovation:
 ### For IT Teams:
 1. Simplify development with modular components tailored to specific domains.
 2. Ensure reliability with fault-tolerant communication powered by NATS JetStream.
-3. Scale effortlessly across cloud or on-premise environments using wasmCloud’s distributed architecture.
+3. Scale effortlessly across cloud or on-premise environments using NATS JetStream.
 
 ---
 

@@ -104,4 +104,40 @@
   * Part-Of: Resource
   * Guides: Organization
 - **Usage Context**: Resource structure and organization
-- **Code Reference**: `cim/src/inventory/shape` 
+- **Code Reference**: `cim/src/inventory/shape`
+
+### Term: ResourceManagement
+- **Category**: Technical Concept
+- **Type**: Service
+- **Taxonomy**: Resource Management
+- **Definition**: A system service responsible for managing, allocating, and tracking resources across the domain.
+- **Relationships**:
+  * Manages: Resource, Inventory
+  * Implements: Resource Allocation
+  * Uses: Content Address
+- **Usage Context**: Resource lifecycle management
+- **Code Reference**: `cim/src/business/resource_management`
+
+### Term: CustomerSegmentation
+- **Category**: Business Concept
+- **Type**: Service
+- **Taxonomy**: Business Value
+- **Definition**: A service that analyzes and categorizes customers into distinct segments based on common characteristics and needs.
+- **Relationships**:
+  * Creates: Customer Segment
+  * Uses: Customer Profile
+  * Implements: Market Analysis
+- **Usage Context**: Customer analysis and targeting
+- **Code Reference**: `cim/src/business/segmentation`
+
+### Term: InventoryManagement
+- **Category**: Technical Concept
+- **Type**: Service
+- **Taxonomy**: Resource Management
+- **Definition**: A service that maintains and manages the comprehensive catalog of domain resources and their relationships.
+- **Relationships**:
+  * Manages: Inventory, Category
+  * Implements: Resource Tracking
+  * Uses: Shape
+- **Usage Context**: Inventory tracking and management
+- **Code Reference**: `cim/src/business/inventory_management` 

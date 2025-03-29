@@ -15,18 +15,18 @@ Game theory provides a mathematical framework for modeling interactions between 
 ## **2. ECS Architecture in CIM**
 
 ### **Entities**
-- In CIM, entities are represented as **wasmCloud actors**, lightweight WebAssembly modules deployed across a distributed lattice.
+- In CIM, entities are represented as **NATS Subjects**, lightweight modules deployed across a distributed lattice.
 - Each entity has unique identifiers and is equipped with components that define its properties and capabilities.
 
 ### **Components**
-- Components are modular data containers implemented as **capability providers** in wasmCloud.
+- Components are modular data containers implemented as **capability providers**.
 - Examples include:
   - **UtilityComponent**: Tracks an entity’s payoff or utility function.
   - **StrategyComponent**: Encodes decision-making strategies based on game-theoretic principles.
   - **CoalitionComponent**: Manages group memberships for cooperative scenarios.
 
 ### **Systems**
-- Systems are logic processors that operate on entities with specific components. They are implemented either as wasmCloud actors or capability providers.
+- Systems are logic processors that operate on entities with specific components.
 - Examples:
   - A "DecisionSystem" that evaluates game-theoretic strategies for each entity.
   - A "ResourceAllocationSystem" that optimizes resource distribution using cooperative game theory.
@@ -116,7 +116,7 @@ Game-theoretic models enhance decision-making in complex environments:
 
 2. **Performance Overhead**:
    - Large-scale simulations with complex strategies may introduce computational overhead.
-   - *Solution*: Leverage wasmCloud’s lightweight actors and NATS JetStream’s high-performance messaging layer for scalability.
+   - *Solution*: Leverage NATS JetStream’s high-performance messaging layer for scalability.
 
 3. **Coordination Across Entities**:
    - Ensuring consistent behavior across distributed nodes can be difficult.
@@ -126,4 +126,4 @@ Game-theoretic models enhance decision-making in complex environments:
 
 ## **Conclusion**
 
-By integrating game theory into its ECS backend, CIM enables strategic decision-making and coordination among distributed entities in both cooperative and competitive scenarios. This approach enhances the intelligence, adaptability, and efficiency of systems built with CIM—making it ideal for applications such as multi-agent simulations, resource optimization, and AI-driven decision support systems. Through its modular architecture and use of wasmCloud actors, NATS JetStream messaging, and reusable components, CIM provides developers and architects with the tools needed to build dynamic systems where entities interact strategically in real time.
+By integrating game theory into its ECS backend, CIM enables strategic decision-making and coordination among distributed entities in both cooperative and competitive scenarios. This approach enhances the intelligence, adaptability, and efficiency of systems built with CIM—making it ideal for applications such as multi-agent simulations, resource optimization, and AI-driven decision support systems. Through its modular architecture, NATS JetStream messaging, and reusable components, CIM provides developers and architects with the tools needed to build dynamic systems where entities interact strategically in real time.
