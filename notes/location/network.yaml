@@ -1,0 +1,20 @@
+networks:
+  - name: lan
+    ip4: 192.168.1.0/24
+  # - name: comms
+  #   ip4: 192.168.2.0/24
+  # - name: secure
+  #   ip4: 192.168.3.0/24
+  # - name: dmz
+  #   ip4: 192.168.4.0/24
+  # - name: agent
+  #   ip4: 192.168.5.0/24
+  # - name: mgmt
+  #   ip4: 192.168.6.0/24
+  # - name: wifi
+  #   ip4: 192.168.7.0/24
+  - name: wan
+    ip4: dhcp
+    dns: [192.168.1.254 1.1.1.1]
+  
+  
