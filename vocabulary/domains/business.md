@@ -130,4 +130,52 @@
 
 (:CodeBase {path: "notes/businessmodel/resources.md"})
 -[:IMPLEMENTS]->(:Resource)
-``` 
+```
+
+### Term: Real-Time Customer Insights
+- **Category**: Business Concept
+- **Type**: Service
+- **Taxonomy**: Customer Management
+- **Definition**: A system capability that uses conceptual spaces to map and analyze customer behavior patterns in real-time.
+- **Relationships**:
+  * Uses: Conceptual Space, Quality Dimension
+  * Manages: Customer Behavior
+  * Produces: Marketing Campaigns
+- **Usage Context**: Customer analysis and marketing strategy
+- **Code Reference**: `cim/src/customer`
+
+### Term: Supply Chain Optimization
+- **Category**: Business Concept
+- **Type**: Service
+- **Taxonomy**: Operations Management
+- **Definition**: A system service that uses game theory and conceptual spaces to optimize supply chain operations and resource allocation.
+- **Relationships**:
+  * Uses: Game Theory Optimization, Conceptual Space
+  * Manages: Inventory Levels
+  * Optimizes: Resource Allocation
+- **Usage Context**: Supply chain management and resource optimization
+- **Code Reference**: `cim/src/supply`
+
+### Term: Product Development
+- **Category**: Business Concept
+- **Type**: Process
+- **Taxonomy**: Product Management
+- **Definition**: A business process that leverages conceptual spaces to identify market opportunities and guide product innovation.
+- **Relationships**:
+  * Uses: Conceptual Space, Quality Dimension
+  * Produces: Product Ideas
+  * Analyzes: Market Fit
+- **Usage Context**: Product innovation and market analysis
+- **Code Reference**: `cim/src/product`
+
+### Term: Resource Allocation
+- **Category**: Business Concept
+- **Type**: Process
+- **Taxonomy**: Operations Management
+- **Definition**: The process of distributing available resources across different business activities optimally.
+- **Relationships**:
+  * Uses: Game Theory Optimization
+  * Manages: Business Resources
+  * Optimizes: Business Operations
+- **Usage Context**: Resource management and operational optimization
+- **Code Reference**: `cim/src/resource` 
