@@ -1,0 +1,82 @@
+# GitHub-Compatible Mermaid Diagrams
+
+## Gantt Charts
+```mermaid
+gantt
+    dateFormat  YYYY-MM-DD
+    title       Example Progress
+    excludes    weekends
+    
+    section Phase 1
+    Task 1 :done, 2024-03-29, 1d
+    Task 2 :done, 2024-03-29, 1d
+    
+    section Phase 2
+    Task 3 :active, 2024-03-30, 7d
+    Task 4 :2024-04-06, 14d
+```
+
+Key points:
+- Use simple date-based tasks instead of dependencies
+- Include `excludes weekends`
+- Status indicators: `:done`, `:active` (no `:wait` or `:planned`)
+- Simple sections without complex nesting
+- Explicit dates for all tasks
+
+## Pie Charts
+```mermaid
+pie showData
+    title Example Distribution
+    "Category A" : 30
+    "Category B" : 20
+    "Category C" : 50
+```
+
+Key points:
+- Always use `showData` for better readability
+- Keep titles and labels simple
+- Use quotes for category names with spaces
+
+## Flow Diagrams
+```mermaid
+graph LR
+    subgraph Group1
+        A["Node A<br/>Detail 1<br/>Detail 2"]
+        B["Node B<br/>Detail 1<br/>Detail 2"]
+    end
+    
+    subgraph Group2
+        C["Node C<br/>Detail 1<br/>Detail 2"]
+    end
+
+    style Group1 fill:#ffcccc,stroke:#ff0000
+    style Group2 fill:#ccffcc,stroke:#00ff00
+```
+
+Key points:
+- Use `graph LR` or `graph TD` for direction
+- HTML line breaks with `<br/>`
+- Subgraphs for grouping
+- Style definitions after nodes
+- Quote text with spaces/special chars
+
+## Best Practices
+1. Test complex diagrams in [Mermaid Live Editor](https://mermaid.live) first
+2. Keep diagrams simple and focused
+3. Use HTML breaks instead of complex formatting
+4. Prefer explicit dates over relative dependencies
+5. Use emojis and colors for visual indicators
+6. Include legends or keys for complex diagrams
+
+## Common Issues
+1. Avoid:
+   - Complex task dependencies in Gantt charts
+   - Nested subgraphs more than one level deep
+   - Special characters in node IDs
+   - Unsupported diagram types (quadrantChart, etc.)
+   
+2. Always use:
+   - Simple, clear node names
+   - Basic formatting
+   - Explicit styling
+   - Standard direction indicators (LR, TD, etc.) 
