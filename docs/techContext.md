@@ -3,7 +3,19 @@
 ## Domain Analysis Focus
 
 ### Strategic Design Decisions
-1. Bounded Context Choices
+1. Vocabulary Management
+   - Domain-based organization
+   - Ontology structure
+   - Taxonomy definition
+   - Term relationships
+
+2. Knowledge Organization
+   - Cross-domain mapping
+   - Term categorization
+   - Relationship tracking
+   - Version management
+
+3. Bounded Context Choices
    - Context boundaries
    - Context relationships
    - Integration patterns
@@ -22,19 +34,25 @@
    - Pattern adaptation
 
 ### Research Areas
-1. Core Domain Decisions
+1. Knowledge Management
+   - Vocabulary structure
+   - Ontology organization
+   - Taxonomy definition
+   - Term relationships
+
+2. Core Domain Decisions
    - Aggregate design choices
    - Entity lifecycle patterns
    - Value object strategies
    - Repository approaches
 
-2. Integration Patterns
+3. Integration Patterns
    - Context mapping methods
    - Bounded context relationships
    - Anti-corruption layers
    - Domain event patterns
 
-3. Implementation Examples
+4. Implementation Examples
    - DDD pattern applications
    - Context boundaries
    - Aggregate designs
@@ -43,13 +61,19 @@
 ## Research Environment
 
 ### Analysis Tools
-1. Domain Analysis Tools
+1. Knowledge Management Tools
+   - Vocabulary management
+   - Ontology organization
+   - Taxonomy definition
+   - Term relationship tracking
+
+2. Domain Analysis Tools
    - Context mapping tools
    - Domain model visualization
    - Pattern documentation
    - Ubiquitous language tracking
 
-2. Evaluation Tools
+3. Evaluation Tools
    - Pattern validation
    - Context boundary analysis
    - Model effectiveness
@@ -59,43 +83,65 @@
 ```shell
 # Domain analysis environment
 use flake
+
+# Knowledge management tools
+use vocabulary-tools
 ```
 
 ## Analysis Structure
 
 ### Core Documentation
-1. Domain Model Analysis
+1. Vocabulary Documentation
+   - Domain terms
+   - Ontology structure
+   - Taxonomy organization
+   - Term relationships
+
+2. Domain Model Analysis
    - Entity patterns
    - Value objects
    - Aggregates
    - Domain services
 
-2. Strategic Design Analysis
+3. Strategic Design Analysis
    - Context mapping
    - Integration patterns
    - Boundary decisions
    - Anti-corruption layers
 
-3. Tactical Design Analysis
+4. Tactical Design Analysis
    - Entity implementations
    - Value object designs
    - Repository patterns
    - Factory methods
 
 ### Supporting Materials
-1. Research Resources
+1. Knowledge Resources
+   - Vocabulary structure
+   - Ontology documentation
+   - Taxonomy guides
+   - Relationship maps
+
+2. Research Resources
    - DDD pattern catalogs
    - Implementation examples
    - Context maps
    - Domain models
 
-2. Analysis Tools
-   - Pattern validation
-   - Context analysis
-   - Model evaluation
-   - Design assessment
-
 ## Pattern Decisions
+
+### Knowledge Patterns
+1. Vocabulary Structure
+   - Domain organization
+   - Term categorization
+   - Relationship mapping
+   - Version control
+
+2. Knowledge Organization
+   - Ontology management
+   - Taxonomy structure
+   - Term relationships
+   - Cross-domain mapping
 
 ### Domain Patterns
 1. Core Decisions
@@ -124,6 +170,17 @@ use flake
    - Context confusion
 
 ## Research Tools Used
+
+### Knowledge Management Tools
+1. Vocabulary Tools
+   - Purpose: Term management
+   - Usage: Domain organization
+   - Features: Relationship tracking
+
+2. Ontology Tools
+   - Purpose: Knowledge structure
+   - Usage: Domain organization
+   - Features: Term categorization
 
 ### Documentation Tools
 1. Git

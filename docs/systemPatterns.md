@@ -15,6 +15,14 @@
 - Ubiquitous language
 - Domain aggregates
 - Entity relationships
+- Vocabulary management
+
+#### Knowledge Management
+- Domain vocabularies
+- Ontology organization
+- Taxonomy structure
+- Term relationships
+- Cross-domain mapping
 
 #### Module System
 - NixOS-based modules
@@ -43,6 +51,13 @@
 [LLM] → [MCP] → [Tools]
   ↓       ↓        ↓
 [Embeddings] → [Knowledge Graph]
+```
+
+#### Knowledge Layer
+```
+[Domain] → [Vocabulary] → [Ontology]
+    ↓           ↓            ↓
+[Terms] → [Relationships] → [Taxonomy]
 ```
 
 ## Technical Decisions
@@ -79,6 +94,19 @@
    - Role-based access
    - Domain-specific policies
    - Event-level control
+
+### Knowledge Management Decisions
+1. Vocabulary Structure
+   - Domain-based organization
+   - Ontology management
+   - Taxonomy definition
+   - Term relationships
+
+2. Knowledge Organization
+   - Cross-domain mapping
+   - Term categorization
+   - Relationship tracking
+   - Version management
 
 ## Design Patterns
 
@@ -121,6 +149,15 @@ cim-events/
                 └── events.log
 ```
 
+### Vocabulary Pattern
+```
+vocabulary/
+├── domains/           # Domain-specific terms
+├── ontologies/        # Domain ontologies
+├── taxonomies/        # Term categorization
+└── relationships/     # Term relationships
+```
+
 ## Implementation Guidelines
 
 ### Module Development
@@ -149,4 +186,18 @@ cim-events/
 2. Implement role-based access
 3. Follow security patterns
 4. Log security events
-5. Regular auditing 
+5. Regular auditing
+
+### Vocabulary Management
+1. Use domain-based organization
+2. Implement ontology structure
+3. Define taxonomies
+4. Track relationships
+5. Maintain consistency
+
+### Knowledge Management
+1. Use domain vocabularies
+2. Implement ontology organization
+3. Define taxonomy structure
+4. Track term relationships
+5. Maintain cross-domain mapping 

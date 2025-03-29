@@ -17,6 +17,9 @@ CIM addresses these challenges through:
 3. Domain-specific organization
 4. AI-assisted research and management
 5. Secure, modular architecture
+6. Comprehensive vocabulary management
+7. Domain-specific ontologies
+8. Cross-domain taxonomies
 
 ## Operation Methods
 
@@ -26,6 +29,7 @@ CIM addresses these challenges through:
 - NixOS module system
 - Content-addressed storage
 - Event sourcing for state management
+- Vocabulary-driven domain organization
 
 ### Implementation Strategy
 1. Bottom-up approach starting from single packages
@@ -33,24 +37,33 @@ CIM addresses these challenges through:
 3. Reproducible builds using Nix Flakes
 4. Multiple development states (dev, test, prod)
 5. Security-first design principles
+6. Vocabulary-first domain modeling
 
 ### User Experience Goals
 1. Seamless Information Access
    - Cross-device availability
    - Domain-specific organization
    - Intuitive navigation
+   - Vocabulary-based search
 
-2. AI Integration
+2. Knowledge Management
+   - Domain-specific vocabularies
+   - Ontology navigation
+   - Taxonomy organization
+   - Term relationships
+
+3. AI Integration
    - Research assistance
    - Knowledge management
    - Natural language interaction
+   - Vocabulary enhancement
 
-3. Security and Privacy
+4. Security and Privacy
    - End-to-end encryption
    - Authentication options
    - Access control
 
-4. Extensibility
+5. Extensibility
    - Custom module development
    - Domain-specific adaptations
    - Integration capabilities
@@ -87,13 +100,22 @@ CIM addresses these challenges through:
    - Structured documentation
    - Knowledge preservation
    - Decision tracking
+   - Vocabulary management
 
-2. Research Materials
+2. Domain Organization
+   - Vocabulary structure
+   - Ontology management
+   - Taxonomy organization
+   - Term relationships
+
+3. Research Materials
    - Academic foundations
    - Implementation patterns
    - Case studies
+   - Domain vocabularies
 
-3. Technical Documentation
+4. Technical Documentation
    - Architecture specs
    - API documentation
-   - Implementation guides 
+   - Implementation guides
+   - Vocabulary guides 
