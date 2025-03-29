@@ -1,0 +1,87 @@
+@prefix cim: <http://cim.thecowboyai.com/ontology#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# Domain Classes
+cim:Domain rdf:type owl:Class .
+cim:Category rdf:type owl:Class .
+cim:Term rdf:type owl:Class .
+
+# Information Domain
+cim:InformationDomain rdf:type owl:Class ;
+    rdfs:subClassOf cim:Domain .
+
+cim:InformationEntity rdf:type owl:Class ;
+    rdfs:subClassOf cim:Term ;
+    cim:belongsToDomain cim:InformationDomain .
+
+cim:InformationState rdf:type owl:Class ;
+    rdfs:subClassOf cim:Term ;
+    cim:belongsToDomain cim:InformationDomain .
+
+# Knowledge Domain
+cim:KnowledgeDomain rdf:type owl:Class ;
+    rdfs:subClassOf cim:Domain .
+
+cim:Fact rdf:type owl:Class ;
+    rdfs:subClassOf cim:Term ;
+    cim:belongsToDomain cim:KnowledgeDomain .
+
+cim:Claim rdf:type owl:Class ;
+    rdfs:subClassOf cim:Term ;
+    cim:belongsToDomain cim:KnowledgeDomain .
+
+cim:Theory rdf:type owl:Class ;
+    rdfs:subClassOf cim:Term ;
+    cim:belongsToDomain cim:KnowledgeDomain .
+
+# Organization Domain
+cim:OrganizationDomain rdf:type owl:Class ;
+    rdfs:subClassOf cim:Domain .
+
+cim:Operator rdf:type owl:Class ;
+    rdfs:subClassOf cim:Term ;
+    cim:belongsToDomain cim:OrganizationDomain .
+
+cim:Account rdf:type owl:Class ;
+    rdfs:subClassOf cim:Term ;
+    cim:belongsToDomain cim:OrganizationDomain .
+
+# Relationship Properties
+cim:contains rdf:type owl:ObjectProperty .
+cim:manages rdf:type owl:ObjectProperty .
+cim:validates rdf:type owl:ObjectProperty .
+cim:dependsOn rdf:type owl:ObjectProperty .
+cim:extends rdf:type owl:ObjectProperty .
+cim:configures rdf:type owl:ObjectProperty .
+
+# Domain Relationships
+cim:Fact cim:validates cim:Claim .
+cim:Claim cim:supports cim:Theory .
+cim:Theory cim:contains cim:Claim .
+
+cim:Operator cim:manages cim:Account .
+cim:Account cim:contains cim:User .
+cim:User cim:has cim:Permission .
+
+# Cross-Domain Relationships
+cim:InformationEntity cim:dependsOn cim:InformationState .
+cim:Agent cim:processes cim:InformationEntity .
+cim:Policy cim:governs cim:Behavior .
+
+# Property Characteristics
+cim:contains rdfs:domain cim:Term ;
+    rdfs:range cim:Term .
+
+cim:manages rdfs:domain cim:Term ;
+    rdfs:range cim:Term .
+
+cim:validates rdfs:domain cim:Term ;
+    rdfs:range cim:Term .
+
+# Annotations
+cim:InformationDomain rdfs:comment "Core information representation and processing"@en .
+cim:KnowledgeDomain rdfs:comment "Knowledge representation and management"@en .
+cim:OrganizationDomain rdfs:comment "Organizational structure and management"@en . 

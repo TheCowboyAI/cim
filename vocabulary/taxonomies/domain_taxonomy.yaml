@@ -1,0 +1,128 @@
+---
+name: CIM Domain Taxonomy
+version: 1.0.0
+description: Primary classification of domains in the CIM system
+
+domains:
+  information:
+    name: Information Domain
+    description: Core information representation and processing
+    categories:
+      - entity
+      - state
+      - capability
+      - storage
+      - integrity
+
+  knowledge:
+    name: Knowledge Domain
+    description: Knowledge representation and management
+    categories:
+      - fact
+      - claim
+      - theory
+      - idea
+      - argument
+      - proof
+
+  organization:
+    name: Organization Domain
+    description: Organizational structure and management
+    categories:
+      - operator
+      - account
+      - tenant
+      - user
+      - permission
+
+  agent:
+    name: Agent Domain
+    description: Autonomous agents and behaviors
+    categories:
+      - agent
+      - behavior
+      - capability
+      - model
+      - interaction
+
+  business:
+    name: Business Domain
+    description: Business concepts and value delivery
+    categories:
+      - value_proposition
+      - solution
+      - business_model
+      - goal
+      - proposal
+
+  environment:
+    name: Environment Domain
+    description: Physical and virtual resource management
+    categories:
+      - equipment
+      - location
+      - environment
+      - preference
+      - resource
+
+  governance:
+    name: Governance Domain
+    description: Rules, policies, and ethical guidelines
+    categories:
+      - policy
+      - ethics
+      - law
+      - compliance
+      - security
+
+  security:
+    name: Security Domain
+    description: Security and access control
+    categories:
+      - authorization
+      - authentication
+      - integrity
+      - confidentiality
+      - availability
+
+  distribution:
+    name: Distribution Domain
+    description: Distributed system components
+    categories:
+      - node
+      - network
+      - protocol
+      - topology
+      - communication
+
+  persistence:
+    name: Persistence Domain
+    description: Data storage and retrieval
+    categories:
+      - storage
+      - state
+      - backup
+      - recovery
+      - archive
+
+relationships:
+  - type: hierarchical
+    patterns:
+      - is_a
+      - part_of
+      - contains
+      - extends
+  
+  - type: functional
+    patterns:
+      - manages
+      - processes
+      - validates
+      - configures
+  
+  - type: temporal
+    patterns:
+      - precedes
+      - follows
+      - triggers
+      - depends_on 

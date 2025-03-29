@@ -89,4 +89,174 @@
 - **OpenSSL**: Cryptographic software library
 
 ---
-*For contribution guidelines, see [Contributing](index.md#contributing)* 
+*For contribution guidelines, see [Contributing](index.md#contributing)*
+
+# CIM Domain Vocabulary - Notes
+
+## Knowledge Domain
+
+### Term: Fact
+- **Category**: Domain Object
+- **Type**: Entity
+- **Taxonomy**: Storage Taxonomy
+- **Definition**: A proven claim with verifiable evidence and reproducible validation
+- **Relationships**:
+  * Validates: Claims
+  * Supports: Theories
+  * Contains: Proofs
+- **Usage Context**: Foundation for building reliable knowledge base
+- **Code Reference**: TBD
+
+### Term: Claim
+- **Category**: Domain Object
+- **Type**: Entity
+- **Taxonomy**: Storage Taxonomy
+- **Definition**: An assertion that has a repeatable construction method
+- **Relationships**:
+  * Depends-On: Facts
+  * Supports: Theories
+  * Contains: Arguments
+- **Usage Context**: Building blocks for theories and knowledge construction
+- **Code Reference**: TBD
+
+### Term: Theory
+- **Category**: Domain Object
+- **Type**: Aggregate
+- **Taxonomy**: Storage Taxonomy
+- **Definition**: A structured belief system with context, explanation, and sources
+- **Relationships**:
+  * Contains: Claims
+  * Uses: Facts
+  * Supports: Models
+- **Usage Context**: Framework for understanding complex systems
+- **Code Reference**: TBD
+
+## Organization Domain
+
+### Term: Operator
+- **Category**: Business Concept
+- **Type**: Entity
+- **Taxonomy**: Configuration Taxonomy
+- **Definition**: Organization responsible for operating a CIM instance
+- **Relationships**:
+  * Manages: Tenants
+  * Configures: Policies
+  * Contains: Accounts
+- **Usage Context**: Primary administrative entity for CIM operations
+- **Code Reference**: TBD
+
+### Term: Account
+- **Category**: Business Concept
+- **Type**: Entity
+- **Taxonomy**: Configuration Taxonomy
+- **Definition**: A group or individual identity within the CIM system
+- **Relationships**:
+  * Part-Of: Operator
+  * Contains: Users
+  * Has: Permissions
+- **Usage Context**: Access control and resource management
+- **Code Reference**: TBD
+
+## Agent Domain
+
+### Term: Agent
+- **Category**: Technical Concept
+- **Type**: Service
+- **Taxonomy**: Processing Rules
+- **Definition**: An autonomous entity capable of performing tasks within the CIM
+- **Relationships**:
+  * Uses: AI Tools
+  * Processes: Information Entities
+  * Has: Behaviors
+- **Usage Context**: Automated processing and decision making
+- **Code Reference**: TBD
+
+### Term: Behavior
+- **Category**: Technical Concept
+- **Type**: Value Object
+- **Taxonomy**: Processing Rules
+- **Definition**: Defined patterns of action and response for agents
+- **Relationships**:
+  * Configures: Agent
+  * Follows: Policies
+  * Uses: Models
+- **Usage Context**: Defining how agents interact with the system
+- **Code Reference**: TBD
+
+## Business Domain
+
+### Term: Value Proposition
+- **Category**: Business Concept
+- **Type**: Aggregate
+- **Taxonomy**: Business Rules
+- **Definition**: The unique value offered by a solution or service
+- **Relationships**:
+  * Supports: Business Model
+  * Contains: Solutions
+  * Targets: Goals
+- **Usage Context**: Defining business value and market positioning
+- **Code Reference**: TBD
+
+### Term: Solution
+- **Category**: Business Concept
+- **Type**: Entity
+- **Taxonomy**: Business Rules
+- **Definition**: A specific implementation addressing business needs
+- **Relationships**:
+  * Part-Of: Value Proposition
+  * Uses: Models
+  * Achieves: Goals
+- **Usage Context**: Concrete implementations of business value
+- **Code Reference**: TBD
+
+## Environment Domain
+
+### Term: Equipment
+- **Category**: Technical Concept
+- **Type**: Entity
+- **Taxonomy**: Configuration Taxonomy
+- **Definition**: Physical or virtual resources used by the CIM
+- **Relationships**:
+  * Located-In: Environment
+  * Supports: Solutions
+  * Has: Preferences
+- **Usage Context**: Resource management and deployment
+- **Code Reference**: TBD
+
+### Term: Location
+- **Category**: Business Concept
+- **Type**: Value Object
+- **Taxonomy**: Configuration Taxonomy
+- **Definition**: Physical or logical placement of CIM components
+- **Relationships**:
+  * Contains: Equipment
+  * Follows: Policies
+  * Has: Environment
+- **Usage Context**: Geographic and logical resource organization
+- **Code Reference**: TBD
+
+## Governance Domain
+
+### Term: Policy
+- **Category**: Business Concept
+- **Type**: Service
+- **Taxonomy**: Configuration Taxonomy
+- **Definition**: Rules and guidelines governing CIM operation
+- **Relationships**:
+  * Governs: Behaviors
+  * Enforces: Ethics
+  * Follows: Laws
+- **Usage Context**: System governance and compliance
+- **Code Reference**: TBD
+
+### Term: Ethics
+- **Category**: Cross-Cutting
+- **Type**: Service
+- **Taxonomy**: Business Rules
+- **Definition**: Moral principles and values guiding CIM operation
+- **Relationships**:
+  * Guides: Policies
+  * Influences: Decisions
+  * Aligns-With: Laws
+- **Usage Context**: Ethical decision making and governance
+- **Code Reference**: TBD 
