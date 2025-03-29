@@ -10,7 +10,11 @@ name: "Vocabulary Management"
 ## Purpose
 Maintain a consistent ubiquitous language across the project by tracking and organizing domain-specific terms, concepts, and relationships.
 
+We use this vocabulary to write documents and software that is easy to understand and use.  
+
 ## Vocabulary Structure
+
+Vocabularies are used to create Subject-Based Messaging structures according to Domain Driven Design (DDD).
 
 ### Term Categories
 1. **Domain Objects**
@@ -192,3 +196,36 @@ suggestions:
       3. Maintain graph integrity
       4. Archive definition
       5. Update documentation 
+
+# Domain Vocabulary Syntax (Cypher-Compatible)
+
+## Node (Term) Syntax
+(:Label1:Label2 {prop1: value, prop2: value})
+
+## Relationship Syntax
+-[:TYPE {props}]->
+
+## Full Pattern
+(:Label1 {props})-[:RELATIONSHIP_TYPE {props}]->(:Label2 {props})
+
+## Examples
+
+# Domain Objects
+(:Entity:Aggregate {type: "customer", status: "active"})
+-[:OWNS {since: "2023"}]->
+(:Entity {balance: 1000})
+
+# Technical Concepts
+(:Service {version: "1.21"})
+-[:ROUTES {protocol: "http"}]->
+(:Interface {path: "/api/v1"})
+
+# Business Rules
+(:Aggregate {status: "pending"})
+-[:TRIGGERS {condition: "paid"}]->
+(:Process {method: "express"})
+
+## Complex Example
+(:Order:Aggregate {status: "new"})
+-[:TRIGGERS {condition: "paid", priority: "high"}]->
+(:Shipment:Process {method: "express"}) 
