@@ -8,21 +8,31 @@ domains:
     name: Information Domain
     description: Core information representation and processing
     categories:
-      - entity
-      - state
-      - capability
-      - storage
-      - integrity
+      - information_entity
+      - information_state
+      - composable_unit
+      - information_storage
+      - information_attribute
+      - state_change
+      - unit_composition
 
   knowledge:
     name: Knowledge Domain
     description: Knowledge representation and management
     categories:
+      - research
+      - evidence
+      - method
+      - finding
       - fact
       - claim
       - theory
-      - idea
-      - argument
+      - citation
+      - knowledge_graph
+      - validation
+      - classification
+      - relationship
+      - navigation
       - proof
 
   organization:
@@ -112,6 +122,7 @@ relationships:
       - part_of
       - contains
       - extends
+      - based_on
   
   - type: functional
     patterns:
@@ -119,10 +130,22 @@ relationships:
       - processes
       - validates
       - configures
+      - produces
+      - supports
   
   - type: temporal
     patterns:
       - precedes
       - follows
       - triggers
-      - depends_on 
+      - depends_on
+      - references
+
+  - type: knowledge
+    patterns:
+      - validates
+      - supports
+      - contradicts
+      - cites
+      - derives_from
+      - classifies 
