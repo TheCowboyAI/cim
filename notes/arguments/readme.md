@@ -50,42 +50,68 @@
 #### Term: Argument
 - **Category**: Domain Object
 - **Type**: Aggregate
+- **Taxonomy**: Knowledge Processing
 - **Definition**: A structured reasoning construct that supports or challenges a claim through logical relationships and evidence
 - **Relationships**:
-  * Validates: Claims
-  * Uses: Evidence
-  * Follows: Logic
   * Part-Of: Knowledge Framework
+  * Manages: Evidence
+  * Processes: Claims
+  * Depends-On: Logic
+- **Usage Context**: Used in formal reasoning, claim validation, and knowledge verification processes
+- **Code Reference**: notes/arguments/readme.md
 
 #### Term: Evidence
 - **Category**: Domain Object
 - **Type**: Value Object
+- **Taxonomy**: Knowledge Processing
 - **Definition**: Supporting information or data that strengthens or weakens an argument
 - **Relationships**:
-  * Supports: Arguments
+  * Part-Of: Argument
   * Validates: Claims
   * Sources: Facts
-  * Part-Of: Knowledge Framework
+  * Depends-On: Context
+- **Usage Context**: Used in argument construction and claim validation
+- **Code Reference**: notes/arguments/evidence.md
 
 #### Term: Context
 - **Category**: Domain Object
 - **Type**: Value Object
+- **Taxonomy**: Knowledge Processing
 - **Definition**: The specific circumstances or conditions under which an argument is applicable
 - **Relationships**:
-  * Bounds: Arguments
-  * Influences: Validity
   * Contains: Conditions
-  * Part-Of: Knowledge Framework
+  * Configures: Arguments
+  * Validates: Applicability
+  * Precedes: Evaluation
+- **Usage Context**: Determines argument applicability and evaluation parameters
+- **Code Reference**: notes/arguments/context.md
 
 #### Term: Logic
 - **Category**: Domain Object
 - **Type**: Service
+- **Taxonomy**: Knowledge Processing
 - **Definition**: The system of reasoning principles used to construct and evaluate arguments
 - **Relationships**:
-  * Guides: Arguments
+  * Processes: Arguments
   * Validates: Reasoning
-  * Uses: Rules
-  * Part-Of: Knowledge Framework
+  * Contains: Rules
+  * Configures: Evaluation
+- **Usage Context**: Provides reasoning framework for argument construction and evaluation
+- **Code Reference**: notes/arguments/logic.md
+
+### Knowledge Processing Taxonomy
+- Argument Construction
+  * Structure Definition
+  * Evidence Integration
+  * Logic Application
+- Validation Operations
+  * Context Verification
+  * Evidence Assessment
+  * Logic Evaluation
+- Relationship Management
+  * Claim Connections
+  * Evidence Links
+  * Context Mappings
 
 ### Relationships
 - Claim support
