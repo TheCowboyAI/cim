@@ -6,26 +6,25 @@
 gantt
     title CIM Development Progress
     dateFormat YYYY-MM-DD
-    section Foundation
-    Vocabulary Structure    :done, vocab, 2024-03-29, 1d
-    Domain Organization     :done, domain, 2024-03-29, 1d
-    Project Setup          :done, setup, 2024-03-29, 1d
-
-    section In Progress
-    Knowledge Management   :active, knowledge, after vocab, 7d
-    Domain Implementation  :active, impl, after domain, 14d
-    Agent Development     :active, agent, after setup, 21d
-
-    section Planned
-    Integration Layer     :planned, integration, after impl, 14d
-    Security Framework    :planned, security, after integration, 14d
-    Distribution System   :planned, dist, after security, 21d
+    
+    Foundation :milestone, m1, 2024-03-29, 0d
+    Vocabulary Structure :done, vocab, 2024-03-29, 1d
+    Domain Organization :done, domain, after vocab, 1d
+    Project Setup :done, setup, after domain, 1d
+    
+    Knowledge Management :active, knowledge, after setup, 7d
+    Domain Implementation :active, impl, after knowledge, 14d
+    Agent Development :active, agent, after impl, 21d
+    
+    Integration Layer :wait, integration, after agent, 14d
+    Security Framework :wait, security, after integration, 14d
+    Distribution System :wait, dist, after security, 21d
 ```
 
 ## Domain Completion Status
 
 ```mermaid
-pie
+pie showData
     title Domain Implementation Progress
     "Information Domain" : 40
     "Knowledge Domain" : 30
@@ -102,34 +101,34 @@ pie
 ## Risk Assessment
 
 ```mermaid
-graph TD
-    subgraph High Priority
-    KI[Knowledge Integration]
-    AC[Agent Coordination]
-    DC[Data Consistency]
+graph LR
+    subgraph High-Impact-High-Probability
+        KI["🔴 Knowledge Integration<br/>Impact: High<br/>Probability: High"]
+        AC["🔴 Agent Coordination<br/>Impact: High<br/>Probability: High"]
     end
     
-    subgraph Monitor
-    SI[Security Implementation]
+    subgraph High-Impact-Low-Probability
+        SI["🟡 Security Implementation<br/>Impact: High<br/>Probability: Low"]
     end
     
-    subgraph Low Priority
-    RA[Resource Allocation]
+    subgraph Low-Impact-High-Probability
+        DC["🟡 Data Consistency<br/>Impact: Low<br/>Probability: High"]
+    end
+    
+    subgraph Low-Impact-Low-Probability
+        RA["🟢 Resource Allocation<br/>Impact: Low<br/>Probability: Low"]
     end
 
-    classDef highPriority fill:#ff9999
-    classDef monitor fill:#99ff99
-    classDef lowPriority fill:#9999ff
-    
-    class KI,AC,DC highPriority
-    class SI monitor
-    class RA lowPriority
+    style High-Impact-High-Probability fill:#ffcccc,stroke:#ff0000
+    style High-Impact-Low-Probability fill:#ffffcc,stroke:#ffcc00
+    style Low-Impact-High-Probability fill:#ffffcc,stroke:#ffcc00
+    style Low-Impact-Low-Probability fill:#ccffcc,stroke:#00ff00
 ```
 
 ## Resource Allocation
 
 ```mermaid
-pie
+pie showData
     title Resource Distribution
     "Knowledge Engineering" : 30
     "Domain Development" : 25
