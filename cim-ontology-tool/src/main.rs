@@ -2,7 +2,6 @@ use anyhow::Result;
 use clap::Parser;
 use cim_ontology::mcp::ServerConfig;
 use cim_ontology::storage::neo4j::Neo4jConfig;
-use std::net::SocketAddr;
 use std::sync::Arc;
 
 /// Command-line arguments for the cim-ontology-tool
@@ -18,9 +17,9 @@ struct Args {
     #[clap(short, long, default_value = "config.toml")]
     config: String,
 
-    /// Server address to bind to
-    #[clap(short, long, default_value = "127.0.0.1:8080")]
-    address: String,
+    /// NATS server URL
+    #[clap(long, default_value = "nats://localhost:4222")]
+    nats_url: String,
 
     /// Verbose output
     #[clap(short, long)]
@@ -65,12 +64,12 @@ async fn main() -> Result<()> {
 
     // Create server config
     let server_config = ServerConfig {
-        address: args.address.parse::<SocketAddr>()?,
+        nats_url: args.nats_url,
         auth_token: args.auth_token,
     };
 
     // Start MCP server with event-driven architecture
-    println!("Starting MCP server on {}", server_config.address);
+    println!("Starting MCP server with NATS connection to {}", server_config.nats_url);
     cim_ontology::mcp::server::start_server(server_config, Arc::new(neo4j_storage)).await
         .map_err(|e| anyhow::anyhow!("Failed to start MCP server: {}", e))?;
 

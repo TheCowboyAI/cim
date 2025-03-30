@@ -16,6 +16,30 @@ The CIM Ontology Tool is designed to scan folders of files, extract taxonomies a
 - Analyze and visualize ontological relationships
 - Support version control and change tracking
 
+## Communication Architecture
+
+The CIM Ontology Tool uses NATS for all communication. This approach aligns with the broader CIM architecture that uses NATS as its primary messaging system.
+
+### Why NATS?
+
+NATS provides a lightweight, high-performance messaging system that enables:
+
+- Subject-based messaging (matching the Domain-Driven Design approach)
+- Distributed, scalable architecture
+- Built-in request-reply patterns
+- Durable message delivery with JetStream
+- Clustering and fault tolerance
+
+### MCP Protocol over NATS
+
+Rather than using HTTP endpoints, MCP requests are sent as NATS messages to subjects following the pattern:
+
+```
+mcp.request.<operation>
+```
+
+Responses are delivered via the NATS request-reply mechanism, maintaining the same MCP protocol message format.
+
 ## Architecture
 
 ### System Architecture Diagram
@@ -23,7 +47,7 @@ The CIM Ontology Tool is designed to scan folders of files, extract taxonomies a
 ┌────────────────────┐     ┌───────────────────┐
 │                    │     │                   │
 │  Cursor and other  │◄────┤   MCP Protocol    │
-│   MCP Clients      │     │    Interface      │
+│   MCP Clients      │     │ (over NATS)       │
 │                    │     │                   │
 └────────────────────┘     └─────────┬─────────┘
                                     │
@@ -43,8 +67,8 @@ The CIM Ontology Tool is designed to scan folders of files, extract taxonomies a
 │                  │                     │       │
 │         ┌────────▼─────────┐   ┌───────▼────┐  │
 │         │                  │   │            │  │
-│         │  Domain Model    │   │ MCP Server │  │
-│         │                  │   │            │  │
+│         │  Domain Model    │   │ NATS-based │  │
+│         │                  │   │ MCP Server │  │
 │         └────────┬─────────┘   └───────────┘  │
 │                  │                             │
 └──────────────────┼─────────────────────────────┘

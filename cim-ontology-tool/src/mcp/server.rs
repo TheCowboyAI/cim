@@ -1,27 +1,20 @@
 //! MCP server implementation
 //!
-//! This module provides the HTTP server implementation for the MCP protocol.
+//! This module provides the NATS-based server implementation for the MCP protocol.
 
 use crate::events::EventBus;
 use crate::mcp::{MCPError, MCPRequest, MCPResponse, MCPStatus, request_to_event, handle_event_and_create_response};
 use crate::storage::OntologyStorage;
-use axum::{
-    extract::State,
-    http::{HeaderMap, StatusCode},
-    response::IntoResponse,
-    Json,
-};
 use serde_json::json;
-use std::net::SocketAddr;
 use std::sync::Arc;
-use tokio::net::TcpListener;
 use anyhow::{Context, Result};
+use futures::StreamExt;
 
 /// Server configuration
 #[derive(Debug, Clone)]
 pub struct ServerConfig {
-    /// Address to bind to
-    pub address: SocketAddr,
+    /// NATS server URL
+    pub nats_url: String,
     /// Authentication token
     pub auth_token: Option<String>,
 }
@@ -29,7 +22,7 @@ pub struct ServerConfig {
 impl Default for ServerConfig {
     fn default() -> Self {
         Self {
-            address: "127.0.0.1:8080".parse().unwrap(),
+            nats_url: "nats://localhost:4222".to_string(),
             auth_token: None,
         }
     }
@@ -46,27 +39,7 @@ pub struct ServerState<S: OntologyStorage + Clone + 'static> {
     pub _event_bus: EventBus,
 }
 
-// Define the MCPRequestHandler struct
-struct MCPRequestHandler<S: OntologyStorage> {
-    storage: Arc<S>,
-    auth_token: Option<String>,
-}
-
-impl<S: OntologyStorage> MCPRequestHandler<S> {
-    /// Create a new MCPRequestHandler
-    fn new(storage: Arc<S>, auth_token: Option<String>) -> Self {
-        Self { storage, auth_token }
-    }
-
-    /// Handle a client connection
-    async fn handle_connection(&self, _socket: tokio::net::TcpStream) -> Result<()> {
-        // This is a placeholder for the actual connection handling logic
-        println!("Handling connection (placeholder implementation)");
-        Ok(())
-    }
-}
-
-/// Start the MCP server
+/// Start the MCP server using NATS
 ///
 /// # Arguments
 ///
@@ -82,53 +55,7 @@ pub async fn start_server<S: OntologyStorage + 'static>(
 ) -> Result<()> {
     // Initialize event system
     let event_capacity = 100; // Default event capacity
-    init_event_system(event_capacity).await?;
-
-    // Bind TCP listener to the specified address
-    let listener = TcpListener::bind(&config.address)
-        .await
-        .with_context(|| format!("Failed to bind to address: {}", config.address))?;
-
-    println!("MCP server listening on {}", config.address);
-
-    // Handle incoming connections
-    loop {
-        let (socket, addr) = match listener.accept().await {
-            Ok((socket, addr)) => (socket, addr),
-            Err(e) => {
-                eprintln!("Failed to accept connection: {}", e);
-                continue;
-            }
-        };
-
-        println!("New client connected: {}", addr);
-
-        // Clone storage for the new connection
-        let storage_clone = Arc::clone(&storage);
-        let auth_token = config.auth_token.clone();
-
-        // Spawn a new task to handle the connection
-        tokio::spawn(async move {
-            let handler = MCPRequestHandler::new(storage_clone, auth_token);
-            if let Err(e) = handler.handle_connection(socket).await {
-                eprintln!("Error handling connection from {}: {}", addr, e);
-            }
-            println!("Client disconnected: {}", addr);
-        });
-    }
-}
-
-/// Initialize the event system
-///
-/// # Arguments
-///
-/// * `capacity` - Capacity of the event queue
-///
-/// # Returns
-///
-/// * `Result<()>` - Result indicating success or failure
-async fn init_event_system(capacity: usize) -> Result<()> {
-    let (_event_bus, mut event_dispatcher, _event_store) = crate::events::init_event_system(100);
+    let (event_bus, mut event_dispatcher, _event_store) = crate::events::init_event_system(100);
     
     // Start event dispatcher in a background task
     tokio::spawn(async move {
@@ -137,106 +64,186 @@ async fn init_event_system(capacity: usize) -> Result<()> {
         }
     });
     
-    println!("Event system initialized with capacity: {}", capacity);
+    println!("Event system initialized with capacity: {}", event_capacity);
+    
+    // Connect to NATS
+    let client = match connect_to_nats(&config).await {
+        Ok(client) => client,
+        Err(e) => return Err(anyhow::anyhow!("Failed to connect to NATS: {}", e)),
+    };
+    
+    println!("Connected to NATS server at {}", config.nats_url);
+    
+    // Create a health check subscription
+    let health_client = client.clone();
+    tokio::spawn(async move {
+        if let Err(e) = setup_health_check(health_client).await {
+            eprintln!("Failed to set up health check: {}", e);
+        }
+    });
+    
+    // Subscribe to MCP request subjects
+    let mut subscription = client.subscribe("mcp.request.>").await
+        .with_context(|| "Failed to subscribe to MCP request subjects")?;
+    
+    println!("Listening for MCP requests on 'mcp.request.>' subjects");
+    
+    // Process incoming messages
+    while let Some(msg) = subscription.next().await {
+        // Clone required data for the task
+        let client_clone = client.clone();
+        let storage_clone = Arc::clone(&storage);
+        let event_bus_clone = event_bus.clone();
+        let auth_token = config.auth_token.clone();
+        
+        // Process the message in a separate task
+        tokio::spawn(async move {
+            if let Err(e) = handle_nats_message(
+                msg, 
+                client_clone,
+                storage_clone, 
+                event_bus_clone,
+                auth_token
+            ).await {
+                eprintln!("Error handling message: {}", e);
+            }
+        });
+    }
     
     Ok(())
 }
 
-/// Health check endpoint
-async fn health_check() -> impl IntoResponse {
-    Json(json!({
-        "status": "ok",
-        "version": env!("CARGO_PKG_VERSION"),
-    }))
+/// Connect to NATS server
+async fn connect_to_nats(config: &ServerConfig) -> Result<async_nats::Client> {
+    // Simple connection without advanced options for now
+    let client = if let Some(token) = &config.auth_token {
+        // Connect with authentication
+        async_nats::connect_with_options(
+            &config.nats_url,
+            async_nats::ConnectOptions::new()
+                .token(token.clone())
+        ).await?
+    } else {
+        // Connect without authentication
+        async_nats::connect(&config.nats_url).await?
+    };
+    
+    Ok(client)
 }
 
-/// Handle an MCP request
-async fn handle_mcp_request<S: OntologyStorage + Clone + 'static>(
-    State(state): State<ServerState<S>>,
-    headers: HeaderMap,
-    Json(request): Json<MCPRequest>,
-) -> impl IntoResponse {
-    // Authenticate request if auth token is set
-    if let Some(auth_token) = &state.config.auth_token {
-        if let Some(auth_header) = headers.get("Authorization") {
-            if let Ok(auth_str) = auth_header.to_str() {
-                if !auth_str.starts_with("Bearer ") || !auth_str[7..].eq(auth_token) {
-                    return (
-                        StatusCode::UNAUTHORIZED,
-                        Json(MCPResponse {
-                            request_id: request.id.clone(),
-                            status: MCPStatus::Error,
-                            data: None,
-                            error: Some(MCPError {
-                                code: "UNAUTHORIZED".to_string(),
-                                message: "Invalid authentication token".to_string(),
-                                details: None,
-                            }),
-                        }),
-                    );
-                }
-            } else {
-                return (
-                    StatusCode::UNAUTHORIZED,
-                    Json(MCPResponse {
-                        request_id: request.id.clone(),
-                        status: MCPStatus::Error,
-                        data: None,
-                        error: Some(MCPError {
-                            code: "UNAUTHORIZED".to_string(),
-                            message: "Invalid authentication header".to_string(),
-                            details: None,
-                        }),
-                    }),
-                );
-            }
-        } else {
-            return (
-                StatusCode::UNAUTHORIZED,
-                Json(MCPResponse {
-                    request_id: request.id.clone(),
+/// Setup health check handler
+async fn setup_health_check(client: async_nats::Client) -> Result<()> {
+    let mut subscription = client.subscribe("mcp.health").await?;
+    
+    println!("Health check service initialized on 'mcp.health' subject");
+    
+    while let Some(msg) = subscription.next().await {
+        if let Some(reply) = msg.reply {
+            let health_response = json!({
+                "status": "ok",
+                "version": env!("CARGO_PKG_VERSION"),
+            });
+            
+            let response_data = serde_json::to_vec(&health_response)?;
+            client.publish(reply, response_data.into()).await?;
+        }
+    }
+    
+    Ok(())
+}
+
+/// Handle a NATS message containing an MCP request
+async fn handle_nats_message<S: OntologyStorage + 'static>(
+    msg: async_nats::Message,
+    client: async_nats::Client,
+    storage: Arc<S>,
+    event_bus: EventBus,
+    auth_token: Option<String>,
+) -> Result<()> {
+    // Parse the subject to extract the operation
+    let subject = msg.subject.to_string();
+    
+    // Parse the payload as an MCPRequest
+    let request: MCPRequest = match serde_json::from_slice(&msg.payload) {
+        Ok(req) => req,
+        Err(e) => {
+            // If parsing fails, reply with an error
+            if let Some(reply) = msg.reply {
+                let error_response = MCPResponse {
+                    request_id: "unknown".to_string(),
                     status: MCPStatus::Error,
                     data: None,
                     error: Some(MCPError {
-                        code: "UNAUTHORIZED".to_string(),
-                        message: "Authentication required".to_string(),
+                        code: "INVALID_REQUEST".to_string(),
+                        message: format!("Failed to parse request: {}", e),
                         details: None,
                     }),
-                }),
-            );
+                };
+                let response_data = serde_json::to_vec(&error_response)?;
+                client.publish(reply, response_data.into()).await?;
+            }
+            return Err(anyhow::anyhow!("Failed to parse request: {}", e));
         }
-    }
-
-    // Convert the request to an event
-    match request_to_event(&request) {
-        Some(event) => {
-            // Process the event
-            let response = handle_event_and_create_response(&state._event_bus, &request, event).await;
+    };
+    
+    // Handle authentication if needed
+    if let Some(auth_token) = &auth_token {
+        // Check if the request contains a valid auth token in the context
+        let is_authenticated = request.context
+            .as_ref()
+            .and_then(|ctx| ctx.get("auth_token"))
+            .and_then(|token| token.as_str())
+            .map(|token| token == auth_token)
+            .unwrap_or(false);
             
-            // Return the response with appropriate status code
-            let status_code = match response.status {
-                MCPStatus::Success => StatusCode::OK,
-                MCPStatus::Pending => StatusCode::ACCEPTED,
-                MCPStatus::Error => StatusCode::BAD_REQUEST,
+        if !is_authenticated {
+            let error_response = MCPResponse {
+                request_id: request.id.clone(),
+                status: MCPStatus::Error,
+                data: None,
+                error: Some(MCPError {
+                    code: "UNAUTHORIZED".to_string(),
+                    message: "Invalid authentication token".to_string(),
+                    details: None,
+                }),
             };
             
-            (status_code, Json(response))
-        },
-        None => {
-            // No matching event type, return an error
-            (
-                StatusCode::BAD_REQUEST,
-                Json(MCPResponse {
-                    request_id: request.id.clone(),
-                    status: MCPStatus::Error,
-                    data: None,
-                    error: Some(MCPError {
-                        code: "INVALID_OPERATION".to_string(),
-                        message: format!("Unknown operation: {}", request.operation),
-                        details: None,
-                    }),
-                }),
-            )
+            if let Some(reply) = msg.reply {
+                let response_data = serde_json::to_vec(&error_response)?;
+                client.publish(reply, response_data.into()).await?;
+            }
+            
+            return Err(anyhow::anyhow!("Unauthorized request"));
         }
     }
+    
+    // Use the existing event handling code
+    if let Some(event) = request_to_event(&request) {
+        let response = handle_event_and_create_response(&event_bus, &request, event).await;
+        
+        // Send the response if a reply subject was provided
+        if let Some(reply) = msg.reply {
+            let response_data = serde_json::to_vec(&response)?;
+            client.publish(reply, response_data.into()).await?;
+        }
+    } else {
+        // No matching event type, send an error response
+        let error_response = MCPResponse {
+            request_id: request.id.clone(),
+            status: MCPStatus::Error,
+            data: None,
+            error: Some(MCPError {
+                code: "INVALID_OPERATION".to_string(),
+                message: format!("Unknown operation: {}", request.operation),
+                details: None,
+            }),
+        };
+        
+        if let Some(reply) = msg.reply {
+            let response_data = serde_json::to_vec(&error_response)?;
+            client.publish(reply, response_data.into()).await?;
+        }
+    }
+    
+    Ok(())
 } 
