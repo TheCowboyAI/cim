@@ -58,6 +58,37 @@
 - Event-driven architecture for request processing
 - Neo4j graph database for ontology storage
 - Subject-based message routing
+- Asynchronous request handling
+- Persistent connection management
+- Scalable message distribution
+
+### Client Architecture (cim-client)
+1. Layered Design
+   - **Domain Layer**: Core entities and business logic
+     - Ontology, Term, and Relationship entities
+     - Domain services for entity management
+     - Value objects for immutable data
+   - **Application Layer**: Orchestration and use cases
+     - MCP client implementation
+     - Request/response handling
+     - Domain service orchestration
+   - **Infrastructure Layer**: External communication
+     - NATS client implementation
+     - Connection management
+     - Message serialization/deserialization
+   - **Presentation Layer**: User interfaces
+     - CLI implementation
+     - GUI implementation with Iced
+     - User interaction handling
+
+2. Communication Protocol
+   - Subject-based routing via NATS
+   - JSON-based message format
+   - Request/response pattern
+   - Publish/subscribe for events
+   - Standardized error handling
+   - Timeout management
+   - Authentication support
 
 ### Client Libraries
 1. Core Library (cim-client)
@@ -66,12 +97,17 @@
    - Asynchronous API
    - Request/response handling
    - Event subscription
+   - Comprehensive error handling
+   - Connection pooling and management
+   - Configurable timeouts and retries
 
 2. Interface Options
    - Programmable API for embedded usage
    - CLI for command-line operations
    - GUI for visual management and exploration
    - All built on the same core library
+   - Consistent user experience across interfaces
+   - Shared configuration management
 
 3. Design Principles
    - Domain-Driven Design architecture
@@ -79,6 +115,17 @@
    - Consistent error handling
    - Feature flags for optional components
    - Full async support via Tokio
+   - Comprehensive testing strategy
+   - Documentation-driven development
+
+4. Client Features
+   - Ontology management (create, read, update, delete)
+   - Term and relationship management
+   - Ontology browsing and visualization
+   - Import/export functionality
+   - Search and filtering
+   - Batch operations
+   - User preferences management
 
 ## Pod Architecture
 *For specific pod implementations, see [Domain Implementations](domain_implementations.md)*

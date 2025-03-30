@@ -17,7 +17,7 @@ The tool addresses several key challenges in vocabulary and ontology management:
 
 ## Architecture
 
-The CIM Ontology Tool follows a modular architecture:
+The CIM Ontology Tool follows a modular architecture with recent updates implementing NATS-based messaging:
 
 ```
 ┌────────────────────┐     ┌───────────────────┐
@@ -44,18 +44,32 @@ The CIM Ontology Tool follows a modular architecture:
 │         ┌────────▼─────────┐   ┌───────▼────┐  │
 │         │                  │   │            │  │
 │         │  Domain Model    │   │ MCP Server │  │
-│         │                  │   │            │  │
+│         │                  │   │   (NATS)   │  │
 │         └────────┬─────────┘   └───────────┘  │
 │                  │                             │
 └──────────────────┼─────────────────────────────┘
-                   │
-                   ▼
-       ┌─────────────────────────┐
-       │                         │
-       │      Neo4j Graph        │
-       │       Database          │
-       │                         │
-       └─────────────────────────┘
+                   │                  ▲
+                   ▼                  │
+       ┌─────────────────────────┐    │
+       │                         │    │
+       │      Neo4j Graph        │    │
+       │       Database          │    │
+       │                         │    │
+       └─────────────────────────┘    │
+                                      │
+                                      │
+┌──────────────────────────────────────────────┐
+│                                              │
+│               cim-client                     │
+│                                              │
+│  ┌─────────────┐      ┌─────────────────┐    │
+│  │             │      │                 │    │
+│  │  MCP Client │      │ User Interfaces │    │
+│  │  (NATS)     │      │ (CLI, GUI)      │    │
+│  │             │      │                 │    │
+│  └─────────────┘      └─────────────────┘    │
+│                                              │
+└──────────────────────────────────────────────┘
 ```
 
 ### Key Components
@@ -89,11 +103,19 @@ The CIM Ontology Tool follows a modular architecture:
    - Supports CRUD operations on ontology elements
    - Enables complex graph queries and traversals
 
-6. **MCP Server**:
-   - Implements the MCP protocol specification
-   - Exposes API endpoints for ontology operations
-   - Handles authentication and authorization
-   - Manages request/response processing
+6. **MCP Server (NATS-Based)**:
+   - Implements the MCP protocol over NATS messaging
+   - Provides enhanced scalability and reliability
+   - Enables asynchronous communication patterns
+   - Supports request-response and publish-subscribe patterns
+   - Handles connection management and messaging
+
+7. **CIM Client (New Component)**:
+   - Provides a standalone client for connecting to the MCP server
+   - Implements the MCP protocol over NATS
+   - Features both CLI and GUI interfaces
+   - Supports ontology browsing, creation, and management
+   - Enables easier integration with other systems
 
 ## Integration with Vocabulary Workflow
 
@@ -131,25 +153,31 @@ The CIM Ontology Tool enhances the existing vocabulary management workflow:
 
 The implementation follows a phased approach:
 
-### Phase 1: Core Infrastructure (Weeks 1-2)
+### Phase 1: Core Infrastructure (Completed)
 - Set up Neo4j connectivity
 - Implement MCP server foundation
 - Design domain model
 - Create basic API endpoints
 
-### Phase 2: Extraction Capabilities (Weeks 3-5)
+### Phase 2: Extraction Capabilities (Completed)
 - Implement file traversal
 - Build parsing engines for different file types
 - Develop NLP processing pipeline
 - Create ontology comparison logic
 
-### Phase 3: Analysis Features (Weeks 6-8)
+### Phase 3: Analysis Features (In Progress)
 - Implement ontology metrics
 - Develop visualization capabilities
 - Create advanced query patterns
 - Build recommendation system
 
-### Phase 4: Integration & Deployment (Weeks 9-10)
+### Phase 4: Client Implementation (New - In Progress)
+- Develop standalone NATS-based MCP client
+- Implement CLI for command-line operations
+- Create GUI for visual ontology management
+- Support both core ontology operations and advanced features
+
+### Phase 5: Integration & Deployment (Planned)
 - Finalize MCP protocol compliance
 - Implement authentication and authorization
 - Create deployment configuration
@@ -184,7 +212,14 @@ The CIM Ontology Tool supports several key use cases:
    - Check documentation against established vocabulary
    - Ensure ubiquitous language usage
 
+6. **Collaborative Ontology Management (New)**:
+   - Use the dedicated client to manage ontologies collaboratively
+   - Access ontology tools from command line or GUI interface
+   - Browse, create, edit, and delete ontologies and terms
+
 ## Getting Started
+
+### Setting up the Server
 
 To use the CIM Ontology Tool:
 
@@ -193,6 +228,15 @@ To use the CIM Ontology Tool:
 3. Configure the connection to Neo4j
 4. Start the MCP server
 5. Connect through Cursor or other MCP clients
+
+### Using the CIM Client (New)
+
+The dedicated client provides an easy way to interact with the CIM Ontology Tool:
+
+1. Build the client: `cd cim-client && cargo build`
+2. Use the CLI: `./target/debug/cim-client-cli <command> <arguments>`
+3. Or launch the GUI: `./target/debug/cim-client-gui`
+4. Configure connection to NATS server in the settings
 
 ## Future Work
 
@@ -218,6 +262,14 @@ Planned enhancements include:
    - Scheduled ontology analysis
    - Continuous vocabulary improvement
 
+5. **Advanced Client Features (New)**:
+   - Real-time collaboration capabilities
+   - Custom visualization templates
+   - Integration with other development tools
+   - Enhanced search and filtering
+
 ## Conclusion
 
 The CIM Ontology Tool represents a significant enhancement to the vocabulary management capabilities of the CIM project. By providing advanced ontology extraction, analysis, and storage capabilities, it enables more sophisticated vocabulary management and knowledge organization, ultimately contributing to better alignment between documentation, vocabulary, and code implementation. 
+
+The newly added NATS-based messaging architecture and dedicated client implementation further enhance these capabilities by providing improved scalability, reliability, and user experience through dedicated interfaces for interacting with the ontology management system. 

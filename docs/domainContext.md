@@ -7,18 +7,19 @@
 - Building AI integration framework
 - Standardizing vocabulary management workflow
 - Maintaining structured knowledge flow
+- Enhancing ontology management with NATS-based messaging
 
 ## Domain Specifics
 
 ### Knowledge Management Domain
 - Status: Active Development
-- Current Focus: Core module implementation and knowledge flow standardization
+- Current Focus: Core module implementation, knowledge flow standardization, and ontology client development
 - Next Steps: Implement AI integration and enhance claim extraction
 
 ### Technical Domain
 - Status: Active Development
-- Current Focus: Core module prototype development
-- Next Steps: Implement event-driven communication system
+- Current Focus: Core module prototype development and NATS-based messaging implementation
+- Next Steps: Implement comprehensive event-driven communication system
 
 ### Business Domain
 - Status: Active Planning
@@ -52,6 +53,8 @@
 14. Transitioned from vocabulary to implementation phase
 15. Replaced wasmCloud with generic WebAssembly runtime
 16. Implemented knowledge graph visualization using Mermaid
+17. Migrated MCP server from HTTP to NATS-based messaging
+18. Developed standalone cim-client for ontology management
 
 ## Active Decisions
 
@@ -78,6 +81,8 @@
 4. Implementing MCP for AI integration
 5. Creating knowledge graph implementation for queryable vocabulary
 6. Using Mermaid for knowledge graph visualization
+7. Adopting NATS for message transport in MCP implementation
+8. Creating standalone client for ontology management
 
 ### Implementation Decisions
 1. Rust as primary implementation language
@@ -86,6 +91,8 @@
 4. Local LLM integration through Ollama
 5. Graph database for knowledge structure
 6. Mermaid-based knowledge graphs for documentation
+7. Domain-Driven Design for client implementation
+8. Async/await for NATS-based messaging
 
 ### Documentation Decisions
 1. Following project memory structure
@@ -101,11 +108,12 @@
 1. Ensure team adoption of standardized file structure and workflow
 2. Create training materials for vocabulary manager usage
 3. Run initial vocabulary workflow analysis to establish baseline metrics
-4. Develop core module prototype
+4. Complete core module prototype
 5. Document implementation patterns
 6. Begin case study development
 7. Plan AI integration framework
 8. Create research integration
+9. Enhance client implementations with additional features
 
 ### Short-term Goals
 1. Integrate vocabulary workflow checking into CI pipeline
@@ -114,6 +122,7 @@
 4. Create detailed case study
 5. Implement basic AI integration
 6. Define compliance framework
+7. Complete client implementations for ontology management
 
 ### Long-term Goals
 1. Achieve target metrics for vocabulary quality and alignment
@@ -121,6 +130,7 @@
 3. Expand compliance documentation
 4. Develop operational testing framework
 5. Build research community
+6. Create comprehensive client ecosystem for CIM tools
 
 ## Current Domain Focus
 
@@ -151,7 +161,39 @@ A new focus area has been added to support the development of a specialized onto
    - Exposing ontology management capabilities through an MCP server
    - Supporting both Cursor and other MCP clients
    - Enabling synchronous and asynchronous operations
+   - Implementing NATS-based messaging for improved scalability
+
+5. **Client Implementation**
+   - Developing standalone client for ontology management
+   - Supporting multiple user interfaces (CLI, GUI)
+   - Implementing domain-driven design principles
+   - Providing intuitive ontology browsing and editing
 
 #### Implementation
 
-The implementation of these domain concepts is being realized through the cim-ontology-tool project, a Rust-based MCP server that integrates with Neo4j for graph database storage. 
+The implementation of these domain concepts is being realized through two main components:
+
+1. **cim-ontology-tool**: A Rust-based MCP server that integrates with Neo4j for graph database storage and exposes functionality through NATS-based messaging.
+
+2. **cim-client**: A standalone client application that connects to the cim-ontology-tool server using NATS messaging, providing both CLI and GUI interfaces for ontology management.
+
+### Integration Between Components
+
+The integration between the server and client components follows these principles:
+
+1. **Message-Based Communication**
+   - Using NATS as the messaging infrastructure
+   - Implementing request-response and publish-subscribe patterns
+   - Ensuring reliable communication between components
+
+2. **Domain-Driven Design**
+   - Applying DDD principles to both server and client
+   - Maintaining consistent domain models across components
+   - Using ubiquitous language in implementation
+
+3. **Separation of Concerns**
+   - Server focuses on data processing and storage
+   - Client focuses on user interaction and visualization
+   - Shared domain model ensures consistency
+
+This architecture enables a flexible and scalable approach to ontology management while maintaining a consistent user experience across different interfaces. 
