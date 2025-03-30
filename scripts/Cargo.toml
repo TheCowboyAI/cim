@@ -1,0 +1,11 @@
+[package]
+name = "knowledge_graph_generator"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "generate_knowledge_graph"
+path = "generate_knowledge_graph.rs"
+
+[dependencies]
+regex = "1.9.5" 
