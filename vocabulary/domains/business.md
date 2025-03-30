@@ -7,42 +7,110 @@
 ```cypher
 (:BusinessModel:Aggregate {
   domain: "Business",
-  definition: "A structured representation of how an organization creates, delivers, and captures value"
+  term: "BusinessModel",
+  taxonomy: "Business Taxonomy",
+  definition: "A structured representation of how an organization creates, delivers, and captures value",
+  usage_context: "Strategic business planning and organizational structure",
+  code_reference: "notes/businessmodel/readme.md"
 })
 
 (:ValueProposition:ValueObject {
   domain: "Business",
-  definition: "The unique value offered to customers that addresses their needs and differentiates from competitors"
+  term: "ValueProposition",
+  taxonomy: "Business Taxonomy",
+  definition: "The unique value offered to customers that addresses their needs and differentiates from competitors",
+  usage_context: "Product and service design, marketing and sales",
+  code_reference: "notes/businessmodel/value.md"
 })
 
 (:CustomerSegment:Entity {
   domain: "Business",
-  definition: "A distinct group of customers with common characteristics, needs, and behaviors"
+  term: "CustomerSegment",
+  taxonomy: "Business Taxonomy",
+  definition: "A distinct group of customers with common characteristics, needs, and behaviors",
+  usage_context: "Market targeting and customer relationship management",
+  code_reference: "notes/businessmodel/customers.md"
 })
 
 (:Revenue:ValueObject {
   domain: "Business",
-  definition: "Income streams generated from delivering value to customers"
+  term: "Revenue",
+  taxonomy: "Business Taxonomy",
+  definition: "Income streams generated from delivering value to customers",
+  usage_context: "Financial planning and business model evaluation",
+  code_reference: "TBD"
 })
 
 (:Resource:Entity {
   domain: "Business",
-  definition: "Key assets and capabilities required to deliver the value proposition"
+  term: "Resource",
+  taxonomy: "Business Taxonomy",
+  definition: "Key assets and capabilities required to deliver the value proposition",
+  usage_context: "Resource management and operational planning",
+  code_reference: "notes/businessmodel/resources.md"
 })
 
 (:Channel:Service {
   domain: "Business",
-  definition: "Methods and platforms used to reach and interact with customers"
+  term: "Channel",
+  taxonomy: "Business Taxonomy",
+  definition: "Methods and platforms used to reach and interact with customers",
+  usage_context: "Marketing strategy and customer engagement",
+  code_reference: "TBD"
 })
 
 (:Partnership:Aggregate {
   domain: "Business",
-  definition: "Strategic relationships with external entities that enhance business capabilities"
+  term: "Partnership",
+  taxonomy: "Business Taxonomy",
+  definition: "Strategic relationships with external entities that enhance business capabilities",
+  usage_context: "Strategic planning and business ecosystem development",
+  code_reference: "TBD"
 })
 
 (:Cost:ValueObject {
   domain: "Business",
-  definition: "Financial resources required to operate the business model"
+  term: "Cost",
+  taxonomy: "Business Taxonomy",
+  definition: "Financial resources required to operate the business model",
+  usage_context: "Financial planning and cost management",
+  code_reference: "TBD"
+})
+
+(:RealTimeCustomerInsights:Service {
+  domain: "Business",
+  term: "RealTimeCustomerInsights",
+  taxonomy: "Customer Management",
+  definition: "A system capability that uses conceptual spaces to map and analyze customer behavior patterns in real-time",
+  usage_context: "Customer analysis and marketing strategy",
+  code_reference: "cim/src/customer"
+})
+
+(:SupplyChainOptimization:Service {
+  domain: "Business",
+  term: "SupplyChainOptimization",
+  taxonomy: "Operations Management",
+  definition: "A system service that uses game theory and conceptual spaces to optimize supply chain operations and resource allocation",
+  usage_context: "Supply chain management and resource optimization",
+  code_reference: "cim/src/supply"
+})
+
+(:ProductDevelopment:Process {
+  domain: "Business",
+  term: "ProductDevelopment",
+  taxonomy: "Product Management",
+  definition: "A business process that leverages conceptual spaces to identify market opportunities and guide product innovation",
+  usage_context: "Product innovation and market analysis",
+  code_reference: "cim/src/product"
+})
+
+(:ResourceAllocation:Process {
+  domain: "Business",
+  term: "ResourceAllocation",
+  taxonomy: "Operations Management",
+  definition: "The process of distributing available resources across different business activities optimally",
+  usage_context: "Resource management and operational optimization",
+  code_reference: "cim/src/resource"
 })
 ```
 
@@ -73,9 +141,61 @@
 (:Resource)-[:SUPPORTS {type: "value"}]->(:ValueProposition)
 (:Resource)-[:INCURS {type: "expense"}]->(:Cost)
 (:Resource)-[:ENHANCED_BY {type: "partner"}]->(:Partnership)
+
+// RealTimeCustomerInsights relationships
+(:RealTimeCustomerInsights)-[:USES {type: "technology"}]->(:ConceptualSpace)
+(:RealTimeCustomerInsights)-[:USES {type: "metric"}]->(:QualityDimension)
+(:RealTimeCustomerInsights)-[:MANAGES {type: "analysis"}]->(:CustomerBehavior)
+(:RealTimeCustomerInsights)-[:PRODUCES {type: "output"}]->(:MarketingCampaigns)
+
+// SupplyChainOptimization relationships
+(:SupplyChainOptimization)-[:USES {type: "technique"}]->(:GameTheoryOptimization)
+(:SupplyChainOptimization)-[:USES {type: "technology"}]->(:ConceptualSpace)
+(:SupplyChainOptimization)-[:MANAGES {type: "resource"}]->(:InventoryLevels)
+(:SupplyChainOptimization)-[:OPTIMIZES {type: "process"}]->(:ResourceAllocation)
+
+// ProductDevelopment relationships
+(:ProductDevelopment)-[:USES {type: "technology"}]->(:ConceptualSpace)
+(:ProductDevelopment)-[:USES {type: "metric"}]->(:QualityDimension)
+(:ProductDevelopment)-[:PRODUCES {type: "output"}]->(:ProductIdeas)
+(:ProductDevelopment)-[:ANALYZES {type: "metric"}]->(:MarketFit)
+
+// ResourceAllocation relationships
+(:ResourceAllocation)-[:USES {type: "technique"}]->(:GameTheoryOptimization)
+(:ResourceAllocation)-[:MANAGES {type: "resource"}]->(:BusinessResources)
+(:ResourceAllocation)-[:OPTIMIZES {type: "process"}]->(:BusinessOperations)
 ```
 
 ## Taxonomies
+
+### Business Taxonomy
+
+```cypher
+(:Taxonomy {name: "Business Taxonomy"})
+-[:CONTAINS]->(:Category {name: "BusinessModeling"})
+-[:CONTAINS]->(:Category {name: "CustomerManagement"})
+-[:CONTAINS]->(:Category {name: "ResourceManagement"})
+
+(:Category {name: "BusinessModeling"})
+-[:CONTAINS]->(:Term {name: "BusinessModel"})
+-[:CONTAINS]->(:Term {name: "ValueProposition"})
+-[:CONTAINS]->(:Term {name: "Revenue"})
+-[:CONTAINS]->(:Term {name: "Cost"})
+
+(:Category {name: "CustomerManagement"})
+-[:CONTAINS]->(:Term {name: "CustomerSegment"})
+-[:CONTAINS]->(:Term {name: "Channel"})
+-[:CONTAINS]->(:Term {name: "RealTimeCustomerInsights"})
+
+(:Category {name: "ResourceManagement"})
+-[:CONTAINS]->(:Term {name: "Resource"})
+-[:CONTAINS]->(:Term {name: "Partnership"})
+-[:CONTAINS]->(:Term {name: "ResourceAllocation"})
+-[:CONTAINS]->(:Term {name: "SupplyChainOptimization"})
+
+(:Category {name: "ProductManagement"})
+-[:CONTAINS]->(:Term {name: "ProductDevelopment"})
+```
 
 ### Business Processing
 
@@ -100,6 +220,11 @@
 ## Usage Contexts
 
 ```cypher
+(:UsageContext {name: "BusinessPlanning"})
+-[:APPLIES_TO]->(:BusinessModel)
+-[:REQUIRES]->(:ValueProposition)
+-[:PRODUCES]->(:BusinessStrategy)
+
 (:UsageContext {name: "ValueDelivery"})
 -[:APPLIES_TO]->(:ValueProposition)
 -[:REQUIRES]->(:Resource)
@@ -114,6 +239,21 @@
 -[:APPLIES_TO]->(:Resource)
 -[:REQUIRES]->(:Partnership)
 -[:PRODUCES]->(:Efficiency)
+
+(:UsageContext {name: "MarketAnalysis"})
+-[:APPLIES_TO]->(:RealTimeCustomerInsights)
+-[:REQUIRES]->(:CustomerBehavior)
+-[:PRODUCES]->(:MarketingCampaigns)
+
+(:UsageContext {name: "SupplyChainManagement"})
+-[:APPLIES_TO]->(:SupplyChainOptimization)
+-[:REQUIRES]->(:InventoryLevels)
+-[:PRODUCES]->(:OptimizedSupplyChain)
+
+(:UsageContext {name: "ProductInnovation"})
+-[:APPLIES_TO]->(:ProductDevelopment)
+-[:REQUIRES]->(:MarketFit)
+-[:PRODUCES]->(:ProductIdeas)
 ```
 
 ## Code References
@@ -130,52 +270,16 @@
 
 (:CodeBase {path: "notes/businessmodel/resources.md"})
 -[:IMPLEMENTS]->(:Resource)
-```
 
-### Term: Real-Time Customer Insights
-- **Category**: Business Concept
-- **Type**: Service
-- **Taxonomy**: Customer Management
-- **Definition**: A system capability that uses conceptual spaces to map and analyze customer behavior patterns in real-time.
-- **Relationships**:
-  * Uses: Conceptual Space, Quality Dimension
-  * Manages: Customer Behavior
-  * Produces: Marketing Campaigns
-- **Usage Context**: Customer analysis and marketing strategy
-- **Code Reference**: `cim/src/customer`
+(:CodeBase {path: "cim/src/customer"})
+-[:IMPLEMENTS]->(:RealTimeCustomerInsights)
 
-### Term: Supply Chain Optimization
-- **Category**: Business Concept
-- **Type**: Service
-- **Taxonomy**: Operations Management
-- **Definition**: A system service that uses game theory and conceptual spaces to optimize supply chain operations and resource allocation.
-- **Relationships**:
-  * Uses: Game Theory Optimization, Conceptual Space
-  * Manages: Inventory Levels
-  * Optimizes: Resource Allocation
-- **Usage Context**: Supply chain management and resource optimization
-- **Code Reference**: `cim/src/supply`
+(:CodeBase {path: "cim/src/supply"})
+-[:IMPLEMENTS]->(:SupplyChainOptimization)
 
-### Term: Product Development
-- **Category**: Business Concept
-- **Type**: Process
-- **Taxonomy**: Product Management
-- **Definition**: A business process that leverages conceptual spaces to identify market opportunities and guide product innovation.
-- **Relationships**:
-  * Uses: Conceptual Space, Quality Dimension
-  * Produces: Product Ideas
-  * Analyzes: Market Fit
-- **Usage Context**: Product innovation and market analysis
-- **Code Reference**: `cim/src/product`
+(:CodeBase {path: "cim/src/product"})
+-[:IMPLEMENTS]->(:ProductDevelopment)
 
-### Term: Resource Allocation
-- **Category**: Business Concept
-- **Type**: Process
-- **Taxonomy**: Operations Management
-- **Definition**: The process of distributing available resources across different business activities optimally.
-- **Relationships**:
-  * Uses: Game Theory Optimization
-  * Manages: Business Resources
-  * Optimizes: Business Operations
-- **Usage Context**: Resource management and operational optimization
-- **Code Reference**: `cim/src/resource` 
+(:CodeBase {path: "cim/src/resource"})
+-[:IMPLEMENTS]->(:ResourceAllocation)
+``` 
