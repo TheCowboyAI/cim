@@ -1,3 +1,9 @@
+// examples/event_driven.rs - Example of event-driven architecture
+
+// Silence warnings since this is just an example
+#![allow(unused_variables)]
+#![allow(dead_code)]
+
 use cim_ontology::events::{Event, EventError, EventHandler, EventType};
 use cim_ontology::storage::neo4j::Neo4jConfig;
 

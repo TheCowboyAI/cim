@@ -1,5 +1,9 @@
 // cim-ontology-tool: A Rust-based MCP server for ontology extraction, analysis, and management.
 
+// Silence warnings about unused code and variables throughout the entire crate
+#![allow(dead_code)]
+#![allow(unused_variables)]
+
 pub mod analyzer;
 pub mod cli;
 pub mod events;
