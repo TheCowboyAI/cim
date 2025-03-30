@@ -29,7 +29,8 @@ NC='\033[0m' # No Color
 NOTES_DIR="./notes"
 DOCS_DIR="./docs"
 VOCAB_DIR="./vocabulary/domains"
-CODE_DIR="./cim/src"
+CODE_DIR="./src"
+INCOMING_DIR="./notes/incoming"
 
 # Output file for the report
 REPORT_FILE="docs/workflow_analysis_report.md"
@@ -45,11 +46,19 @@ if [ -f "$REPORT_FILE" ]; then
 fi
 
 # Check if directories exist
-for dir in "$NOTES_DIR" "$DOCS_DIR" "$VOCAB_DIR" "$CODE_DIR"; do
+for dir in "$NOTES_DIR" "$DOCS_DIR" "$VOCAB_DIR" "$CODE_DIR" "$INCOMING_DIR"; do
     if [ ! -d "$dir" ]; then
-        echo -e "${RED}Directory does not exist: $dir${NC}"
-        echo -e "${YELLOW}Please ensure all required directories exist before running this script.${NC}"
-        exit 1
+        echo -e "${YELLOW}Directory does not exist: $dir${NC}"
+        if [ "$dir" == "$CODE_DIR" ]; then
+            echo -e "${YELLOW}Code directory not found. Skipping code analysis.${NC}"
+        elif [ "$dir" == "$INCOMING_DIR" ]; then
+            echo -e "${YELLOW}Creating incoming directory for documents ready for inspection...${NC}"
+            mkdir -p "$INCOMING_DIR"
+            echo -e "${GREEN}Created $INCOMING_DIR${NC}"
+        else
+            echo -e "${RED}Please ensure required directory exists before running this script.${NC}"
+            exit 1
+        fi
     fi
 done
 
@@ -496,13 +505,24 @@ EOF
 extract_terms_from_notes
 extract_terms_from_docs
 extract_terms_from_vocabulary
-extract_terms_from_code
+if [ -d "$CODE_DIR" ]; then
+    extract_terms_from_code
+else
+    echo -e "${YELLOW}Skipping code term extraction as code directory doesn't exist.${NC}"
+fi
 
 analyze_notes_to_docs
 analyze_docs_to_vocabulary
-analyze_vocabulary_to_code
-analyze_overall_workflow
+if [ -d "$CODE_DIR" ]; then
+    analyze_vocabulary_to_code
+else
+    echo -e "${YELLOW}Skipping vocabulary to code analysis as code directory doesn't exist.${NC}"
+fi
 
+# Check incoming documents
+check_incoming_documents
+
+# Generate the report
 generate_report
 
 # Clean up temporary files

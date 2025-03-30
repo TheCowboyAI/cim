@@ -21,6 +21,7 @@ NC='\033[0m' # No Color
 VOCABULARY_DIR="./vocabulary/domains"
 NOTES_DIR="./notes"
 DOCS_DIR="./docs"
+INCOMING_DIR="./notes/incoming"
 OUTPUT_FILE="docs/notes_vocabulary_alignment.md"
 TEMP_DIR="/tmp/vocab_analysis"
 
@@ -40,6 +41,13 @@ for dir in "$VOCABULARY_DIR" "$NOTES_DIR" "$DOCS_DIR"; do
         exit 1
     fi
 done
+
+# Check for incoming directory and create if missing
+if [ ! -d "$INCOMING_DIR" ]; then
+    echo -e "${YELLOW}Creating incoming directory for documents ready for inspection...${NC}"
+    mkdir -p "$INCOMING_DIR"
+    echo -e "${GREEN}Created $INCOMING_DIR${NC}"
+fi
 
 # Step 1: Extract vocabulary terms, domains, and categories
 echo -e "${BLUE}1. Extracting vocabulary terms...${NC}"
@@ -267,7 +275,7 @@ cat > "$OUTPUT_FILE" << EOF
 ![Generated-$(date +%Y-%m-%d)](https://img.shields.io/badge/Generated-$(date +%Y-%m-%d)-blue)
 ![Overall Alignment-${OVERALL_ALIGNMENT}%](https://img.shields.io/badge/Overall%20Alignment-${OVERALL_ALIGNMENT}%25-${OVERALL_ALIGNMENT -ge 70 && echo "green" || echo "orange"})
 ![Term Alignment-${TERM_ALIGNMENT}%](https://img.shields.io/badge/Term%20Alignment-${TERM_ALIGNMENT}%25-${TERM_ALIGNMENT -ge 70 && echo "green" || echo "orange"})
-![Workflow Alignment-${NOTES_TO_DOCS_FLOW}%](https://img.shields.io/badge/Workflow%20Alignment-${NOTES_TO_DOCS_FLOW}%25-${NOTES_TO_DOCS_FLOW -ge 70 && echo "green" || echo "orange"})
+![Workflow Alignment-${NOTES_TO_DOCS_FLOW}%](https://img.shields.io/badge/Workflow%20Alignment-${NOTES_TO_DOCS_FLOW}%25-${NOTES_TO_DOCS_FLOW -ge 75 && echo "green" || echo "orange"})
 
 This report analyzes how well the vocabulary terms reflect content in the notes directory and align with the workflow defined in \`vocabulary.mdc\`.
 
@@ -427,5 +435,40 @@ echo -e "${BLUE}Structure Alignment: $DOMAIN_ALIGNMENT%${NC}"
 echo -e "${BLUE}Category Balance: $CATEGORY_BALANCE%${NC}"
 echo -e "${BLUE}Relationship Type Balance: $RELATIONSHIP_BALANCE%${NC}"
 echo -e "${YELLOW}Missing Domains: $MISSING_DOMAINS${NC}"
+
+# New section to analyze incoming documents
+echo -e "${BLUE}10. Analyzing documents in incoming directory...${NC}"
+
+# Count files in incoming directory
+INCOMING_FILES=$(find "$INCOMING_DIR" -type f -name "*.md" | wc -l)
+
+if [ "$INCOMING_FILES" -eq 0 ]; then
+    echo -e "${YELLOW}  No documents found in the incoming directory.${NC}"
+else
+    echo -e "${GREEN}  Found $INCOMING_FILES documents ready for inspection.${NC}"
+    
+    # Extract terms from incoming documents
+    find "$INCOMING_DIR" -type f -name "*.md" -print0 | while IFS= read -r -d '' file; do
+        # Extract headings (potential terms)
+        grep -E "^#+\s+.*" "$file" | sed -E 's/^#+\s+(.+)/\1/' >> $TEMP_DIR/incoming_headings.txt
+        
+        # Extract emphasized text (potential terms)
+        grep -E "\*\*.*\*\*" "$file" | grep -oE "\*\*[^*]+\*\*" | sed -E 's/\*\*(.+)\*\*/\1/' >> $TEMP_DIR/incoming_emphasized.txt
+    done
+    
+    # Combine and get unique terms
+    if [ -f "$TEMP_DIR/incoming_headings.txt" ] && [ -f "$TEMP_DIR/incoming_emphasized.txt" ]; then
+        cat $TEMP_DIR/incoming_headings.txt $TEMP_DIR/incoming_emphasized.txt | sort | uniq > $TEMP_DIR/incoming_terms.txt
+        INCOMING_TERMS_COUNT=$(wc -l < $TEMP_DIR/incoming_terms.txt)
+        echo -e "${GREEN}  Extracted $INCOMING_TERMS_COUNT potential terms from incoming documents${NC}"
+        
+        # Check for new terms not in vocabulary yet
+        comm -23 <(sort $TEMP_DIR/incoming_terms.txt) <(sort $TEMP_DIR/vocab_terms.txt) > $TEMP_DIR/new_incoming_terms.txt
+        NEW_TERMS_COUNT=$(wc -l < $TEMP_DIR/new_incoming_terms.txt)
+        echo -e "${YELLOW}  Found $NEW_TERMS_COUNT new terms in incoming documents not yet in vocabulary${NC}"
+    else
+        echo -e "${YELLOW}  No terms extracted from incoming documents.${NC}"
+    fi
+fi
 
 exit 0 
