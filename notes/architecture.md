@@ -9,7 +9,7 @@
 
 ### Foundation
 - [Domain-Driven Design (DDD)](vocabulary.md#technical-terms) principles
-- [Event-Driven Architecture (EDA)](vocabulary.md#technical-terms)
+- [Event-Driven Architecture (EDA)](vocabulary.md#technical-terms) - [Implementation Decision](decisions/event-driven-architecture-implementation.md)
 - Bottom-up approach starting from single packages
 - Modular construction methodology
 - Minimal environment requirements
@@ -41,10 +41,14 @@
    - Content verification system
 
 2. Event System
-   - State change tracking
+   - State change tracking via events
    - Delta storage in Object Store
    - Immutable history maintenance
    - Graph-based relationship tracking
+   - Implementation via `EventBus`, `EventDispatcher`, and `EventHandler` pattern
+   - Full decoupling of components through event-based messaging
+   - Comprehensive event types for all domain operations
+   - Centralized event publishing and handling
 
 ## Pod Architecture
 *For specific pod implementations, see [Domain Implementations](domain_implementations.md)*
@@ -103,12 +107,28 @@
    - [NATS](vocabulary.md#technical-terms) integration
    - Monitoring system
 
+### NixOS-Style Modules
+*See detailed [Cursor Rules Modularization Decision](decisions/cursor-rules-modularization.md)*
+
+1. Module Approach
+   - Declarative configuration using NixOS module patterns
+   - Type-safe option definition
+   - Component encapsulation
+   - Standardized interfaces
+
+2. Cursor Rules Module
+   - Structured rule definition
+   - Version-controlled rule content
+   - Management tooling
+   - Reproducible rule deployment
+   - Integration with development workflow
+
 ### Communication Patterns
 *See also [Technical Infrastructure](technical.md)*
 
 1. Message Flow
    - Subject-based routing
-   - Event-driven communication
+   - Event-driven communication (implemented via `EventBus`)
    - Command processing
    - State observation
 
@@ -117,6 +137,28 @@
    - Inter-pod communication
    - Client-server interactions
    - Federation protocols
+
+### Event-Driven Architecture Implementation
+*See detailed [Implementation Decision](decisions/event-driven-architecture-implementation.md)*
+
+1. Core Components
+   - `Event`: Data structure with metadata, payload, and context
+   - `EventBus`: Message broker for event distribution
+   - `EventDispatcher`: Routes events to appropriate handlers
+   - `EventHandler`: Processes specific event types
+
+2. Event Flow
+   - API requests converted to events
+   - Events published to the event bus
+   - Handlers subscribe to relevant event types
+   - Asynchronous processing of events
+
+3. Benefits
+   - Loose coupling between components
+   - Enhanced scalability
+   - Improved system resilience
+   - Comprehensive audit trail
+   - Better extensibility
 
 ## Deployment Models
 *For specific implementations, see [Domain Implementations](domain_implementations.md)*

@@ -2,6 +2,7 @@
 
 pub mod analyzer;
 pub mod cli;
+pub mod events;
 pub mod extractor;
 pub mod mcp;
 pub mod ontology;
@@ -40,6 +41,9 @@ pub enum Error {
 
     #[error("Ontology error: {0}")]
     Ontology(String),
+
+    #[error("Event error: {0}")]
+    Event(String),
 
     #[error("Unknown error: {0}")]
     Unknown(String),

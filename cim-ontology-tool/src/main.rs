@@ -41,6 +41,10 @@ struct Args {
     /// Optional authentication token for the API
     #[clap(long)]
     auth_token: Option<String>,
+    
+    /// Event bus capacity
+    #[clap(long, default_value = "100")]
+    event_capacity: usize,
 }
 
 #[tokio::main]
@@ -65,7 +69,7 @@ async fn main() -> Result<()> {
         auth_token: args.auth_token,
     };
 
-    // Start MCP server
+    // Start MCP server with event-driven architecture
     println!("Starting MCP server on {}", server_config.address);
     cim_ontology::mcp::server::start_server(server_config, Arc::new(neo4j_storage)).await
         .map_err(|e| anyhow::anyhow!("Failed to start MCP server: {}", e))?;

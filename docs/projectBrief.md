@@ -16,9 +16,11 @@
    - Aggregate design decisions
    - Entity and value object patterns
    - Domain-specific vocabularies
+   - Conceptual Spaces
 
 2. Knowledge Management
    - Vocabulary structure implementation
+   - Domain knowledge graph implementation  
    - Domain ontology management
    - Taxonomy organization
    - Cross-domain relationships
@@ -30,14 +32,18 @@
    - Anti-corruption layers
 
 4. Tactical Design
+   - Event Driven Architecture implementation
    - Entity implementation patterns
+   - Subject-based Messaging
    - Value object strategies
    - Aggregate root decisions
    - Repository patterns
 
 5. Reference Documentation
    - Domain event catalogs
+   - Entity Component System (ECS) patterns
    - Service boundaries
+   - Capabilities and Components model
    - Factory implementations
    - Specification patterns
 
@@ -45,7 +51,13 @@
 
 ### In Scope
 - Analysis of DDD pattern implementations
+- Analysis of EDA pattern implementations
+- Analysis of ECS pattern implementations
 - Documentation of bounded contexts
+- Documentation of conceptual spaces
+- Documentation of domain knowledge graphs
+- Documentation of domain ontologies
+- Documentation of domain vocabularies
 - Evaluation of aggregate designs
 - Entity lifecycle patterns
 - Value object strategies
@@ -54,7 +66,6 @@
 - Service boundaries
 
 ### Out of Scope
-- Concrete implementations
 - Deployment strategies
 - Infrastructure concerns
 - Production operations
@@ -71,6 +82,8 @@
 8. Complete vocabulary structure
 9. Domain-specific ontologies
 10. Cross-domain taxonomies
+11. Conceptual Spaces
+12. Domain knowledge graphs
 
 ## Next Steps
 1. Complete vocabulary domain content
@@ -82,3 +95,7 @@
 7. Catalog DDD patterns
 8. Evaluate aggregate designs
 9. Begin implementation case studies 
+10. Document implementation patterns
+11. Create reference documentation
+12. Publish findings
+

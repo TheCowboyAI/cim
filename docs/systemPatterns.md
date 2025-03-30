@@ -5,10 +5,11 @@
 ### Core Patterns
 
 #### Event-Driven Architecture
-- Event Store for state tracking
+- Event Store for state tracking (Nats Jetstream)
 - NATS for message transport
 - Event sourcing for state management
 - Graph-based relationship tracking
+- Object Stores (S3-compatible)
 
 #### Domain-Driven Design
 - Bounded contexts
@@ -16,6 +17,9 @@
 - Domain aggregates
 - Entity relationships
 - Vocabulary management
+- Conceptual spaces
+- Knowledge graphs
+- Entity component system
 
 #### Knowledge Management
 - Domain vocabularies
@@ -23,12 +27,15 @@
 - Taxonomy structure
 - Term relationships
 - Cross-domain mapping
+- Conceptual spaces
+- Knowledge graphs
 
 #### Module System
 - NixOS-based modules
 - Self-contained functionality
 - Standardized interfaces
 - Event-based communication
+- Subject-based messaging
 
 ### Component Relationships
 

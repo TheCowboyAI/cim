@@ -20,6 +20,7 @@
    - Context relationships
    - Integration patterns
    - Anti-corruption layers
+   - Conceptual Spaces
 
 2. Domain Model Decisions
    - Entity identification
@@ -28,8 +29,9 @@
    - Repository patterns
 
 3. Evolution Patterns
+   - Event storming
    - Context refinement
-   - Model improvements
+   - Domain modeling
    - Integration evolution
    - Pattern adaptation
 
@@ -39,19 +41,23 @@
    - Ontology organization
    - Taxonomy definition
    - Term relationships
+   - Conceptual spaces
+   - Knowledge graphs
 
 2. Core Domain Decisions
    - Aggregate design choices
    - Entity lifecycle patterns
    - Value object strategies
    - Repository approaches
-
+   - Subject-based messaging
 3. Integration Patterns
    - Context mapping methods
    - Bounded context relationships
    - Anti-corruption layers
    - Domain event patterns
-
+   - Entity component system patterns
+   - Subject-based messaging
+   - 
 4. Implementation Examples
    - DDD pattern applications
    - Context boundaries

@@ -2,7 +2,9 @@
 //!
 //! This module provides the HTTP server implementation for the MCP protocol.
 
-use crate::mcp::{MCPError, MCPRequest, MCPResponse, MCPStatus, OperationHandler, OntologyOperations};
+use crate::events::{EventBus, EventDispatcher, EventStore};
+use crate::events::handlers::{OntologyEventHandler, QueryEventHandler};
+use crate::mcp::{MCPError, MCPRequest, MCPResponse, MCPStatus, request_to_event, handle_event_and_create_response};
 use crate::storage::OntologyStorage;
 use axum::{
     extract::State,
@@ -41,8 +43,8 @@ pub struct ServerState<S: OntologyStorage + Clone + 'static> {
     pub storage: Arc<S>,
     /// Configuration
     pub config: ServerConfig,
-    /// Operation handler
-    pub handler: Arc<OperationHandler<S>>,
+    /// Event bus
+    pub event_bus: EventBus,
 }
 
 /// Start the MCP server
@@ -50,16 +52,29 @@ pub async fn start_server<S: OntologyStorage + Clone + 'static>(
     config: ServerConfig,
     storage: Arc<S>,
 ) -> Result<(), String> {
-    // Create and configure the operation handler
-    let mut handler = OperationHandler::new(Arc::clone(&storage));
+    // Initialize the event system
+    let (event_bus, mut event_dispatcher, event_store) = crate::events::init_event_system(100);
     
-    // Register all operations
-    OntologyOperations::register_all(&mut handler);
+    // Register event handlers
+    event_dispatcher.register_handler(
+        OntologyEventHandler::new("ontology_handler", Arc::clone(&storage))
+    ).await;
+    
+    event_dispatcher.register_handler(
+        QueryEventHandler::new("query_handler", Arc::clone(&storage))
+    ).await;
+    
+    // Start the event dispatcher
+    event_dispatcher.start().await
+        .map_err(|e| format!("Failed to start event dispatcher: {}", e))?;
+    
+    // Log system startup
+    println!("Event system initialized");
 
     let state = ServerState {
         storage,
         config: config.clone(),
-        handler: Arc::new(handler),
+        event_bus,
     };
 
     let app = Router::new()
@@ -145,15 +160,36 @@ async fn handle_mcp_request<S: OntologyStorage + Clone + 'static>(
         }
     }
 
-    // Process the request using the operation handler
-    let response = state.handler.handle(request).await;
-    
-    // Return the response with appropriate status code
-    let status_code = match response.status {
-        MCPStatus::Success => StatusCode::OK,
-        MCPStatus::Pending => StatusCode::ACCEPTED,
-        MCPStatus::Error => StatusCode::BAD_REQUEST,
-    };
-    
-    (status_code, Json(response))
+    // Convert the request to an event
+    match request_to_event(&request) {
+        Some(event) => {
+            // Process the event
+            let response = handle_event_and_create_response(&state.event_bus, &request, event).await;
+            
+            // Return the response with appropriate status code
+            let status_code = match response.status {
+                MCPStatus::Success => StatusCode::OK,
+                MCPStatus::Pending => StatusCode::ACCEPTED,
+                MCPStatus::Error => StatusCode::BAD_REQUEST,
+            };
+            
+            (status_code, Json(response))
+        },
+        None => {
+            // No matching event type, return an error
+            (
+                StatusCode::BAD_REQUEST,
+                Json(MCPResponse {
+                    request_id: request.id.clone(),
+                    status: MCPStatus::Error,
+                    data: None,
+                    error: Some(MCPError {
+                        code: "INVALID_OPERATION".to_string(),
+                        message: format!("Unknown operation: {}", request.operation),
+                        details: None,
+                    }),
+                }),
+            )
+        }
+    }
 } 
