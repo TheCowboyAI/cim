@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use std::net::SocketAddr;
 use uuid::Uuid;
 
-mod server;
+pub mod server;
 mod handler;
 mod operations;
 

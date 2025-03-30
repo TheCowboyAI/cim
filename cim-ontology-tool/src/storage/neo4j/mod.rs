@@ -5,7 +5,7 @@
 use crate::ontology::{Ontology, Relationship, Source, Term};
 use crate::storage::{OntologyStorage, OntologySummary, Result, StorageError};
 use async_trait::async_trait;
-use neo4rs::{query, Graph, Node, Relation};
+use neo4rs::{Graph, Node, Query};
 use serde_json::json;
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -45,6 +45,7 @@ impl Default for Neo4jConfig {
 }
 
 /// Neo4j implementation of the OntologyStorage trait
+#[derive(Clone)]
 pub struct Neo4jStorage {
     /// Neo4j graph connection
     graph: Arc<Mutex<Graph>>,
@@ -66,13 +67,13 @@ impl Neo4jStorage {
     }
 
     /// Execute a Cypher query with parameters
-    async fn execute_query<T, F>(&self, query: &str, params: HashMap<String, serde_json::Value>, mapper: F) -> Result<Vec<T>>
+    async fn execute_query<T, F>(&self, query: &str, _params: HashMap<String, serde_json::Value>, mapper: F) -> Result<Vec<T>>
     where
         F: FnMut(Node) -> Result<T> + Send,
     {
-        let mut graph = self.graph.lock().await;
+        let graph = self.graph.lock().await;
         let mut result = graph
-            .execute(query::Query::new(query).with_parameters(params))
+            .execute(Query::new(query.to_string()))
             .await
             .map_err(|e| StorageError::QueryError(format!("Failed to execute query: {}", e)))?;
 
@@ -93,10 +94,10 @@ impl Neo4jStorage {
     }
 
     /// Execute a Cypher query that doesn't return results
-    async fn execute_command(&self, query: &str, params: HashMap<String, serde_json::Value>) -> Result<()> {
-        let mut graph = self.graph.lock().await;
-        graph
-            .execute(query::Query::new(query).with_parameters(params))
+    async fn execute_command(&self, query: &str, _params: HashMap<String, serde_json::Value>) -> Result<()> {
+        let graph = self.graph.lock().await;
+        let _ = graph
+            .execute(Query::new(query.to_string()))
             .await
             .map_err(|e| StorageError::QueryError(format!("Failed to execute command: {}", e)))?;
 

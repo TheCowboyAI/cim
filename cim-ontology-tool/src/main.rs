@@ -27,19 +27,19 @@ struct Args {
     verbose: bool,
 
     /// Neo4j database URL
-    #[clap(long, env = "ONTOLOGY_NEO4J_URL", default_value = "bolt://localhost:7687")]
+    #[clap(long, default_value = "bolt://localhost:7687")]
     neo4j_url: String,
 
     /// Neo4j database username
-    #[clap(long, env = "ONTOLOGY_NEO4J_USER", default_value = "neo4j")]
+    #[clap(long, default_value = "neo4j")]
     neo4j_user: String,
 
     /// Neo4j database password
-    #[clap(long, env = "ONTOLOGY_NEO4J_PASSWORD")]
+    #[clap(long)]
     neo4j_password: String,
     
     /// Optional authentication token for the API
-    #[clap(long, env = "ONTOLOGY_AUTH_TOKEN")]
+    #[clap(long)]
     auth_token: Option<String>,
 }
 
@@ -67,7 +67,8 @@ async fn main() -> Result<()> {
 
     // Start MCP server
     println!("Starting MCP server on {}", server_config.address);
-    cim_ontology::mcp::server::start_server(server_config, Arc::new(neo4j_storage)).await?;
+    cim_ontology::mcp::server::start_server(server_config, Arc::new(neo4j_storage)).await
+        .map_err(|e| anyhow::anyhow!("Failed to start MCP server: {}", e))?;
 
     Ok(())
 }

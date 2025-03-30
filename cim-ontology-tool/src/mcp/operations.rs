@@ -16,21 +16,106 @@ pub struct OntologyOperations;
 impl OntologyOperations {
     /// Register all ontology operations with the handler
     pub fn register_all<S: OntologyStorage + 'static>(handler: &mut OperationHandler<S>) {
+        // Register operation handlers directly with cloned parameters
         handler
-            .register("extractOntology", Self::extract_ontology)
-            .register("getOntology", Self::get_ontology)
-            .register("listOntologies", Self::list_ontologies)
-            .register("createOntology", Self::create_ontology)
-            .register("updateOntology", Self::update_ontology)
-            .register("deleteOntology", Self::delete_ontology)
-            .register("addTerm", Self::add_term)
-            .register("updateTerm", Self::update_term)
-            .register("getTerm", Self::get_term)
-            .register("searchTerms", Self::search_terms)
-            .register("addRelationship", Self::add_relationship)
-            .register("updateRelationship", Self::update_relationship)
-            .register("getRelationship", Self::get_relationship)
-            .register("compareOntologies", Self::compare_ontologies);
+            .register("extractOntology", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::extract_ontology(&params, &storage).await
+                }
+            })
+            .register("getOntology", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::get_ontology(&params, &storage).await
+                }
+            })
+            .register("listOntologies", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::list_ontologies(&params, &storage).await
+                }
+            })
+            .register("createOntology", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::create_ontology(&params, &storage).await
+                }
+            })
+            .register("updateOntology", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::update_ontology(&params, &storage).await
+                }
+            })
+            .register("deleteOntology", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::delete_ontology(&params, &storage).await
+                }
+            })
+            .register("addTerm", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::add_term(&params, &storage).await
+                }
+            })
+            .register("updateTerm", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::update_term(&params, &storage).await
+                }
+            })
+            .register("getTerm", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::get_term(&params, &storage).await
+                }
+            })
+            .register("searchTerms", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::search_terms(&params, &storage).await
+                }
+            })
+            .register("addRelationship", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::add_relationship(&params, &storage).await
+                }
+            })
+            .register("updateRelationship", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::update_relationship(&params, &storage).await
+                }
+            })
+            .register("getRelationship", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::get_relationship(&params, &storage).await
+                }
+            })
+            .register("compareOntologies", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::compare_ontologies(&params, &storage).await
+                }
+            });
     }
 
     /// Extract ontology from files

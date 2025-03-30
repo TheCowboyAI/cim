@@ -6,6 +6,7 @@ use crate::mcp::{MCPError, MCPRequest, MCPResponse, MCPStatus};
 use crate::storage::OntologyStorage;
 use serde_json::Value;
 use std::collections::HashMap;
+use std::fmt;
 use std::sync::Arc;
 
 /// Handler for MCP operations
@@ -14,6 +15,16 @@ pub struct OperationHandler<S: OntologyStorage> {
     storage: Arc<S>,
     /// Registered operation handlers
     handlers: HashMap<String, Box<dyn OperationFn<S>>>,
+}
+
+// Implement Debug for OperationHandler
+impl<S: OntologyStorage> fmt::Debug for OperationHandler<S> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("OperationHandler")
+            .field("storage", &"Arc<S>")
+            .field("handlers", &format!("{} operations", self.handlers.len()))
+            .finish()
+    }
 }
 
 /// Trait for operation handler functions
@@ -31,8 +42,8 @@ pub trait OperationFn<S: OntologyStorage>: Send + Sync {
 impl<S, F, Fut> OperationFn<S> for F
 where
     S: OntologyStorage,
-    F: Send + Sync + Fn(&HashMap<String, Value>, &Arc<S>) -> Fut,
-    Fut: std::future::Future<Output = Result<Value, MCPError>> + Send,
+    F: Send + Sync + Fn(&HashMap<String, Value>, &Arc<S>) -> Fut + 'static,
+    Fut: std::future::Future<Output = Result<Value, MCPError>> + Send + 'static,
 {
     async fn execute(
         &self,
@@ -56,7 +67,7 @@ impl<S: OntologyStorage + 'static> OperationHandler<S> {
     pub fn register<F, Fut>(&mut self, operation: &str, handler: F) -> &mut Self
     where
         F: Fn(&HashMap<String, Value>, &Arc<S>) -> Fut + Send + Sync + 'static,
-        Fut: std::future::Future<Output = Result<Value, MCPError>> + Send,
+        Fut: std::future::Future<Output = Result<Value, MCPError>> + Send + 'static,
     {
         self.handlers
             .insert(operation.to_string(), Box::new(handler));

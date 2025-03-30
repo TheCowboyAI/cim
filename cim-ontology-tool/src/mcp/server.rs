@@ -36,7 +36,7 @@ impl Default for ServerConfig {
 
 /// Server state
 #[derive(Debug, Clone)]
-pub struct ServerState<S: OntologyStorage> {
+pub struct ServerState<S: OntologyStorage + Clone + 'static> {
     /// Storage backend
     pub storage: Arc<S>,
     /// Configuration
@@ -46,7 +46,7 @@ pub struct ServerState<S: OntologyStorage> {
 }
 
 /// Start the MCP server
-pub async fn start_server<S: OntologyStorage + 'static>(
+pub async fn start_server<S: OntologyStorage + Clone + 'static>(
     config: ServerConfig,
     storage: Arc<S>,
 ) -> Result<(), String> {
@@ -89,7 +89,7 @@ async fn health_check() -> impl IntoResponse {
 }
 
 /// Handle an MCP request
-async fn handle_mcp_request<S: OntologyStorage>(
+async fn handle_mcp_request<S: OntologyStorage + Clone + 'static>(
     State(state): State<ServerState<S>>,
     headers: HeaderMap,
     Json(request): Json<MCPRequest>,
