@@ -50,6 +50,36 @@
    - Comprehensive event types for all domain operations
    - Centralized event publishing and handling
 
+## Client-Server Architecture
+*See detailed [NATS-Based MCP Client Implementation Decision](decisions/2024-05-06-nats-based-mcp-client.md)*
+
+### Server Components
+- CIM Ontology Tool implements MCP server over NATS
+- Event-driven architecture for request processing
+- Neo4j graph database for ontology storage
+- Subject-based message routing
+
+### Client Libraries
+1. Core Library (cim-client)
+   - NATS-based communication
+   - Domain entity models
+   - Asynchronous API
+   - Request/response handling
+   - Event subscription
+
+2. Interface Options
+   - Programmable API for embedded usage
+   - CLI for command-line operations
+   - GUI for visual management and exploration
+   - All built on the same core library
+
+3. Design Principles
+   - Domain-Driven Design architecture
+   - Clean separation of concerns
+   - Consistent error handling
+   - Feature flags for optional components
+   - Full async support via Tokio
+
 ## Pod Architecture
 *For specific pod implementations, see [Domain Implementations](domain_implementations.md)*
 

@@ -6,6 +6,7 @@ This document tracks significant milestones, architectural decisions, and implem
 
 | Date | Milestone | Status | Documentation |
 |------|-----------|--------|---------------|
+| 2024-05-06 | NATS-Based MCP Client Implementation | Completed | [Decision Document](decisions/2024-05-06-nats-based-mcp-client.md) |
 | 2025-03-30 | Cursor Rules Modularization | Completed | [Decision Document](decisions/cursor-rules-modularization.md) |
 | 2025-03-30 | Event-Driven Architecture Implementation | Completed | [Decision Document](decisions/event-driven-architecture-implementation.md) |
 | 2025-03-30 | File Structure & Workflow Standardization | Completed | [Decision Document](decisions/file-structure-workflow-standardization.md) |
@@ -25,6 +26,14 @@ This document tracks significant milestones, architectural decisions, and implem
 | Extractor | Planned | Ontology extraction tools | - |
 | Analyzer | Planned | Ontology analysis tools | - |
 
+### CIM Client Libraries
+
+| Component | Status | Details | Last Updated |
+|-----------|--------|---------|-------------|
+| Core Library | Completed | NATS-based MCP client with DDD architecture | 2024-05-06 |
+| CLI Interface | Completed | Command-line interface for ontology management | 2024-05-06 |
+| GUI Interface | Completed | Iced-based graphical interface | 2024-05-06 |
+
 ### Development Tools
 
 | Component | Status | Details | Last Updated |
@@ -36,6 +45,8 @@ This document tracks significant milestones, architectural decisions, and implem
 ### Next Steps
 
 1. **Short-term (Next 2 weeks)**
+   - Integrate cim-client with other tools and workflows
+   - Develop automated tests for cim-client components
    - Enhance logging and monitoring for event flows
    - Add event replay capabilities for recovery scenarios
    - Implement comprehensive test suite for event-driven components
@@ -64,6 +75,7 @@ This document tracks significant milestones, architectural decisions, and implem
 
 ## Recent Achievements
 
+- **2024-05-06**: Implemented NATS-based MCP client library with CLI and GUI interfaces
 - **2025-03-30**: Implemented cursor rules as NixOS-style modules
 - **2025-03-30**: Successfully refactored the codebase to use Event-Driven Architecture
 - **2025-03-29**: Fixed build issues in flake.nix configuration
