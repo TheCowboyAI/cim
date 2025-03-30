@@ -14,6 +14,8 @@
 - [✓] Cross-referencing system
 - [✓] Vocabulary structure implementation
 - [✓] Vocabulary management workflow
+- [✓] File structure standardization
+- [✓] Knowledge flow process formalization
 
 ### AI Research Tools
 - [ ] Research assistance integration
@@ -28,6 +30,8 @@
 - [✓] Source management
 - [✓] Vocabulary domain mapping
 - [✓] Notes to vocabulary to code workflow
+- [✓] Incoming document processing
+- [✓] Claim extraction and management
 
 ## Current Mode
 
@@ -40,15 +44,18 @@ Current Focus:
 5. [✓] Populate domain content
 6. [✓] Implement knowledge graph
 7. [✓] Implement vocabulary management workflow
-8. [ ] Create core module prototype
+8. [✓] Standardize file structure and knowledge flow
+9. [ ] Create core module prototype
 
 Next Steps:
 1. [✓] Implement knowledge graph structure
 2. [✓] Implement vocabulary workflow from notes to code
-3. [ ] Run initial vocabulary alignment analysis
-4. [ ] Develop core module prototype
-5. [ ] Document implementation patterns
-6. [ ] Create case study
+3. [✓] Formalize file structure for document processing
+4. [✓] Create scripts for knowledge flow management
+5. [ ] Run initial vocabulary alignment analysis
+6. [ ] Develop core module prototype
+7. [ ] Document implementation patterns
+8. [ ] Create case study
 
 ## Remaining Work
 
@@ -57,7 +64,8 @@ Next Steps:
 2. [ ] Create methodology documentation
 3. [ ] Document implementation patterns
 4. [ ] Create contribution guidelines
-5. [ ] Complete vocabulary workflow documentation
+5. [✓] Complete vocabulary workflow documentation
+6. [✓] Document file structure and knowledge flow
 
 ### Research
 1. [ ] Core domain research
@@ -65,35 +73,50 @@ Next Steps:
 3. [ ] Pattern documentation
 4. [ ] Case studies
 5. [ ] Vocabulary-notes alignment analysis
+6. [✓] Standardize document processing workflow
 
 ### Analysis
 1. [ ] Complete foundational analysis
 2. [ ] Document research patterns
 3. [ ] Create research guides
 4. [ ] Develop best practices
-5. [ ] Analyze vocabulary workflow metrics
+5. [✓] Implement vocabulary workflow metrics
+6. [✓] Create knowledge flow analysis tools
 
 ## Known Issues
 
 ### Documentation
 - [✓] Knowledge graph structure implemented
 - [✓] Vocabulary management workflow implemented
+- [✓] File structure standardization completed
+- [✓] Knowledge flow process formalized
 - Research collection process pending
 - AI research tools not configured
 
 ### Research
 - [✓] Domain mappings defined in knowledge graph
 - [✓] Vocabulary workflow from notes to code defined
+- [✓] Document processing and claim extraction implemented
 - AI integration planning needed
 - Pattern recognition system pending
 
 ### Analysis
 - [✓] Knowledge graph implemented
 - [✓] Vocabulary workflow analysis tools created
+- [✓] Knowledge flow analysis scripts developed
 - Research integration planned
 - Pattern analysis needed
 
 ## Strategic Improvement Plan
+
+### File Structure and Knowledge Flow
+- [✓] Create /notes/incoming directory for document staging
+- [✓] Create /notes/claims directory for extracted claims
+- [✓] Formalize knowledge flow process
+- [✓] Develop scripts to support standardized workflow
+- [✓] Implement automated claim extraction
+- [ ] Establish team training on new workflow
+- [ ] Integrate with CI/CD pipeline
 
 ### Vocabulary Management Workflow
 - [✓] Define workflow from notes to code
@@ -150,18 +173,23 @@ Next Steps:
 ### Immediate Tasks
 1. [✓] Implement knowledge graph structure
 2. [✓] Implement vocabulary management workflow
-3. [ ] Run initial vocabulary workflow analysis
-4. [ ] Develop core module prototype
-5. [ ] Document implementation patterns
-6. [ ] Begin case study development
+3. [✓] Standardize file structure and knowledge flow
+4. [✓] Create scripts for document processing and claim extraction
+5. [ ] Ensure team adoption of standardized workflow
+6. [ ] Run initial vocabulary workflow analysis
+7. [ ] Develop core module prototype
+8. [ ] Document implementation patterns
+9. [ ] Begin case study development
 
 ### Short-term Goals
 1. [✓] Complete knowledge graph implementation
 2. [✓] Implement vocabulary workflow from notes to code
-3. [ ] Integrate vocabulary workflow checking into CI pipeline
-4. [ ] Develop minimal core module prototype
-5. [ ] Document implementation patterns
-6. [ ] Create detailed case study
+3. [✓] Formalize file structure and knowledge flow
+4. [ ] Create training materials for vocabulary workflow
+5. [ ] Integrate vocabulary workflow checking into CI pipeline
+6. [ ] Develop minimal core module prototype
+7. [ ] Document implementation patterns
+8. [ ] Create detailed case study
 
 ### Long-term Goals
 1. [ ] Achieve target metrics for vocabulary quality and alignment

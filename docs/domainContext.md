@@ -6,13 +6,14 @@
 - Developing case studies
 - Building AI integration framework
 - Standardizing vocabulary management workflow
+- Maintaining structured knowledge flow
 
 ## Domain Specifics
 
 ### Knowledge Management Domain
 - Status: Active Development
-- Current Focus: Core module implementation
-- Next Steps: Implement AI integration
+- Current Focus: Core module implementation and knowledge flow standardization
+- Next Steps: Implement AI integration and enhance claim extraction
 
 ### Technical Domain
 - Status: Active Development
@@ -35,21 +36,32 @@
 - Next Steps: Develop testing framework
 
 ## Recent Changes
-1. Implemented standardized vocabulary management workflow from notes to code
-2. Created vocabulary_manager.sh as unified interface for vocabulary management
-3. Enhanced vocabulary analysis scripts for notes-vocabulary alignment
-4. Added workflow analysis to track knowledge flow across the system
-5. Added comprehensive vocabulary structure with domains, ontologies, and taxonomies
-6. Established Cowboy AI as primary implementation owner
-7. Restructured documentation to follow vocabulary rules
-8. Created project memory structure
-9. Defined core domain categories
-10. Developed strategic improvement plan
-11. Transitioned from vocabulary to implementation phase
-12. Replaced wasmCloud with generic WebAssembly runtime
-13. Implemented knowledge graph visualization using Mermaid
+1. Formalized file structure with dedicated /notes/incoming and /notes/claims directories
+2. Standardized knowledge workflow with defined processing stages
+3. Updated scripts to support the standardized file structure
+4. Implemented standardized vocabulary management workflow from notes to code
+5. Created vocabulary_manager.sh as unified interface for vocabulary management
+6. Enhanced vocabulary analysis scripts for notes-vocabulary alignment
+7. Added workflow analysis to track knowledge flow across the system
+8. Added comprehensive vocabulary structure with domains, ontologies, and taxonomies
+9. Established Cowboy AI as primary implementation owner
+10. Restructured documentation to follow vocabulary rules
+11. Created project memory structure
+12. Defined core domain categories
+13. Developed strategic improvement plan
+14. Transitioned from vocabulary to implementation phase
+15. Replaced wasmCloud with generic WebAssembly runtime
+16. Implemented knowledge graph visualization using Mermaid
 
 ## Active Decisions
+
+### File Structure and Workflow Decisions
+1. Created /notes/incoming directory for staging new documents
+2. Created /notes/claims directory for storing extracted claims
+3. Formalized knowledge flow process: /notes -> /docs -> /vocabulary -> /code
+4. Developed comprehensive scripts to support the standardized workflow
+5. Implemented automated claim extraction from incoming documents
+6. Established metrics for measuring knowledge flow effectiveness
 
 ### Vocabulary Management Decisions
 1. Implemented /notes -> /docs -> /vocabulary -> /code workflow for knowledge management
@@ -86,12 +98,14 @@
 ## Next Steps
 
 ### Immediate Actions
-1. Run initial vocabulary workflow analysis to establish baseline metrics
-2. Develop core module prototype
-3. Document implementation patterns
-4. Begin case study development
-5. Plan AI integration framework
-6. Create research integration
+1. Ensure team adoption of standardized file structure and workflow
+2. Create training materials for vocabulary manager usage
+3. Run initial vocabulary workflow analysis to establish baseline metrics
+4. Develop core module prototype
+5. Document implementation patterns
+6. Begin case study development
+7. Plan AI integration framework
+8. Create research integration
 
 ### Short-term Goals
 1. Integrate vocabulary workflow checking into CI pipeline
