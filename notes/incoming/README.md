@@ -10,7 +10,7 @@ The `/notes/incoming` directory follows the workflow specified in `vocabulary.md
 /notes -> /docs -> /vocabulary -> /code
 ```
 
-Documents placed in this directory will be:
+RAW Documents placed in this directory will be:
 1. Analyzed for terms and concepts
 2. Processed for claims and decisions 
 3. Integrated into the appropriate sections of the knowledge base

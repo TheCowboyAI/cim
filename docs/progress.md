@@ -214,3 +214,36 @@ Next Steps:
 - [✓] Updated relevant documentation with the standardized workflow
 - [✓] Added metrics for tracking document processing and claim extraction quality
 - [✓] Updated directory structure documentation in relevant files 
+
+## Current Projects
+
+### CIM Ontology Tool
+
+The CIM Ontology Tool is a new Rust package designed to scan folders of files, extract taxonomies and ontologies, and compare them against seed ontologies. It functions as an MCP server that integrates with Neo4j for graph database storage.
+
+#### Key Features
+- Extract ontological terms and relationships from various file formats
+- Build and manage taxonomies from source code and documentation
+- Compare extracted ontologies against seed ontologies
+- Store and query ontologies using Neo4j graph database
+- Expose functionalities through MCP protocol endpoints
+
+#### Current Status
+- Initial requirements and architecture defined
+- Project structure created
+- Implementation plan developed
+
+#### Next Steps
+- Begin Phase 1: Core Infrastructure implementation
+  - Set up Neo4j connectivity
+  - Implement MCP server foundation
+  - Design domain model
+  - Create basic API endpoints
+
+#### Implementation Timeline
+- Phase 1: Core Infrastructure (Weeks 1-2)
+- Phase 2: Extraction Capabilities (Weeks 3-5)
+- Phase 3: Analysis Features (Weeks 6-8)
+- Phase 4: Integration & Deployment (Weeks 9-10)
+
+See the detailed plan in `cim-ontology-tool/docs/implementation_plan.md` 

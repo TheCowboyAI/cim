@@ -120,4 +120,38 @@
 2. Enhance AI integration framework
 3. Expand compliance documentation
 4. Develop operational testing framework
-5. Build research community 
+5. Build research community
+
+## Current Domain Focus
+
+### Composable Information Machines (CIMs)
+
+### Ontology Management
+
+A new focus area has been added to support the development of a specialized ontology extraction and management tool. This tool will help in analyzing files and documents to extract domain-specific terms and relationships, building cohesive taxonomies and ontologies.
+
+#### Key Domain Concepts
+
+1. **Ontology Extraction**
+   - Parsing different file formats to extract domain-specific terms and relationships
+   - Using NLP techniques for identifying relevant concepts
+   - Maintaining provenance of extracted information
+
+2. **Ontology Comparison**
+   - Comparing extracted ontologies against seed ontologies
+   - Identifying gaps and inconsistencies
+   - Mapping between different ontological representations
+
+3. **Graph-Based Storage**
+   - Using Neo4j as a graph database for ontology storage
+   - Representing terms and relationships as graph structures
+   - Enabling complex graph queries and traversals
+
+4. **MCP Server Integration**
+   - Exposing ontology management capabilities through an MCP server
+   - Supporting both Cursor and other MCP clients
+   - Enabling synchronous and asynchronous operations
+
+#### Implementation
+
+The implementation of these domain concepts is being realized through the cim-ontology-tool project, a Rust-based MCP server that integrates with Neo4j for graph database storage. 
