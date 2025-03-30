@@ -25,6 +25,8 @@ Out of Scope:
 
 Intent:
 
+THIS IS A RESEARCH PROJECT DETERMINING THE NATURE OF A CIM
+
 Use what is already available and make it better.
 Contribute to Open Source projects.
 Make sharing information better and more secure.
