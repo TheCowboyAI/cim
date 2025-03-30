@@ -2,7 +2,7 @@
 //!
 //! This module provides a Neo4j-based implementation of the OntologyStorage trait.
 
-use crate::ontology::{Ontology, Relationship, Source, Term};
+use crate::ontology::{Ontology, Relationship, Term};
 use crate::storage::{OntologyStorage, OntologySummary, Result, StorageError};
 use async_trait::async_trait;
 use neo4rs::{Graph, Node, Query};

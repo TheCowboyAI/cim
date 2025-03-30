@@ -2,23 +2,20 @@
 //!
 //! This module provides the HTTP server implementation for the MCP protocol.
 
-use crate::events::{EventBus, EventDispatcher, EventStore};
-use crate::events::handlers::{OntologyEventHandler, QueryEventHandler};
+use crate::events::EventBus;
 use crate::mcp::{MCPError, MCPRequest, MCPResponse, MCPStatus, request_to_event, handle_event_and_create_response};
 use crate::storage::OntologyStorage;
 use axum::{
     extract::State,
     http::{HeaderMap, StatusCode},
     response::IntoResponse,
-    routing::{get, post},
-    Json, Router,
+    Json,
 };
 use serde_json::json;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tokio::net::TcpListener;
 use anyhow::{Context, Result};
-use tokio::sync::mpsc;
 
 /// Server configuration
 #[derive(Debug, Clone)]
@@ -46,7 +43,7 @@ pub struct ServerState<S: OntologyStorage + Clone + 'static> {
     /// Configuration
     pub config: ServerConfig,
     /// Event bus
-    pub event_bus: EventBus,
+    pub _event_bus: EventBus,
 }
 
 // Define the MCPRequestHandler struct
@@ -131,7 +128,7 @@ pub async fn start_server<S: OntologyStorage + 'static>(
 ///
 /// * `Result<()>` - Result indicating success or failure
 async fn init_event_system(capacity: usize) -> Result<()> {
-    let (event_bus, mut event_dispatcher, _event_store) = crate::events::init_event_system(100);
+    let (_event_bus, mut event_dispatcher, _event_store) = crate::events::init_event_system(100);
     
     // Start event dispatcher in a background task
     tokio::spawn(async move {
@@ -214,7 +211,7 @@ async fn handle_mcp_request<S: OntologyStorage + Clone + 'static>(
     match request_to_event(&request) {
         Some(event) => {
             // Process the event
-            let response = handle_event_and_create_response(&state.event_bus, &request, event).await;
+            let response = handle_event_and_create_response(&state._event_bus, &request, event).await;
             
             // Return the response with appropriate status code
             let status_code = match response.status {

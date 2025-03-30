@@ -1,12 +1,8 @@
-use cim_ontology::events::{Event, EventBus, EventDispatcher, EventError, EventHandler, EventStore, EventType};
-use cim_ontology::events::handlers::{OntologyEventHandler, QueryEventHandler};
-use cim_ontology::ontology::{Ontology, Relationship, Term};
-use cim_ontology::storage::neo4j::{Neo4jConfig, Neo4jStorage};
-use cim_ontology::storage::OntologyStorage;
+use cim_ontology::events::{Event, EventError, EventHandler, EventType};
+use cim_ontology::storage::neo4j::Neo4jConfig;
 
 use async_trait::async_trait;
 use serde_json::json;
-use std::sync::Arc;
 use tokio::time::{sleep, Duration};
 use uuid::Uuid;
 

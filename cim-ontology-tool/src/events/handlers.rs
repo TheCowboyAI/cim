@@ -6,7 +6,6 @@ use super::{Event, EventError, EventHandler, EventType};
 use crate::ontology::{Ontology, Relationship, Term};
 use crate::storage::OntologyStorage;
 use async_trait::async_trait;
-use serde_json::json;
 use std::sync::Arc;
 use uuid::Uuid;
 

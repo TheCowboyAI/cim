@@ -5,9 +5,6 @@
 use crate::events::{Event, EventBus, EventType};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::sync::Arc;
-use uuid::Uuid;
-use std::net::SocketAddr;
 
 pub mod server;
 pub mod handler;
