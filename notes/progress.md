@@ -23,7 +23,7 @@ This document tracks significant milestones, architectural decisions, and implem
 | MCP Server | Completed | Updated to use NATS-based messaging with Event-Driven Architecture | 2025-03-30 |
 | Storage | In Progress | Neo4j integration | 2025-03-29 |
 | CLI | Planned | Command-line interface | - |
-| Extractor | Planned | Ontology extraction tools | - |
+| Extractor | Completed | Markdown file parser - Extract terms and relationships from markdown files | 2025-03-30 |
 | Analyzer | Planned | Ontology analysis tools | - |
 
 ### CIM Client

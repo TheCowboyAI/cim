@@ -2,9 +2,11 @@
 //!
 //! This module defines the specific operations supported by the MCP server.
 
+use std::path::{Path, PathBuf};
 use crate::mcp::handler::{mcp_error, OperationHandler};
 use crate::ontology::{Ontology, Relationship, Term};
 use crate::storage::OntologyStorage;
+use crate::extractor;
 use serde_json::{json, Value};
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -23,6 +25,13 @@ impl OntologyOperations {
                 let storage = Arc::clone(storage);
                 async move {
                     Self::extract_ontology(&params, &storage).await
+                }
+            })
+            .register("extractFromMarkdown", |params, storage| {
+                let params = params.clone();
+                let storage = Arc::clone(storage);
+                async move {
+                    Self::extract_from_markdown(&params, &storage).await
                 }
             })
             .register("getOntology", |params, storage| {
@@ -134,6 +143,87 @@ impl OntologyOperations {
         Ok(json!({
             "message": format!("Extraction requested for path: {}", path),
             "status": "pending",
+        }))
+    }
+
+    /// Extract ontology from a markdown file
+    async fn extract_from_markdown(
+        params: &HashMap<String, Value>,
+        storage: &Arc<impl OntologyStorage>,
+    ) -> Result<Value, crate::mcp::MCPError> {
+        // Validate parameters
+        let file_path = params
+            .get("filePath")
+            .and_then(|v| v.as_str())
+            .ok_or_else(|| mcp_error("INVALID_PARAMS", "Missing or invalid 'filePath' parameter"))?;
+
+        let ontology_name = params
+            .get("ontologyName")
+            .and_then(|v| v.as_str())
+            .unwrap_or("Extracted Ontology");
+
+        let ontology_description = params
+            .get("ontologyDescription")
+            .and_then(|v| v.as_str())
+            .unwrap_or("Ontology extracted from markdown file");
+
+        let ontology_domain = params
+            .get("ontologyDomain")
+            .and_then(|v| v.as_str())
+            .unwrap_or("unknown");
+
+        // Create the path
+        let path = PathBuf::from(file_path);
+        
+        // Check if it's a file or directory
+        let is_dir = path.is_dir();
+        
+        // Process the file or directory
+        let ontology = if is_dir {
+            extractor::create_ontology_from_directory(
+                &path,
+                ontology_name,
+                ontology_description,
+                ontology_domain,
+            )
+            .map_err(|e| {
+                mcp_error(
+                    "EXTRACTION_ERROR",
+                    &format!("Failed to extract ontology from directory: {}", e),
+                )
+            })?
+        } else {
+            extractor::create_ontology_from_markdown(
+                &path,
+                ontology_name,
+                ontology_description,
+                ontology_domain,
+            )
+            .map_err(|e| {
+                mcp_error(
+                    "EXTRACTION_ERROR",
+                    &format!("Failed to extract ontology from markdown: {}", e),
+                )
+            })?
+        };
+        
+        // Save the ontology to storage
+        storage.save_ontology(&ontology).await.map_err(|e| {
+            mcp_error(
+                "STORAGE_ERROR",
+                &format!("Failed to save extracted ontology: {}", e),
+            )
+        })?;
+        
+        // Return the ontology data with statistics
+        Ok(json!({
+            "id": ontology.id.to_string(),
+            "name": ontology.name,
+            "description": ontology.description,
+            "termCount": ontology.terms.len(),
+            "relationshipCount": ontology.relationships.len(),
+            "source": if is_dir { "directory" } else { "file" },
+            "sourcePath": file_path,
         }))
     }
 

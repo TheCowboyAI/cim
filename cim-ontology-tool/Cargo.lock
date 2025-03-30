@@ -483,6 +483,7 @@ dependencies = [
  "indexmap",
  "indicatif",
  "neo4rs",
+ "once_cell",
  "petgraph",
  "pretty_assertions",
  "rayon",
