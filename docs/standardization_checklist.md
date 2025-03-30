@@ -221,6 +221,33 @@ All domain vocabularies now follow a consistent Cypher format with properly defi
 - Usage contexts describing how terms are applied
 - Code references linking to implementation files
 
+## Directory Structure Standardization
+
+To ensure a consistent and efficient workflow, we've standardized the directory structure across the project:
+
+### New Directory Structure
+
+- [x] `/notes/incoming` - Standardized directory for new documents waiting to be processed
+- [x] `/notes/claims` - Standardized directory for extracted claims from processed documents 
+- [x] `/notes/decisions` - Documents recording important project decisions
+- [x] `/notes/research` - Research notes and findings
+- [x] `/notes/meetings` - Meeting notes and summaries
+- [x] `/notes/reviews` - Review notes and feedback
+
+### Document Processing Workflow
+
+The standardized workflow for document processing is:
+
+1. **Incoming Documents** → Place new documents in `/notes/incoming`
+2. **Document Processing** → Run `./scripts/vocabulary_manager.sh --align` to process documents
+3. **Claim Extraction** → Claims are automatically extracted to `/notes/claims`
+4. **Vocabulary Alignment** → Terms from documents are aligned with vocabulary
+5. **Documentation** → Documentation is updated in `/docs`
+6. **Vocabulary Updates** → Vocabulary is updated in `/vocabulary/domains`
+7. **Code Implementation** → Code is updated according to vocabulary definitions
+
+This workflow ensures a consistent flow from initial research notes to final code implementation, with proper documentation and vocabulary alignment at each step.
+
 ## Automation Tools
 
 To help with standardization, we've created several scripts:
