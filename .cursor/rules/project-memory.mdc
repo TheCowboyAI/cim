@@ -53,14 +53,14 @@ alwaysApply: true
 - systemPatterns.md: Documents technical architecture
 - techContext.md: Documents technical environment
 - progress.md: Tracks project status
-- comments/: Directory for specific comments and decisions
 
 ## comments Structure
-- DOCUMENTS READY FOR INSPECTION IN /docs/claims
+- DOCUMENTS READY FOR INSPECTION IN /notes/incoming
   - These are documents that are ready for inspection by the system to add to the memory bank.
   - we will extract invididual "claims" and add them to the memory bank as decisions.
 
-- Store in docs/comments/
+- Store in /notes
+
 - Categories:
   - decisions/: Technical and architectural decisions
   - research/: Research findings and evaluations
@@ -98,7 +98,7 @@ alwaysApply: true
 
 rules:
   - name: "Core Files Existence"
-    pattern: "docs/(projectBrief|projectContext|domainContext|systemPatterns|techContext|progress)\\.md"
+    pattern: "docs/(projectBrief|projectContext|domainContext|systemPatterns|techContext|progress)\\.md", "notes/incoming"
     ensure:
       - "File exists"
       - "Contains required sections"
@@ -190,7 +190,19 @@ rules:
     severity: "warning"
 
   - name: "Documentation Hierarchy"
+    pattern: "notes/.*\\.md"
+    purpose: notes to analyze for docs
+    ensure:
+      - "Follows memory bank hierarchy"
+      - "References parent documents"
+      - "Maintains consistency"
+      - "Updates related files"
+    message: "Documentation must follow memory bank hierarchy"
+    severity: "warning"
+
+
     pattern: "docs/.*\\.md"
+    purpose: docs to analyze for vocabulary
     ensure:
       - "Follows memory bank hierarchy"
       - "References parent documents"
@@ -200,7 +212,8 @@ rules:
     severity: "warning"
 
   - name: "comments Structure"
-    pattern: "docs/comments/.*\\.md"
+    pattern: "notes/comments/.*\\.md"
+    purpose: comments to analyze for notes and docs
     ensure:
       - "Follows note template"
       - "Has required sections"
@@ -249,7 +262,7 @@ suggestions:
 
   - when: "adding_context"
     suggest: |
-      1. Create in appropriate doc/ subfolder
+      1. Create in appropriate notes/ or docs/ subfolder
       2. Link to parent documentation
       3. Follow memory bank hierarchy
       4. Update related core files

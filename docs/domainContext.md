@@ -5,6 +5,7 @@
 - Creating implementation patterns
 - Developing case studies
 - Building AI integration framework
+- Standardizing vocabulary management workflow
 
 ## Domain Specifics
 
@@ -34,17 +35,29 @@
 - Next Steps: Develop testing framework
 
 ## Recent Changes
-1. Added comprehensive vocabulary structure with domains, ontologies, and taxonomies
-2. Established Cowboy AI as primary implementation owner
-3. Restructured documentation to follow vocabulary rules
-4. Created project memory structure
-5. Defined core domain categories
-6. Developed strategic improvement plan
-7. Transitioned from vocabulary to implementation phase
-8. Replaced wasmCloud with generic WebAssembly runtime
-9. Implemented knowledge graph visualization using Mermaid
+1. Implemented standardized vocabulary management workflow from notes to code
+2. Created vocabulary_manager.sh as unified interface for vocabulary management
+3. Enhanced vocabulary analysis scripts for notes-vocabulary alignment
+4. Added workflow analysis to track knowledge flow across the system
+5. Added comprehensive vocabulary structure with domains, ontologies, and taxonomies
+6. Established Cowboy AI as primary implementation owner
+7. Restructured documentation to follow vocabulary rules
+8. Created project memory structure
+9. Defined core domain categories
+10. Developed strategic improvement plan
+11. Transitioned from vocabulary to implementation phase
+12. Replaced wasmCloud with generic WebAssembly runtime
+13. Implemented knowledge graph visualization using Mermaid
 
 ## Active Decisions
+
+### Vocabulary Management Decisions
+1. Implemented /notes -> /docs -> /vocabulary -> /code workflow for knowledge management
+2. Created unified vocabulary_manager.sh script for vocabulary operations
+3. Established term categories and relationship types according to vocabulary.mdc
+4. Defined target metrics for vocabulary quality and alignment
+5. Created vocabulary quality dashboard for tracking metrics
+6. Implemented regular alignment checks between notes and vocabulary
 
 ### Architecture Decisions
 1. Using NixOS module system for core architecture
@@ -64,7 +77,7 @@
 
 ### Documentation Decisions
 1. Following project memory structure
-2. Implementing vocabulary management
+2. Implementing vocabulary management workflow
 3. Using domain-driven documentation
 4. Maintaining research trails
 5. Documenting implementation patterns with code examples
@@ -73,21 +86,24 @@
 ## Next Steps
 
 ### Immediate Actions
-1. Develop core module prototype
-2. Document implementation patterns
-3. Begin case study development
-4. Plan AI integration framework
-5. Create research integration
+1. Run initial vocabulary workflow analysis to establish baseline metrics
+2. Develop core module prototype
+3. Document implementation patterns
+4. Begin case study development
+5. Plan AI integration framework
+6. Create research integration
 
 ### Short-term Goals
-1. Develop minimal core module prototype
-2. Document key implementation patterns
-3. Create detailed case study
-4. Implement basic AI integration
-5. Define compliance framework
+1. Integrate vocabulary workflow checking into CI pipeline
+2. Develop minimal core module prototype
+3. Document key implementation patterns
+4. Create detailed case study
+5. Implement basic AI integration
+6. Define compliance framework
 
 ### Long-term Goals
-1. Enhance AI integration framework
-2. Expand compliance documentation
-3. Develop operational testing framework
-4. Build research community 
+1. Achieve target metrics for vocabulary quality and alignment
+2. Enhance AI integration framework
+3. Expand compliance documentation
+4. Develop operational testing framework
+5. Build research community 

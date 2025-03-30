@@ -5,7 +5,12 @@ alwaysApply: true
 ---
 name: "Vocabulary Management"
 
-# Domain Vocabulary Management
+# WORKFLOW
+/notes are analyzed to create /docs
+/docs are analyzed to create /vocabulary
+/vocabulary is used to create /code 
+
+## Domain Vocabulary Management
 
 ## Purpose
 Maintain a consistent ubiquitous language across the project by tracking and organizing domain-specific terms, concepts, and relationships.
@@ -203,6 +208,14 @@ Each domain vocabulary file should be structured as follows:
 3. Validate relationships
 4. Update definitions
 5. Remove obsolete terms
+
+### Idioms
+- An idiom is a phrase or expression that carries a figurative meaning different from the literal meanings of its individual words. For example, when someone says "it's raining cats and dogs," they don't mean animals are falling from the sky, but rather that it's raining heavily.
+- Idioms are terms, and they are used in the same way as terms.
+
+### Phrases
+- A phrase is a group of words that are used together to express a complete thought. For example, "it's raining cats and dogs" is a phrase.
+- Phrases are terms, and they are used in the same way as terms.
 
 ### Version Control
 1. Track term changes

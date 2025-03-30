@@ -4,7 +4,10 @@ globs: **/*.*
 alwaysApply: true
 ---
 ## Research Rule Template
-Use this well-structured formula for writing a research paper or theorem. 
+Use this well-structured formula for writing a research paper, theorem, or business proposition. 
+
+ALL FILES ARE STORED IN /notes/research
+
 The standard structure typically includes the following components:
 
 ## Introduction

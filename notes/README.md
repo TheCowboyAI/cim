@@ -6,34 +6,24 @@ This repository contains research notes organized according to the CIM domain st
 
 ```
 notes/
-├── facts/           # PROVEN claims with evidence
 ├── claims/          # Ideas with repeatable construction
-├── theories/        # Beliefs with context and sources
+├── comments/        # Comments about progress
+├── decisions/           # Decisions 
 ├── ideas/           # Preliminary thoughts
 ├── arguments/       # Support for/against claims
 ├── goals/           # Achievement targets
 ├── organizations/   # Structural entities
-├── operators/       # System controllers
-├── models/          # System representations
-├── valuepropositions/ # Benefit offerings
-├── solutions/       # Problem resolutions
-├── proposals/       # Formal suggestions
-├── policies/        # Operational guidelines
-├── laws/           # Regulatory framework
-├── ethics/         # Moral principles
-├── politics/       # Power dynamics
-├── relationships/   # Inter-entity connections
-├── people/         # Human resources
-├── agents/         # Autonomous entities
-├── accounts/       # Managed groups
-├── equipment/      # Physical resources
-├── environment/    # Contextual settings
-├── location/       # Spatial information
-├── secrets/        # Protected information
-├── behaviors/      # Action patterns
-├── axioms/         # Fundamental truths
-└── sources/        # Information origins
-```
+
+## Guidelines
+
+1. Notes are raw research material
+2. Each note focuses on a single concept/idea
+3. Use cross-references between related notes
+4. Include source materials and references
+5. Track note status and updates
+6. Use consistent terminology from vocabulary
+7. Keep notes atomic and focused 
+
 
 ## Note Format
 
@@ -60,20 +50,7 @@ Each note should follow this format:
 - YYYY-MM-DD: [update description]
 ```
 
-## Guidelines
-
-1. Notes are atomic units of information
-2. Each note belongs to a specific category
-3. Categories are fundamental and cannot be further reduced
-4. Use cross-references between related notes
-5. Include source materials and references
-6. Track note status and updates
-7. Use consistent terminology
-8. Notes contribute to domain expertise
-9. Information richness aids operation patterns
-10. Notes will help build Domain Expert AIs
-
-## Categories Explained
+### TARGET DOCS FROM NOTES
 
 ### Knowledge Foundation
 - **Facts**: Proven claims with verifiable evidence

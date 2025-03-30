@@ -2,16 +2,17 @@
 
 # This script helps convert non-Cypher formatted vocabulary files to Cypher format
 # It provides a structure and templates to assist with the conversion process
+# according to vocabulary.mdc rules
 
 # Check if input file is provided
 if [ $# -lt 1 ]; then
   echo "Usage: $0 <input_file> [domain]"
-  echo "Example: $0 vocabulary/domains/cim.md Business"
+  echo "Example: $0 vocabulary/domains/cim.md Technical"
   exit 1
 fi
 
 INPUT_FILE=$1
-DOMAIN=${2:-"KnowledgeDomain"}  # Default domain if not provided
+DOMAIN=${2:-"Technical"}  # Default domain if not provided
 OUTPUT_FILE="${INPUT_FILE%.md}_cypher.md"  # Create a new file with _cypher suffix
 TEMP_FILE="${INPUT_FILE%.md}_temp.md"
 
@@ -39,16 +40,29 @@ display_section_template() {
 ### Nodes
 
 \`\`\`cypher
-(:Example:Aggregate {
+(:Example:Entity {
   domain: \"$DOMAIN\",
   term: \"Example\",
+  taxonomy: \"${DOMAIN} Taxonomy\",
   definition: \"Definition goes here\",
-  taxonomy: \"ExampleTaxonomy\",
-  usage_context: \"ExampleContext\",
-  code_reference: \"path/to/example.md\"
+  usage_context: \"Where/how this term is used in the system\",
+  code_reference: \"TBD\"
 })
 
-// Add more nodes here
+(:AnotherExample:Aggregate {
+  domain: \"$DOMAIN\",
+  term: \"AnotherExample\",
+  taxonomy: \"${DOMAIN} Taxonomy\",
+  definition: \"Definition goes here\",
+  usage_context: \"Where/how this term is used in the system\",
+  code_reference: \"TBD\"
+})
+
+// Add more terms using these types:
+// Domain Objects: Entity, Aggregate, ValueObject, Service, Policy, Command, Query, Event
+// Technical Concepts: Pattern, Architecture, Protocol, Algorithm
+// Business Concepts: Process, Rule, Workflow, Policy
+// Cross-Cutting Terms: Security, Configuration, Monitoring, Event
 \`\`\`"
       ;;
       
@@ -56,41 +70,91 @@ display_section_template() {
       echo "## Relationships
 
 \`\`\`cypher
-// Example relationships
-(:Example)-[:RELATES_TO {type: \"relationship\"}]->(:AnotherExample)
-(:Example)-[:CONTAINS {type: \"composition\"}]->(:Component)
+// Hierarchical relationships
+(:Example)-[:CONTAINS {type: \"component\"}]->(:AnotherExample)
+(:Example)-[:PART_OF {type: \"structure\"}]->(:LargerConcept)
+(:Example)-[:IS_A {type: \"classification\"}]->(:ParentType)
+(:Example)-[:EXTENDS {type: \"enhancement\"}]->(:BaseType)
 
-// Add more relationships here
+// Functional relationships
+(:Service)-[:MANAGES {type: \"control\"}]->(:Example)
+(:Service)-[:PROCESSES {type: \"operation\"}]->(:AnotherExample)
+(:Service)-[:VALIDATES {type: \"quality\"}]->(:Example)
+(:Service)-[:CONFIGURES {type: \"setup\"}]->(:AnotherExample)
+
+// Temporal relationships
+(:FirstStep)-[:PRECEDES {type: \"sequence\"}]->(:Example)
+(:Example)-[:FOLLOWS {type: \"sequence\"}]->(:FirstStep)
+(:Event)-[:TRIGGERS {type: \"cause\"}]->(:Example)
+(:Example)-[:DEPENDS_ON {type: \"requirement\"}]->(:AnotherExample)
+
+// Add more relationships as appropriate for your domain
 \`\`\`"
       ;;
       
     "taxonomies")
       echo "## Taxonomies
 
-### Example Processing
+### ${DOMAIN} Taxonomy
 
 \`\`\`cypher
-(:Taxonomy {name: \"ExampleProcessing\"})
--[:CONTAINS]->(:Category {name: \"ExampleCategory\"})
--[:CONTAINS]->(:Operation {name: \"ExampleOperation\"})
--[:CONTAINS]->(:Operation {name: \"AnotherOperation\"})
+(:Taxonomy {name: \"${DOMAIN} Taxonomy\"})
+-[:CONTAINS]->(:Category {name: \"${DOMAIN} Components\"})
+-[:CONTAINS]->(:Category {name: \"${DOMAIN} Operations\"})
 
-(:Category {name: \"AnotherCategory\"})
--[:CONTAINS]->(:Operation {name: \"ThirdOperation\"})
--[:CONTAINS]->(:Operation {name: \"FourthOperation\"})
-\`\`\`"
+(:Category {name: \"${DOMAIN} Components\"})
+-[:CONTAINS]->(:Term {name: \"Example\"})
+-[:CONTAINS]->(:Term {name: \"AnotherExample\"})
+
+(:Category {name: \"${DOMAIN} Operations\"})
+-[:CONTAINS]->(:Term {name: \"ExampleOperation\"})
+-[:CONTAINS]->(:Term {name: \"AnotherOperation\"})
+\`\`\`
+
+### ${DOMAIN} Classification
+
+\`\`\`cypher
+(:Taxonomy {name: \"${DOMAIN} Classification\"})
+-[:CONTAINS]->(:Category {name: \"${DOMAIN} Types\"})
+-[:CONTAINS]->(:Category {name: \"${DOMAIN} Categories\"})
+
+(:Category {name: \"${DOMAIN} Types\"})
+-[:CONTAINS]->(:Term {name: \"ExampleType\"})
+-[:CONTAINS]->(:Term {name: \"AnotherType\"})
+
+(:Category {name: \"${DOMAIN} Categories\"})
+-[:CONTAINS]->(:Term {name: \"ExampleCategory\"})
+-[:CONTAINS]->(:Term {name: \"AnotherCategory\"})
+\`\`\`
+
+// Consider including these taxonomies if relevant:
+// - Storage Taxonomy (Storage Operations, Location Management, etc.)
+// - Media Taxonomy (Media Types, Metadata, etc.)
+// - UI Taxonomy (Windows, Dialogs, Themes, etc.)
+// - Configuration Taxonomy (Settings, Preferences, etc.)
+"
       ;;
       
     "usage_contexts")
       echo "## Usage Contexts
 
 \`\`\`cypher
-(:UsageContext {name: \"ExampleContext\"})
+(:UsageContext {name: \"${DOMAIN}Creation\"})
 -[:APPLIES_TO]->(:Example)
--[:REQUIRES]->(:Component)
--[:PRODUCES]->(:Output)
+-[:REQUIRES]->(:AnotherExample)
+-[:PRODUCES]->(:OutputConcept)
 
-// Add more usage contexts here
+(:UsageContext {name: \"${DOMAIN}Management\"})
+-[:APPLIES_TO]->(:Service)
+-[:REQUIRES]->(:Example)
+-[:PRODUCES]->(:AnotherExample)
+
+(:UsageContext {name: \"${DOMAIN}Processing\"})
+-[:APPLIES_TO]->(:Process)
+-[:REQUIRES]->(:InputConcept)
+-[:PRODUCES]->(:ResultConcept)
+
+// Add more usage contexts that describe how terms are used in different scenarios
 \`\`\`"
       ;;
       
@@ -98,10 +162,19 @@ display_section_template() {
       echo "## Code References
 
 \`\`\`cypher
-(:CodeBase {path: \"notes/$FILENAME/readme.md\"})
+(:CodeBase {path: \"cim/src/${FILENAME,,}/example\"})
 -[:IMPLEMENTS]->(:Example)
 
-// Add more code references here
+(:CodeBase {path: \"cim/src/${FILENAME,,}/another_example\"})
+-[:IMPLEMENTS]->(:AnotherExample)
+
+(:CodeBase {path: \"cim/docs/${FILENAME,,}/readme.md\"})
+-[:DOCUMENTS]->(:Example)
+
+// Add actual code references using paths like:
+// - cim/src/domain/concept
+// - cim/docs/specifications/concept.md 
+// - Use TBD for the path if not yet implemented
 \`\`\`"
       ;;
   esac
@@ -139,14 +212,24 @@ grep -E '^\s*[*-] |^#{2,4} [A-Z]|_[A-Za-z ]+_|\*\*[A-Za-z ]+\*\*' "$INPUT_FILE" 
   sort | uniq
 
 echo ""
-echo "=== Template Structure for Each Node ==="
-echo "(:NodeName:AggregateType {
-  domain: \"$DOMAIN\",
-  term: \"NodeName\",
-  definition: \"Definition goes here\",
-  taxonomy: \"RelevantTaxonomy\",
-  usage_context: \"RelevantContext\",
-  code_reference: \"path/to/implementation.md\"
-})"
+echo "=== Term Category Guidelines ==="
+echo "Domain Objects: Entity, Aggregate, ValueObject, Service, Policy, Command, Query, Event"
+echo "Technical Concepts: Pattern, Architecture, Protocol, Algorithm"
+echo "Business Concepts: Process, Rule, Workflow, Policy"
+echo "Cross-Cutting Terms: Security, Configuration, Monitoring, Event"
+echo ""
+echo "=== Relationship Type Guidelines ==="
+echo "Hierarchical: IS_A, PART_OF, CONTAINS, EXTENDS"
+echo "Functional: MANAGES, PROCESSES, VALIDATES, CONFIGURES"
+echo "Temporal: PRECEDES, FOLLOWS, TRIGGERS, DEPENDS_ON"
+echo ""
+echo "=== Note on Required Properties ==="
+echo "Each term must have these properties:"
+echo "domain: The domain the term belongs to (e.g., \"$DOMAIN\")"
+echo "term: The name of the term (identical to the node name)"
+echo "taxonomy: The taxonomy it belongs to (e.g., \"${DOMAIN} Taxonomy\")"
+echo "definition: Clear description of what the term means"
+echo "usage_context: Where and how the term is used"
+echo "code_reference: Path to implementation (use \"TBD\" if unknown)"
 
 exit 0 

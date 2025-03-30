@@ -5,7 +5,7 @@ This directory contains raw research notes organized by Domain and Category. The
 ## Structure
 
 ```
-domains/
+docs/domain/
 ├── knowledge/           # Knowledge Management Domain
 │   ├── facts/          # Verified information
 │   ├── claims/         # Unverified but structured ideas
@@ -55,12 +55,3 @@ Each note should follow this format:
 - YYYY-MM-DD: [update description]
 ```
 
-## Guidelines
-
-1. Notes are raw research material
-2. Each note focuses on a single concept/idea
-3. Use cross-references between related notes
-4. Include source materials and references
-5. Track note status and updates
-6. Use consistent terminology from vocabulary
-7. Keep notes atomic and focused 
