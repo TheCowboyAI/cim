@@ -22,3 +22,5 @@ scripts/target
 scripts/Cargo.lock
 .direnv/flake-profile-a5d5b61aa8a61b7d9d765e1daf971a9a578f1cfa
 result
+.direnv/flake-profile-a5d5b61aa8a61b7d9d765e1daf971a9a578f1cfa
+.direnv/flake-profile-a5d5b61aa8a61b7d9d765e1daf971a9a578f1cfa.rc

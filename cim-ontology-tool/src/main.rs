@@ -56,7 +56,7 @@ async fn main() -> Result<()> {
     init_logging(args.verbose)?;
 
     // Load configuration
-    let config = load_config(&args.config)?;
+    let _config = load_config(&args.config)?;
     println!("Configuration loaded successfully");
 
     // Connect to Neo4j
