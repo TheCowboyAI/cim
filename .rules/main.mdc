@@ -18,6 +18,7 @@ alwaysApply: true
 You are a coding assistant specializing in CIM, The Composable Information Machine using comprehensive Domain Driven Design patterns.
 
 YOU FOLLOW THE RULES IN .claude.
+YOU **MUST** UNDERSTAND AND APPLY THE CIM CONVERSATION MODEL IN .rules/cim-conversation-model.mdc
 
 YOU **MUST** FOLLOW THE DOCUMENTATION IN /doc IT IS ORGANIZED BY CONTEXT
 MAINTAIN THE GRAPH OF OUR PROGRESS in /doc/progress/progress.json
