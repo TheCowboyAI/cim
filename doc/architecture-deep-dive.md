@@ -1,726 +1,1013 @@
 # CIM Architecture Deep Dive
 
-A comprehensive exploration of the Composable Information Machine's architecture, design decisions, and implementation details.
+Understanding CIM's visual-first, state machine-driven architecture.
 
 ## Table of Contents
 
 1. [Architectural Philosophy](#architectural-philosophy)
-2. [Core Architecture Layers](#core-architecture-layers)
-3. [Event-Driven Foundation](#event-driven-foundation)
-4. [Domain Modeling](#domain-modeling)
-5. [Conceptual Spaces](#conceptual-spaces)
-6. [Distributed Architecture](#distributed-architecture)
-7. [Security Architecture](#security-architecture)
-8. [Performance Considerations](#performance-considerations)
-9. [Extension Points](#extension-points)
+2. [Visual Architecture](#visual-architecture)
+3. [State Machine Foundation](#state-machine-foundation)
+4. [Event-Driven Core](#event-driven-core)
+5. [Graph-Based Design](#graph-based-design)
+6. [Distributed State Machines](#distributed-state-machines)
+7. [AI Integration Layer](#ai-integration-layer)
+8. [Security Through States](#security-through-states)
+9. [Performance Patterns](#performance-patterns)
 
 ## Architectural Philosophy
 
-CIM's architecture is guided by several key principles:
+CIM's architecture fundamentally differs from traditional systems:
 
-### 1. Information as First-Class Citizens
+### 1. Graphs as Executable Specifications
 
-Traditional systems treat data as passive records in databases. CIM treats information as active, self-describing entities that:
-- Know their own semantics
-- Carry their provenance
-- Understand their relationships
-- Can validate themselves
+In CIM, visual graphs ARE the system design:
 
-```rust
-pub struct Information<T> {
-    pub content: T,
-    pub metadata: Metadata,
-    pub provenance: Provenance,
-    pub relationships: Vec<Relationship>,
-    pub trust_level: TrustLevel,
-}
+```
+Traditional: Requirements → Code → System
+CIM:         Visual Graphs → AI Generation → Execution
 ```
 
-### 2. Composition Over Integration
+The graphs you draw in ExcaliDraw and Arrows.app directly execute:
+- State machines define behavior
+- Context maps define boundaries  
+- Workflow graphs define processes
+- Concept graphs define relationships
 
-Rather than integrating systems through APIs and ETL pipelines, CIM composes capabilities through:
-- Event streams
-- Shared conceptual models
-- Domain boundaries
-- Policy-driven behavior
+### 2. Everything is a State Machine
 
-### 3. Edge-First Design
+CIM doesn't have objects, services, or controllers. It has state machines:
 
-CIM assumes distribution from the ground up:
-- No single point of failure
-- Local-first processing
-- Eventual consistency
-- Offline capabilities
+```
+Traditional Architecture        CIM Architecture
+────────────────────────       ─────────────────────
+- Services                     - Domain State Machines
+- Controllers                  - Workflow State Machines  
+- Models                       - Aggregate State Machines
+- Repositories                 - Projection State Machines
+- Middleware                   - Policy State Machines
+```
 
-## Core Architecture Layers
+### 3. AI-Native Design
+
+AI isn't added to CIM - it's built into the foundation:
+- AI reads your visual designs
+- AI generates state machine implementations
+- AI orchestrates cross-domain workflows
+- AI maintains consistency across the mesh
+
+## Visual Architecture
+
+CIM's architecture starts with visual design:
 
 ```mermaid
 graph TB
-    subgraph "UI Layer"
-        UI1[Web Portal]
-        UI2[CLI Tools]
-        UI3[Mobile Apps]
-        UI4[AI Assistants]
+    subgraph "Design Layer (Human)"
+        D1[Event Storming]
+        D2[Context Mapping]
+        D3[State Machine Design]
+        D4[Workflow Graphs]
     end
     
-    subgraph "Intelligence Layer"
-        IL1[Natural Language Processing]
-        IL2[Semantic Understanding]
-        IL3[Pattern Recognition]
-        IL4[Decision Support]
+    subgraph "AI Generation Layer"
+        AI1[Graph Parser]
+        AI2[Pattern Recognition]
+        AI3[Code Generator]
+        AI4[Consistency Checker]
     end
     
-    subgraph "Domain Layer"
-        DL1[Domain Aggregates]
-        DL2[Domain Services]
-        DL3[Domain Events]
-        DL4[Domain Policies]
+    subgraph "State Machine Layer"
+        SM1[Domain State Machines]
+        SM2[Workflow State Machines]
+        SM3[Policy State Machines]
+        SM4[Projection State Machines]
     end
     
-    subgraph "Event Layer"
-        EL1[Event Store]
-        EL2[Event Streams]
-        EL3[Event Correlation]
-        EL4[Event Projections]
+    subgraph "Event Mesh Layer"
+        E1[Event Streams]
+        E2[Event Store]
+        E3[Event Correlation]
+        E4[Event Replay]
     end
     
-    subgraph "Infrastructure Layer"
-        IF1[NATS Messaging]
-        IF2[IPLD Storage]
-        IF3[Edge Nodes]
-        IF4[Security Framework]
+    subgraph "Execution Layer"
+        X1[NATS Messaging]
+        X2[State Persistence]
+        X3[Edge Nodes]
+        X4[Knowledge Graph]
     end
     
-    UI1 --> IL1
-    UI2 --> IL1
-    UI3 --> IL1
-    UI4 --> IL1
+    D1 --> AI1
+    D2 --> AI1
+    D3 --> AI1
+    D4 --> AI1
     
-    IL1 --> DL1
-    IL2 --> DL1
-    IL3 --> DL2
-    IL4 --> DL4
+    AI1 --> AI2
+    AI2 --> AI3
+    AI3 --> SM1
+    AI3 --> SM2
+    AI3 --> SM3
+    AI3 --> SM4
     
-    DL1 --> EL3
-    DL2 --> EL2
-    DL3 --> EL1
-    DL4 --> EL3
+    SM1 --> E1
+    SM2 --> E1
+    SM3 --> E1
+    SM4 --> E2
     
-    EL1 --> IF1
-    EL2 --> IF1
-    EL3 --> IF2
-    EL4 --> IF3
+    E1 --> X1
+    E2 --> X2
+    E3 --> X3
+    E4 --> X4
     
     %% Styling
-    style UI1 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
-    style UI2 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
-    style UI3 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
-    style UI4 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
-    style IL1 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
-    style IL2 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
-    style IL3 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
-    style IL4 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
-    style DL1 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style DL2 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style DL3 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style DL4 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style EL1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
-    style EL2 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
-    style EL3 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
-    style EL4 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
-    style IF1 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
-    style IF2 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
-    style IF3 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
-    style IF4 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style D1 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style D2 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style D3 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style D4 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style AI1 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style AI2 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style AI3 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style AI4 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style SM1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style SM2 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style SM3 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style SM4 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
 ```
 
-### Layer Responsibilities
+### Architecture Flow
 
-#### UI Layer
-- User interaction through multiple modalities
-- Natural language understanding via AI assistants
-- Visual workflow composition
-- Real-time dashboards and monitoring
+1. **Visual Design** - Humans create understanding through graphs
+2. **AI Generation** - AI reads graphs and generates state machines
+3. **State Execution** - State machines process events
+4. **Event Flow** - Events flow through the mesh
+5. **Distribution** - Execution happens across nodes
 
-#### Intelligence Layer
-- Semantic understanding of information
-- Pattern recognition across domains
-- Decision support and recommendations
-- Natural language processing
+## State Machine Foundation
 
-#### Domain Layer
-- Business logic encapsulation
-- Aggregate root management
-- Domain event generation
-- Policy enforcement
+### Everything is a State Machine
 
-#### Event Layer
-- Event sourcing and storage
-- Stream processing
-- Event correlation and causation
-- Projection generation
-
-#### Infrastructure Layer
-- Distributed messaging (NATS)
-- Content-addressed storage (IPLD)
-- Edge node management
-- Security and authentication
-
-## Event-Driven Foundation
-
-### Event Identity Model
-
-Every event in CIM carries three identifiers:
+In CIM, all behavior is modeled as state machines:
 
 ```rust
-pub struct EventIdentity {
-    pub event_id: EventId,        // Unique event identifier
-    pub correlation_id: CorrelationId,  // Groups related events
-    pub causation_id: CausationId,      // Links cause and effect
-}
-```
-
-### Event Correlation Algebra
-
-CIM implements a formal algebra for event relationships:
-
-```rust
-// Correlation operations
-impl CorrelationId {
-    pub fn merge(self, other: Self) -> Self {
-        // Creates new correlation encompassing both
-    }
-    
-    pub fn fork(self) -> (Self, Self) {
-        // Splits correlation into parallel streams
-    }
-    
-    pub fn join(branches: Vec<Self>) -> Self {
-        // Merges parallel streams back together
-    }
-}
-```
-
-### Event Flow Patterns
-
-```mermaid
-graph LR
-    subgraph "Saga Pattern"
-        A[Start Saga] --> B[Step 1]
-        B --> C[Step 2]
-        C --> D[Step 3]
-        D --> E[Complete]
-        
-        B -.->|Compensate| B1[Undo 1]
-        C -.->|Compensate| C1[Undo 2]
-        D -.->|Compensate| D1[Undo 3]
-    end
-    
-    subgraph "Fork-Join Pattern"
-        F[Fork] --> G[Branch A]
-        F --> H[Branch B]
-        F --> I[Branch C]
-        
-        G --> J[Join]
-        H --> J
-        I --> J
-    end
-    
-    subgraph "Scatter-Gather Pattern"
-        K[Scatter] --> L[Service 1]
-        K --> M[Service 2]
-        K --> N[Service 3]
-        
-        L --> O[Gather]
-        M --> O
-        N --> O
-    end
-    
-    %% Styling
-    style A fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style E fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
-    style F fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style J fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
-    style K fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style O fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
-```
-
-## Domain Modeling
-
-### Domain-Driven Design in CIM
-
-CIM implements Domain-Driven Design with perfect isolation:
-
-```rust
-// Domain boundary definition
-pub trait DomainBoundary {
-    type Command: Command;
-    type Event: Event;
-    type Query: Query;
-    type ReadModel: ReadModel;
-    
-    fn handle_command(&self, cmd: Self::Command) -> Result<Vec<Self::Event>>;
-    fn apply_event(&mut self, event: Self::Event);
-    fn handle_query(&self, query: Self::Query) -> Result<Self::ReadModel>;
-}
-```
-
-### Aggregate Design
-
-```rust
-pub trait Aggregate {
+// Not objects with methods, but states with transitions
+pub trait StateMachine {
     type State;
-    type Command;
     type Event;
-    type Error;
+    type Command;
     
-    fn handle(
-        state: &Self::State,
-        command: Self::Command,
-    ) -> Result<Vec<Self::Event>, Self::Error>;
-    
-    fn apply(
-        state: &mut Self::State,
-        event: Self::Event,
-    );
-    
-    fn new() -> Self::State;
+    fn current_state(&self) -> &Self::State;
+    fn handle_command(&self, cmd: Self::Command) -> Vec<Self::Event>;
+    fn apply_event(&mut self, event: Self::Event);
 }
 ```
 
-### Cross-Domain Communication
-
-Domains communicate exclusively through events:
+### State Machine Types
 
 ```mermaid
 graph TB
-    subgraph "Order Domain"
-        O1[Order Aggregate]
-        O2[Order Events]
+    subgraph "Domain State Machines"
+        DS1[Order State Machine]
+        DS2[Inventory State Machine]
+        DS3[Customer State Machine]
     end
     
-    subgraph "Inventory Domain"
-        I1[Inventory Aggregate]
-        I2[Inventory Events]
+    subgraph "Workflow State Machines"
+        WS1[Order Fulfillment]
+        WS2[Return Process]
+        WS3[Reorder Workflow]
     end
     
-    subgraph "Payment Domain"
-        P1[Payment Aggregate]
-        P2[Payment Events]
+    subgraph "Policy State Machines"
+        PS1[Fraud Detection]
+        PS2[Auto Reorder]
+        PS3[Discount Rules]
     end
     
-    subgraph "Event Mesh"
-        E[Event Bus]
+    subgraph "Saga State Machines"
+        SS1[Payment Saga]
+        SS2[Shipping Saga]
+        SS3[Refund Saga]
     end
     
-    O1 --> O2
-    O2 --> E
-    
-    I1 --> I2
-    I2 --> E
-    
-    P1 --> P2
-    P2 --> E
-    
-    E --> O1
-    E --> I1
-    E --> P1
+    DS1 --> WS1
+    DS2 --> WS1
+    WS1 --> SS1
+    PS2 --> DS2
     
     %% Styling
-    style O1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
-    style I1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
-    style P1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
-    style E fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style DS1 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style DS2 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style DS3 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style WS1 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style WS2 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style WS3 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style PS1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style PS2 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style PS3 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
 ```
 
-## Conceptual Spaces
+### State Completeness Principle
 
-### Gärdenfors Theory Implementation
-
-CIM implements conceptual spaces for semantic understanding:
+Each state contains ALL data needed for that state:
 
 ```rust
-pub struct ConceptualSpace {
-    pub dimensions: Vec<QualityDimension>,
-    pub regions: Vec<ConvexRegion>,
-    pub prototypes: Vec<Prototype>,
+// ❌ Wrong: Incomplete states
+enum BadOrderState {
+    Placed,      // Where's the order data?
+    Paid,        // How much was paid?
+    Shipped,     // What's the tracking info?
 }
 
-pub struct QualityDimension {
-    pub name: String,
-    pub range: Range<f64>,
-    pub metric: DistanceMetric,
-}
-
-pub struct ConvexRegion {
-    pub concept: String,
-    pub boundaries: Vec<Hyperplane>,
-    pub prototype: Point,
-}
-```
-
-### Semantic Similarity
-
-```rust
-impl ConceptualSpace {
-    pub fn similarity(&self, a: &Point, b: &Point) -> f64 {
-        // Calculate semantic similarity
-        let distance = self.distance(a, b);
-        1.0 / (1.0 + distance)
-    }
-    
-    pub fn nearest_concept(&self, point: &Point) -> &str {
-        self.regions
-            .iter()
-            .min_by_key(|r| self.distance(point, &r.prototype))
-            .map(|r| &r.concept)
-            .unwrap()
-    }
+// ✅ Right: Complete states
+enum GoodOrderState {
+    Placed {
+        order_id: OrderId,
+        customer: CustomerId,
+        items: Vec<LineItem>,
+        total: Money,
+        placed_at: DateTime,
+    },
+    Paid {
+        order_id: OrderId,
+        payment_id: PaymentId,
+        amount: Money,
+        paid_at: DateTime,
+    },
+    Shipped {
+        order_id: OrderId,
+        tracking: TrackingNumber,
+        carrier: Carrier,
+        shipped_at: DateTime,
+    },
 }
 ```
 
-### Example: Color Space
+## Graph-Based Domain Design
+
+### From Visual Design to Domain Code
+
+In CIM, domains start as visual graphs that AI transforms into state machines:
 
 ```mermaid
 graph LR
-    subgraph "RGB Color Space"
-        R[Red Dimension]
-        G[Green Dimension]
-        B[Blue Dimension]
-        
-        C1[Red Region]
-        C2[Green Region]
-        C3[Blue Region]
-        C4[Yellow Region]
-        C5[Purple Region]
-        
-        R --> C1
-        G --> C2
-        B --> C3
-        
-        R --> C4
-        G --> C4
-        
-        R --> C5
-        B --> C5
+    subgraph "Design Phase"
+        E1[Event Storm]
+        E2[Context Map]
+        E3[State Diagrams]
+        E4[Concept Graphs]
     end
     
+    subgraph "AI Generation"
+        A1[Parse Graphs]
+        A2[Generate State Machines]
+        A3[Create Event Types]
+        A4[Build Domain Module]
+    end
+    
+    subgraph "Runtime"
+        R1[State Machine Execution]
+        R2[Event Processing]
+        R3[Domain Logic]
+    end
+    
+    E1 --> A1
+    E2 --> A1
+    E3 --> A1
+    E4 --> A1
+    
+    A1 --> A2
+    A2 --> A3
+    A3 --> A4
+    
+    A4 --> R1
+    R1 --> R2
+    R2 --> R3
+    
     %% Styling
-    style R fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style G fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
-    style B fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
-    style C1 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style C2 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
-    style C3 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
-    style C4 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
-    style C5 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style E1 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style E2 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style A1 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style R1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
 ```
 
-## Distributed Architecture
+### Visual Domain Boundaries
 
-### Node Types
+Domains are defined visually in ExcaliDraw:
+
+```
+┌─────────────────────────────────────┐
+│         ORDER DOMAIN                │
+│  Everything is a State Machine      │
+│                                     │
+│  Order State Machine                │
+│  ├─ Draft → Placed → Paid          │
+│  └─ Cancelled (from any state)     │
+│                                     │
+│  Order Saga State Machine           │
+│  ├─ Started → Processing            │
+│  └─ Completed / Failed              │
+└─────────────────────────────────────┘
+        │ Events │
+        ▼        ▼
+┌─────────────────────────────────────┐
+│      INVENTORY DOMAIN               │
+│  Stock State Machine                │
+│  ├─ Available → Reserved            │
+│  └─ Depleted → Restocking          │
+└─────────────────────────────────────┘
+```
+
+### State Machine Aggregates
+
+Aggregates in CIM are state machines with complete state data:
+
+```rust
+// AI generates this from your visual state diagram
+#[derive(StateMachine)]
+pub enum OrderAggregate {
+    Draft {
+        id: OrderId,
+        customer: CustomerId,
+        items: Vec<LineItem>,
+        created_at: DateTime,
+    },
+    
+    Placed {
+        id: OrderId,
+        customer: CustomerId,
+        items: Vec<LineItem>,
+        total: Money,
+        placed_at: DateTime,
+    },
+    
+    Paid {
+        id: OrderId,
+        payment_id: PaymentId,
+        amount: Money,
+        paid_at: DateTime,
+    },
+    
+    Cancelled {
+        id: OrderId,
+        reason: CancellationReason,
+        cancelled_at: DateTime,
+        refund_status: Option<RefundStatus>,
+    },
+}
+```
+
+## Visual Conceptual Spaces
+
+### From Concept Graphs to Semantic Understanding
+
+CIM uses visual concept graphs (Arrows.app) to define semantic spaces:
+
+```cypher
+// Visual concept graph in Arrows.app
+// This becomes semantic understanding
+
+// Quality dimensions as relationships
+(Price)-[:DIMENSION {weight: 0.7}]->(Product)
+(Quality)-[:DIMENSION {weight: 0.9}]->(Product)
+(Availability)-[:DIMENSION {weight: 0.5}]->(Product)
+
+// Concept regions
+(Premium:Region {price: "high", quality: "high"})
+(Budget:Region {price: "low", quality: "medium"})
+(Luxury:Region {price: "very high", quality: "exceptional"})
+
+// Prototypes
+(iPhone:Prototype)-[:EXEMPLIFIES]->(Premium)
+(GenericPhone:Prototype)-[:EXEMPLIFIES]->(Budget)
+(VersacePhone:Prototype)-[:EXEMPLIFIES]->(Luxury)
+```
+
+### AI Interprets Visual Concepts
+
+AI agents read your concept graphs and generate semantic understanding:
+
+```rust
+// AI-generated from Arrows.app graph
+pub struct ProductSpace {
+    dimensions: Vec<Dimension>,
+    regions: Vec<ConceptRegion>,
+}
+
+impl ProductSpace {
+    // AI generates similarity from visual relationships
+    pub fn find_similar(&self, product: &Product) -> Vec<Product> {
+        // Uses graph-defined dimensions and weights
+        self.products
+            .iter()
+            .map(|p| (p, self.calculate_similarity(product, p)))
+            .filter(|(_, sim)| *sim > 0.7)
+            .map(|(p, _)| p.clone())
+            .collect()
+    }
+}
+```
+
+### Visual Concept Evolution
 
 ```mermaid
 graph TB
-    subgraph "Core Nodes"
-        CN1[Primary Core]
-        CN2[Secondary Core]
-        CN3[Tertiary Core]
+    subgraph "Concept Design (Arrows.app)"
+        CD1[Define Concepts]
+        CD2[Draw Relationships]
+        CD3[Set Properties]
+        CD4[Export Graph]
     end
     
-    subgraph "Edge Nodes"
-        EN1[Retail Location 1]
-        EN2[Retail Location 2]
-        EN3[Mobile Device]
-        EN4[IoT Gateway]
+    subgraph "AI Processing"
+        AI1[Parse Concept Graph]
+        AI2[Build Semantic Space]
+        AI3[Generate Code]
     end
     
-    subgraph "Specialized Nodes"
-        SN1[AI Processing Node]
-        SN2[Analytics Node]
-        SN3[Archive Node]
+    subgraph "Runtime Understanding"
+        R1[Concept Matching]
+        R2[Similarity Search]
+        R3[Semantic Queries]
     end
     
-    CN1 <--> CN2
-    CN2 <--> CN3
-    CN1 <--> CN3
-    
-    EN1 --> CN1
-    EN2 --> CN2
-    EN3 --> CN1
-    EN4 --> CN3
-    
-    CN1 --> SN1
-    CN2 --> SN2
-    CN3 --> SN3
+    CD1 --> CD2
+    CD2 --> CD3
+    CD3 --> CD4
+    CD4 --> AI1
+    AI1 --> AI2
+    AI2 --> AI3
+    AI3 --> R1
+    R1 --> R2
+    R2 --> R3
     
     %% Styling
-    style CN1 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style CN2 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style CN3 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style EN1 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
-    style EN2 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
-    style EN3 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
-    style EN4 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
-    style SN1 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
-    style SN2 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
-    style SN3 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style CD1 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style AI1 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style R1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
 ```
 
-### Consistency Model
+## Distributed State Machines
 
-CIM implements eventual consistency with:
-- Vector clocks for ordering
-- CRDTs for conflict-free updates
-- Gossip protocol for state synchronization
+### Visual Node Architecture
 
-```rust
-pub struct VectorClock {
-    clocks: HashMap<NodeId, u64>,
-}
+Nodes are designed visually, showing state machine distribution:
 
-impl VectorClock {
-    pub fn happens_before(&self, other: &Self) -> bool {
-        self.clocks.iter().all(|(node, &time)| {
-            other.clocks.get(node).map_or(false, |&other_time| time <= other_time)
-        })
-    }
-}
+```mermaid
+graph TB
+    subgraph "Visual Design"
+        VD[Node Layout in ExcaliDraw]
+    end
+    
+    subgraph "Core State Machines"
+        CS1[Order State Machines]
+        CS2[Inventory State Machines]
+        CS3[Customer State Machines]
+    end
+    
+    subgraph "Edge State Machines"
+        ES1[Local Order Cache]
+        ES2[Offline Inventory]
+        ES3[Mobile State Sync]
+    end
+    
+    subgraph "AI Nodes"
+        AI1[Graph Parser Node]
+        AI2[Code Generator Node]
+        AI3[State Optimizer Node]
+    end
+    
+    VD --> CS1
+    VD --> ES1
+    VD --> AI1
+    
+    CS1 -.->|Replicate| ES1
+    CS2 -.->|Sync| ES2
+    ES3 -->|Eventually| CS3
+    
+    AI1 --> AI2
+    AI2 --> AI3
+    AI3 -->|Optimize| CS1
+    
+    %% Styling
+    style VD fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style CS1 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style ES1 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style AI1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
 ```
 
-### Partition Tolerance
+### State Machine Distribution Pattern
 
-Edge nodes can operate offline:
+```
+Visual Node Design (ExcaliDraw)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌─────────────────┐
+│   Central Hub   │
+│ ┌─────────────┐ │
+│ │Order States │ │
+│ └─────────────┘ │
+└────────┬────────┘
+         │
+    ┌────┴────┬─────────┐
+    ▼         ▼         ▼
+┌────────┐ ┌────────┐ ┌────────┐
+│Store 1 │ │Store 2 │ │Mobile  │
+│┌──────┐│ │┌──────┐│ │┌──────┐│
+││Local ││ ││Local ││ ││Cache ││
+││States││ ││States││ ││States││
+│└──────┘│ │└──────┘│ │└──────┘│
+└────────┘ └────────┘ └────────┘
+
+Each node runs state machines
+Synchronization via event replication
+```
+
+### Distributed State Consistency
 
 ```rust
-pub struct EdgeNode {
-    local_store: EventStore,
-    sync_queue: Vec<Event>,
+// State machines handle distribution transparently
+#[derive(DistributedStateMachine)]
+pub struct OrderStateMachine {
+    // Local state
+    state: OrderState,
     
-    pub fn process_offline(&mut self, event: Event) {
-        self.local_store.append(event.clone());
-        self.sync_queue.push(event);
-    }
+    // Distribution metadata
+    node_id: NodeId,
+    version: VectorClock,
     
-    pub async fn sync_when_online(&mut self) -> Result<()> {
-        for event in self.sync_queue.drain(..) {
-            self.publish_to_mesh(event).await?;
+    // Offline queue
+    pending_sync: Vec<Event>,
+}
+
+impl OrderStateMachine {
+    // State transitions work offline
+    pub fn transition(&mut self, event: Event) -> Result<()> {
+        match self.state {
+            OrderState::Draft { .. } => {
+                self.apply_event(event);
+                self.version.increment(self.node_id);
+                
+                if self.is_offline() {
+                    self.pending_sync.push(event);
+                } else {
+                    self.broadcast(event).await?;
+                }
+            }
+            // Other states...
         }
         Ok(())
     }
 }
 ```
 
-## Security Architecture
+## Security Through State Machines
 
-### Zero-Trust Model
+### Visual Security Design
+
+Security is modeled as state machines in your visual designs:
+
+```
+Authentication State Machine (ExcaliDraw)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+○ Anonymous
+    │
+    ├─Present Credentials─→ Authenticating
+    │                           │
+    │                           ├─Valid─→ Authenticated
+    │                           │            │
+    │                           └─Invalid─→ Anonymous
+    │                                       │
+    └───────────────────────────────────────┘
+                     
+Authenticated State includes:
+- user_id: UserId
+- permissions: Set<Permission>
+- session_token: Token
+- expires_at: DateTime
+```
+
+### Security State Machines
 
 ```mermaid
 graph TB
-    subgraph "Identity Layer"
-        I1[User Identity]
-        I2[Device Identity]
-        I3[Service Identity]
+    subgraph "Access Control State Machine"
+        A1[No Access]
+        A2[Read Access]
+        A3[Write Access]
+        A4[Admin Access]
     end
     
-    subgraph "Authentication"
-        A1[YubiKey/FIDO2]
-        A2[OAuth2/OIDC]
-        A3[mTLS]
+    subgraph "Session State Machine"
+        S1[No Session]
+        S2[Active Session]
+        S3[Expired Session]
+        S4[Revoked Session]
     end
     
-    subgraph "Authorization"
-        Z1[Policy Engine]
-        Z2[Attribute-Based]
-        Z3[Context-Aware]
+    subgraph "Audit State Machine"
+        AU1[Event Recorded]
+        AU2[Event Verified]
+        AU3[Event Archived]
     end
     
-    subgraph "Audit"
-        AU1[Event Log]
-        AU2[Access Log]
-        AU3[Change Log]
-    end
+    A1 -->|Authenticate| A2
+    A2 -->|Elevate| A3
+    A3 -->|Grant Admin| A4
     
-    I1 --> A1
-    I2 --> A3
-    I3 --> A2
+    S1 -->|Login| S2
+    S2 -->|Timeout| S3
+    S2 -->|Revoke| S4
     
-    A1 --> Z1
-    A2 --> Z1
-    A3 --> Z1
-    
-    Z1 --> Z2
-    Z2 --> Z3
-    
-    Z3 --> AU1
-    Z3 --> AU2
-    Z3 --> AU3
+    %% All transitions generate audit events
+    A2 -.->|Log| AU1
+    A3 -.->|Log| AU1
+    S2 -.->|Log| AU1
     
     %% Styling
-    style I1 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style I2 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style I3 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style Z1 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
-    style AU1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style A1 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style S2 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style AU1 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
 ```
 
-### Encryption Strategy
-
-- **At Rest**: AES-256-GCM
-- **In Transit**: TLS 1.3
-- **End-to-End**: NaCl Box (Curve25519)
+### Policy as State Machines
 
 ```rust
-pub struct EncryptedEvent {
-    pub header: EventHeader,
-    pub encrypted_payload: Vec<u8>,
-    pub nonce: [u8; 24],
-    pub recipient_keys: Vec<PublicKey>,
+// Security policies are state machines too
+#[derive(PolicyStateMachine)]
+pub enum AccessPolicy {
+    Evaluating {
+        request: AccessRequest,
+        context: SecurityContext,
+    },
+    
+    Permitted {
+        request: AccessRequest,
+        permissions: Vec<Permission>,
+        expires_at: DateTime,
+    },
+    
+    Denied {
+        request: AccessRequest,
+        reason: DenialReason,
+        logged_at: DateTime,
+    },
 }
-```
 
-## Performance Considerations
-
-### Event Processing Pipeline
-
-```rust
-pub struct EventPipeline {
-    stages: Vec<Box<dyn PipelineStage>>,
-}
-
-pub trait PipelineStage {
-    fn process(&self, event: Event) -> PipelineResult;
-}
-
-// Parallel processing
-impl EventPipeline {
-    pub async fn process_batch(&self, events: Vec<Event>) {
-        let futures: Vec<_> = events
-            .into_iter()
-            .map(|event| self.process_single(event))
-            .collect();
-        
-        futures::future::join_all(futures).await;
+impl AccessPolicy {
+    pub fn evaluate(&mut self, rules: &[Rule]) {
+        match self {
+            Self::Evaluating { request, context } => {
+                let result = rules.iter()
+                    .all(|rule| rule.check(request, context));
+                
+                *self = if result {
+                    Self::Permitted {
+                        request: request.clone(),
+                        permissions: extract_permissions(rules),
+                        expires_at: calculate_expiry(context),
+                    }
+                } else {
+                    Self::Denied {
+                        request: request.clone(),
+                        reason: find_denial_reason(rules),
+                        logged_at: Utc::now(),
+                    }
+                };
+            }
+            _ => {} // Already evaluated
+        }
     }
 }
 ```
 
-### Optimization Strategies
+## Performance Through Visual Design
 
-1. **Event Batching**: Group events for network efficiency
-2. **Projection Caching**: Materialize frequently-queried views
-3. **Lazy Loading**: Load aggregate state on-demand
-4. **Compression**: Use zstd for event payloads
-5. **Connection Pooling**: Reuse NATS connections
+### Performance Patterns in Graphs
 
-### Benchmarks
+Performance optimization starts in your visual designs:
 
 ```
-Event Processing:
-- Single event: ~50μs
-- Batch (1000 events): ~30ms
-- Throughput: ~20,000 events/sec per node
+Performance-Oriented State Design (ExcaliDraw)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Query Performance:
-- Simple aggregate query: ~1ms
-- Cross-domain query: ~10ms
-- Graph traversal: ~50ms
+┌─────────────────────┐
+│   Hot Path States   │ ← Mark frequently accessed
+│  ┌──────────────┐  │
+│  │ Active Order │  │ Properties:
+│  │ (Cached)     │  │ - cache_ttl: 5min
+│  └──────────────┘  │ - index_on: [customer_id, date]
+└─────────────────────┘
+
+┌─────────────────────┐
+│   Cold Storage     │ ← Mark archival states  
+│  ┌──────────────┐  │
+│  │  Completed   │  │ Properties:
+│  │  (Archive)   │  │ - compress: true
+│  └──────────────┘  │ - retention: 7years
+└─────────────────────┘
 ```
 
-## Extension Points
-
-### Custom Domain Implementation
+### State Machine Performance Patterns
 
 ```rust
-// 1. Define your domain events
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub enum MyDomainEvent {
-    Created { id: String, data: MyData },
-    Updated { id: String, changes: Changes },
-}
-
-// 2. Implement aggregate
-pub struct MyAggregate {
-    id: String,
-    state: MyState,
-}
-
-impl Aggregate for MyAggregate {
-    type State = MyState;
-    type Command = MyCommand;
-    type Event = MyDomainEvent;
-    type Error = MyError;
+// AI generates optimized code from visual hints
+#[derive(StateMachine, HotPath)] // From visual annotation
+pub enum OrderState {
+    // Frequently accessed - kept in memory
+    #[hot_state(cache_ttl = "5min")]
+    Active {
+        // Indexed fields from visual design
+        #[indexed]
+        customer_id: CustomerId,
+        #[indexed]
+        created_at: DateTime,
+        items: Vec<LineItem>,
+    },
     
-    // Implementation...
+    // Archived after completion
+    #[cold_state(compress = true)]
+    Completed {
+        order_id: OrderId,
+        completed_at: DateTime,
+        #[compressed]
+        history: Vec<Event>,
+    },
 }
-
-// 3. Register with CIM
-cim.register_domain::<MyAggregate>("my-domain");
 ```
 
-### Custom Storage Backend
+### Visual Performance Monitoring
+
+```mermaid
+graph LR
+    subgraph "Design Time"
+        D1[Mark Hot Paths]
+        D2[Identify Bottlenecks]
+        D3[Plan Caching]
+    end
+    
+    subgraph "Runtime Monitoring"
+        R1[State Transition Metrics]
+        R2[Event Flow Rates]
+        R3[Cache Hit Rates]
+    end
+    
+    subgraph "AI Optimization"
+        A1[Analyze Patterns]
+        A2[Suggest Improvements]
+        A3[Update Graphs]
+    end
+    
+    D1 --> R1
+    D2 --> R2
+    D3 --> R3
+    
+    R1 --> A1
+    R2 --> A1
+    R3 --> A1
+    
+    A1 --> A2
+    A2 --> A3
+    A3 -->|Feedback| D1
+    
+    %% Styling
+    style D1 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style R1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style A1 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+```
+
+## Extending CIM Through Graphs
+
+### Visual Domain Extension Process
+
+```mermaid
+graph TB
+    subgraph "1. Visual Discovery"
+        V1[Event Storm Your Domain]
+        V2[Draw State Machines]
+        V3[Map Concepts]
+        V4[Design Workflows]
+    end
+    
+    subgraph "2. Export Artifacts"
+        E1[ExcaliDraw → JSON]
+        E2[Arrows → Cypher]
+        E3[Package Designs]
+    end
+    
+    subgraph "3. AI Generation"
+        A1[Parse Visual Designs]
+        A2[Generate Domain Code]
+        A3[Create State Machines]
+        A4[Build Event Types]
+    end
+    
+    subgraph "4. Custom Logic"
+        C1[Add Business Rules]
+        C2[Implement Policies]
+        C3[Define Integrations]
+    end
+    
+    V1 --> V2
+    V2 --> V3
+    V3 --> V4
+    V4 --> E1
+    E1 --> E2
+    E2 --> E3
+    E3 --> A1
+    A1 --> A2
+    A2 --> A3
+    A3 --> A4
+    A4 --> C1
+    C1 --> C2
+    C2 --> C3
+    
+    %% Styling
+    style V1 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style A1 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style C1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+```
+
+### Creating a New Domain Extension
+
+```bash
+# 1. Start with visual design
+mkdir -p cowboy-ai-inventory/design/graphs
+cd cowboy-ai-inventory/design/graphs
+
+# 2. Create your Event Storm
+# Open ExcaliDraw and design:
+# - Domain Events (orange sticky notes)
+# - Commands (blue sticky notes)  
+# - Aggregates (yellow sticky notes)
+# - Policies (purple sticky notes)
+
+# 3. Export and generate
+cim ai new-domain \
+  --from-graphs ./design/graphs \
+  --name cowboy-ai-inventory
+
+# AI reads your graphs and generates:
+# - State machine implementations
+# - Event definitions
+# - Command handlers
+# - Policy state machines
+```
+
+### Visual Plugin Architecture
+
+```
+Plugin System Design (ExcaliDraw)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌─────────────────┐
+│  Core CIM       │
+│  State Engine   │
+└────────┬────────┘
+         │
+    ╔════╧════╗
+    ║ Plugin  ║
+    ║  API    ║
+    ╚═╤═══╤═══╝
+      │   │
+      │   └────────────┐
+      ▼                ▼
+┌──────────┐    ┌──────────────┐
+│ Storage  │    │ Custom State │
+│ Plugin   │    │  Machines    │
+└──────────┘    └──────────────┘
+
+Plugins are state machines too!
+```
+
+## Visual-First Best Practices
+
+### 1. Start with Graphs, Not Code
+
+```
+✅ RIGHT WAY
+━━━━━━━━━━━
+1. Event Storm in ExcaliDraw
+2. Draw state machines
+3. Map concepts in Arrows
+4. Export for AI generation
+5. Add custom business logic
+
+❌ WRONG WAY
+━━━━━━━━━━━
+1. Write code
+2. Create diagrams later
+3. Documentation as afterthought
+```
+
+### 2. Everything is a State Machine
+
+```
+✅ CORRECT THINKING
+━━━━━━━━━━━━━━━━━━
+- Aggregates = State Machines
+- Workflows = State Machines
+- Policies = State Machines
+- Sagas = State Machines
+- Security = State Machines
+
+❌ INCORRECT THINKING
+━━━━━━━━━━━━━━━━━━━━
+- Services and repositories
+- Controllers and models
+- Managers and handlers
+```
+
+### 3. Complete State Principle
 
 ```rust
-pub trait StorageBackend {
-    async fn append(&mut self, event: Event) -> Result<()>;
-    async fn read_stream(&self, stream: StreamId) -> Result<Vec<Event>>;
-    async fn create_snapshot(&self, aggregate: AggregateId) -> Result<()>;
+// ✅ Good: Each state has ALL needed data
+enum OrderState {
+    Active {
+        id: OrderId,
+        customer: Customer,
+        items: Vec<Item>,
+        total: Money,
+    },
 }
 
-// Implement for your storage
-impl StorageBackend for MyCustomStorage {
-    // Implementation...
-}
-```
-
-### AI Agent Integration
-
-```rust
-pub trait AIAgent {
-    async fn process_natural_language(&self, input: &str) -> Result<Intent>;
-    async fn generate_response(&self, context: Context) -> Result<String>;
-    async fn learn_from_feedback(&mut self, feedback: Feedback) -> Result<()>;
+// ❌ Bad: State requires external lookups
+enum OrderState {
+    Active {
+        id: OrderId,
+        // Where's the data?
+    },
 }
 ```
 
-## Best Practices
+### 4. Visual Documentation IS the Documentation
 
-### 1. Event Design
-- Keep events immutable
-- Use past tense naming
-- Include all necessary data
-- Version events for evolution
+```bash
+# Your documentation structure
+docs/
+├── event-storms/      # Discovery sessions
+├── state-machines/    # Behavior designs
+├── context-maps/      # Boundaries
+├── concept-graphs/    # Relationships
+└── workflows/         # Process flows
 
-### 2. Domain Boundaries
-- One aggregate per transaction
-- No cross-aggregate transactions
-- Use sagas for coordination
-- Keep aggregates small
+# NOT this:
+docs/
+├── api-reference.md   # Generated after
+├── class-diagrams.md  # We don't have classes
+└── database-schema.md # Events are the schema
+```
 
-### 3. Performance
-- Prefer async operations
-- Use streaming for large datasets
-- Implement backpressure
-- Monitor event lag
+## The Visual Architecture Revolution
 
-### 4. Security
-- Encrypt sensitive data
-- Audit all operations
-- Use least privilege
-- Validate at boundaries
+CIM's architecture represents a fundamental shift in how we build systems:
 
-## Conclusion
+### Traditional vs CIM Architecture
 
-CIM's architecture provides a solid foundation for building distributed, event-driven information systems. By treating information as first-class citizens and using domains as the primary abstraction, CIM enables systems that are:
+```
+TRADITIONAL ARCHITECTURE          CIM VISUAL ARCHITECTURE
+━━━━━━━━━━━━━━━━━━━━━━━          ━━━━━━━━━━━━━━━━━━━━━
+Code → Documentation             Graphs → Code
+Objects and Services             State Machines Everywhere  
+Developers Write Code            Developers Draw Behavior
+AI Assists Coding                AI Generates from Graphs
+Code is Truth                    Visual Design is Truth
+```
 
-- **Flexible**: Easy to extend and modify
-- **Scalable**: Distributed by design
-- **Resilient**: No single point of failure
-- **Semantic**: Understanding meaning, not just structure
-- **Composable**: Build complex systems from simple parts
+### Why This Matters
 
-The architecture is designed to evolve with your needs, from a single node deployment to a global distributed system.
+1. **Business Understanding**: Graphs are universally understood
+2. **AI-Native**: AI excels at interpreting visual patterns
+3. **Correctness**: Invalid states impossible by design
+4. **Evolution**: Change graphs, regenerate code
+5. **Collaboration**: Everyone can contribute to design
+
+### The State Machine Advantage
+
+```mermaid
+graph LR
+    subgraph "Everything is Predictable"
+        S1[Known States]
+        S2[Explicit Transitions]
+        S3[Complete Data]
+        S4[No Surprises]
+    end
+    
+    S1 --> S2
+    S2 --> S3
+    S3 --> S4
+    
+    style S1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style S4 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+```
+
+### Getting Started
+
+1. **Forget everything you know** about services and repositories
+2. **Think in states** - What states can things be in?
+3. **Draw before coding** - If you can't draw it, you don't understand it
+4. **Let AI help** - It's better at generating code than you are
+5. **Trust the process** - Visual-first works
 
 ---
 
-*Next: [Domain Development Guide](./domain-development-guide.md) - Learn how to build custom domains*
+*Next: Start your journey with the [Event Storming Guide](./event-storming-guide.md)*

@@ -22,6 +22,11 @@ CIM uses visual graphs as the primary design artifact. AI agents then generate c
 
 ### Primary Tools
 
+#### Traditional Event Storming (Recommended)
+- **Why**: Traditional Approach, No technology needed just Butcher Paper and Sticky Notes
+- **Use for**: Event Storming, Context Maps, Concept Diagrams
+- **Export**: Photo (preserves all data), PNG (for documentation), Extract to CIM Graph using AI.
+
 #### ExcaliDraw (Recommended)
 - **Why**: Open source, local-first, excellent export formats
 - **Use for**: Event Storming, Context Maps, Concept Diagrams
@@ -37,6 +42,12 @@ CIM uses visual graphs as the primary design artifact. AI agents then generate c
 ### Tool Setup
 
 ```bash
+# Unlimited roll of Paper
+1. Use multi-colored notes with large, hand written text
+2. Arrange as required
+3. Take a picture
+4. Import into CIM - Alchemist
+
 # ExcaliDraw with CIM Libraries
 1. Visit https://excalidraw.com
 2. Menu → Libraries → Browse Libraries
