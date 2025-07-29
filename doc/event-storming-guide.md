@@ -22,10 +22,197 @@ CIM uses visual graphs as the primary design artifact. AI agents then generate c
 
 ### Primary Tools
 
-#### Traditional Event Storming (Recommended)
-- **Why**: Traditional Approach, No technology needed just Butcher Paper and Sticky Notes
-- **Use for**: Event Storming, Context Maps, Concept Diagrams
-- **Export**: Photo (preserves all data), PNG (for documentation), Extract to CIM Graph using AI.
+#### Traditional Event Storming with Physical Sticky Notes (Alberto Brandolini Method)
+
+Alberto Brandolini created Event Storming as a workshop-based approach to quickly explore complex business domains. The method uses physical sticky notes on a large wall to discover domain events through collaborative exploration.
+
+##### The Brandolini Method
+
+**Core Principles:**
+1. **Big Picture First** - Start with a high-level view of the entire business process
+2. **Timeline-Based** - Events are arranged chronologically from left to right
+3. **No Chairs** - Standing keeps energy high and people engaged
+4. **Unlimited Modeling Space** - Use an entire wall or multiple walls
+5. **Domain Experts Drive** - Business people lead, developers learn
+
+**Materials Needed:**
+- **Orange sticky notes** - Domain Events (past tense)
+- **Blue sticky notes** - Commands (imperative mood)
+- **Yellow sticky notes** - Aggregates/Entities
+- **Pink sticky notes** - Hot spots/Problems/Questions
+- **Purple sticky notes** - Policies/Business Rules
+- **Green sticky notes** - External Systems
+- **Small yellow stickies** - Actors/Users
+- **Red tape or string** - Boundaries between contexts
+- **Markers** - Thick black markers for readability
+- **Unlimited wall space** - Minimum 6-8 meters of wall
+
+##### The Event Storming Process
+
+**Step 1: Chaotic Exploration (45-60 minutes)**
+```
+Instructions:
+1. "Write down business events that happen in this domain"
+2. "Use past tense: 'Order Placed', 'Payment Received'"
+3. "One event per orange sticky note"
+4. "Don't worry about order or duplicates yet"
+5. "If you're not sure, write it anyway"
+
+Result: Wall covered in orange sticky notes
+```
+
+**Step 2: Enforce Timeline (20-30 minutes)**
+```
+Instructions:
+1. "Arrange events from left to right in time order"
+2. "Parallel events stack vertically"
+3. "Remove obvious duplicates"
+4. "Mark unclear areas with pink stickies"
+
+Result: Rough timeline of domain events
+```
+
+**Step 3: Find Pivotal Events (15-20 minutes)**
+```
+Instructions:
+1. "Identify events that change the business flow"
+2. "Mark events that trigger many other events"
+3. "Look for events that represent phase transitions"
+4. "These often indicate aggregate boundaries"
+
+Result: Key business transitions identified
+```
+
+**Step 4: Commands and Actors (30-40 minutes)**
+```
+Instructions:
+1. "What command causes each event?"
+2. "Write commands on blue stickies (imperative: 'Place Order')"
+3. "Who issues this command? Add yellow actor stickies"
+4. "Place commands before their events"
+
+Result: Commands and actors connected to events
+```
+
+**Step 5: Aggregates and Boundaries (30-40 minutes)**
+```
+Instructions:
+1. "Group related events around yellow aggregate stickies"
+2. "Name the thing that changes state (Order, Inventory, Customer)"
+3. "Draw boundaries with red tape between different aggregates"
+4. "These boundaries often become your bounded contexts"
+
+Result: Domain model emerges from events
+```
+
+**Step 6: Policies and Read Models (20-30 minutes)**
+```
+Instructions:
+1. "When this event happens, what policies trigger?"
+2. "Write policies on purple stickies between events"
+3. "Identify what information is needed for decisions"
+4. "Mark external systems with green stickies"
+
+Result: Complete behavioral model of the domain
+```
+
+##### Converting Physical Event Storm to CIM
+
+**Photographing the Wall:**
+```bash
+# Best practices for capturing:
+1. Take one high-resolution overview photo
+2. Take detailed photos of each section (3-4 meter segments)
+3. Ensure all text is readable
+4. Use consistent lighting
+5. Keep camera perpendicular to wall
+```
+
+**Import to Digital Format:**
+```bash
+# Option 1: Direct to ExcaliDraw
+1. Upload photos as background
+2. Recreate sticky notes as digital elements
+3. Preserve spatial relationships
+4. Add digital-only metadata
+
+# Option 2: AI-Assisted Extraction
+cim ai extract-event-storm \
+  --photos ./event-storm-photos/*.jpg \
+  --output ./design/event-storm.excalidraw
+
+# AI will:
+# - OCR all sticky notes
+# - Identify types by color
+# - Preserve spatial relationships
+# - Generate ExcaliDraw file
+```
+
+##### Why Start with Physical Event Storming?
+
+**Advantages:**
+1. **No Technical Barriers** - Anyone can write on a sticky note
+2. **Tactile Engagement** - Physical interaction improves memory
+3. **Spatial Memory** - People remember where things were placed
+4. **Equal Participation** - No one person controls the mouse
+5. **Energy and Movement** - Standing and moving keeps energy high
+6. **Instant Visualization** - No UI to learn
+
+**When to Go Digital:**
+1. After initial discovery is complete
+2. For remote team members to review
+3. To version control the design
+4. To generate code from the model
+5. For ongoing refinement and evolution
+
+##### Common Patterns in Event Storming
+
+**Pattern 1: Command-Event Pairs**
+```
+[Place Order] → (Order Placed)
+[Pay Invoice] → (Invoice Paid)
+[Ship Package] → (Package Shipped)
+```
+
+**Pattern 2: Event Cascades**
+```
+(Order Placed) → [Reserve Inventory] → (Inventory Reserved)
+                → [Calculate Tax] → (Tax Calculated)
+                → [Send Confirmation] → (Confirmation Sent)
+```
+
+**Pattern 3: Policy Triggers**
+```
+(Inventory Low) → Policy: "When inventory < 10" → [Reorder Stock]
+```
+
+**Pattern 4: Aggregate Boundaries**
+```
+ORDER AGGREGATE          INVENTORY AGGREGATE
+(Order Placed)          (Stock Reserved)
+(Order Paid)            (Stock Depleted)
+(Order Shipped)         (Stock Received)
+```
+
+##### Tips for Successful Event Storming
+
+**Do:**
+- Invite actual domain experts who do the work daily
+- Keep sessions under 4 hours (split large domains)
+- Have plenty of supplies (hundreds of stickies)
+- Take breaks every hour
+- Document hot spots and questions
+- Let the domain experts drive
+
+**Don't:**
+- Start designing solutions
+- Discuss implementation details
+- Let developers dominate
+- Worry about perfection
+- Skip the chaotic exploration phase
+- Sit down
+
+**Export**: Photo (preserves all data), PNG (for documentation), Extract to CIM Graph using AI
 
 #### ExcaliDraw (Recommended)
 - **Why**: Open source, local-first, excellent export formats
