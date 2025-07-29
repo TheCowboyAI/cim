@@ -1,302 +1,490 @@
 # CIM Quick Start Guide
 
-Get up and running with the Composable Information Machine in 15 minutes.
+Build your first Composable Information Machine by understanding your business domain first.
 
-## What You'll Build
+## What is a CIM?
 
-In this guide, you'll create a simple information system that:
-- Tracks people and organizations
-- Handles document management
-- Responds to business events
-- Provides AI-powered insights
+A CIM is a living system that understands and manages your business information through:
+- **Event Storming** - Discovering what happens in your business
+- **Domain Modeling** - Creating state machines that reflect reality
+- **Context Mapping** - Understanding relationships between concepts
+- **Workflow Graphs** - Visual representation of business processes
 
 ## Prerequisites
 
 - Git installed
+- Rust toolchain (for building domains)
 - Docker or Podman (for NATS)
-- Development environment for your preferred language (Rust, Python, or Node.js)
-- Basic understanding of event-driven architecture
+- A clear business problem to solve
+- Stakeholders who understand the domain
 
-## Step 1: Install NATS (5 minutes)
+## Step 1: Event Storming (Essential First Step!)
 
-CIM uses NATS for event messaging. Start a NATS server with JetStream enabled:
+Before writing any code, you MUST understand your domain through Event Storming.
 
-```bash
-# Using Docker
-docker run -d --name nats-cim -p 4222:4222 -p 8222:8222 nats:latest -js
-
-# Or using Podman
-podman run -d --name nats-cim -p 4222:4222 -p 8222:8222 nats:latest -js
-
-# Verify it's running
-curl http://localhost:8222/varz
-```
-
-## Step 2: Create Your First CIM Project (5 minutes)
-
-### Option A: Using Rust
+### Gather Your Team
 
 ```bash
-# Clone the starter template
-git clone https://github.com/thecowboyai/cim-start my-cim-project
-cd my-cim-project
-
-# Install dependencies
-cargo build
-
-# Run the example
-cargo run --example basic_domain
+# You need:
+# - Domain experts (people who do the work)
+# - Developers
+# - Business stakeholders
+# - A large wall or whiteboard
+# - Lots of sticky notes (orange for events)
 ```
 
-### Option B: Using Python
+### Run an Event Storming Session
+
+```mermaid
+graph LR
+    subgraph "Event Storming Process"
+        A[Start with Events] --> B[Find Commands]
+        B --> C[Identify Aggregates]
+        C --> D[Discover Policies]
+        D --> E[Map Contexts]
+        
+        F[Orange: Events] -.-> A
+        G[Blue: Commands] -.-> B
+        H[Yellow: Aggregates] -.-> C
+        I[Pink: Policies] -.-> D
+        J[Green: Contexts] -.-> E
+    end
+    
+    %% Styling
+    style A fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style B fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style C fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style D fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style E fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+```
+
+### Example: Inventory Management Domain
+
+Let's discover an inventory domain:
+
+```yaml
+# event-storm-results.yaml
+events:
+  - name: "Item Received from Supplier"
+    triggers: "Delivery arrival"
+    data: "SKU, quantity, supplier, batch"
+    
+  - name: "Stock Count Adjusted"
+    triggers: "Physical count mismatch"
+    data: "SKU, old_count, new_count, reason"
+    
+  - name: "Item Sold"
+    triggers: "Customer purchase"
+    data: "SKU, quantity, order_id"
+    
+  - name: "Low Stock Alert Triggered"
+    triggers: "Stock below threshold"
+    data: "SKU, current_level, reorder_point"
+
+commands:
+  - name: "Receive Stock"
+    actor: "Warehouse Staff"
+    produces: "Item Received from Supplier"
+    
+  - name: "Sell Item"
+    actor: "Sales System"
+    produces: "Item Sold"
+    
+  - name: "Adjust Stock Count"
+    actor: "Inventory Manager"
+    produces: "Stock Count Adjusted"
+
+aggregates:
+  - name: "Inventory Item"
+    commands: ["Receive Stock", "Sell Item", "Adjust Stock Count"]
+    state: "Current stock level, reorder point, location"
+
+policies:
+  - name: "Reorder Policy"
+    trigger: "Low Stock Alert Triggered"
+    action: "Create Purchase Order"
+```
+
+## Step 2: Define Your Domain Purpose
+
+Now create your domain extension:
 
 ```bash
-# Clone the Python starter
-git clone https://github.com/thecowboyai/cim-python-start my-cim-project
-cd my-cim-project
+# Create your domain project
+cargo new --lib cowboy-ai-inventory
+cd cowboy-ai-inventory
 
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run the example
-python examples/basic_domain.py
+# Add CIM domain dependency
+cat >> Cargo.toml << 'EOF'
+[dependencies]
+cim-domain = { git = "https://github.com/thecowboyai/cim-domain" }
+async-trait = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+EOF
 ```
 
-### Option C: Using Node.js
+### Define Domain Intent
 
-```bash
-# Clone the Node.js starter
-git clone https://github.com/thecowboyai/cim-node-start my-cim-project
-cd my-cim-project
-
-# Install dependencies
-npm install
-
-# Run the example
-npm run example:basic
-```
-
-## Step 3: Understanding the Basic Structure (3 minutes)
-
-Your project contains these key components:
-
-```
-my-cim-project/
-├── domains/           # Business domain definitions
-│   ├── person.rs     # Person aggregate
-│   └── organization.rs # Organization aggregate
-├── events/           # Domain events
-│   └── mod.rs       # Event definitions
-├── handlers/         # Command and query handlers
-│   ├── commands.rs  # Business operations
-│   └── queries.rs   # Data retrieval
-└── main.rs          # Application entry point
-```
-
-### Core Concepts in Action
-
-1. **Domain Aggregate** - Business entity with behavior:
 ```rust
-// domains/person.rs
-pub struct Person {
-    pub id: String,
-    pub name: String,
-    pub email: String,
-    pub organization_id: Option<String>,
+// src/lib.rs
+//! # Cowboy AI Inventory Domain
+//! 
+//! Purpose: Manage inventory levels and automate reordering
+//! 
+//! Core Concepts:
+//! - Inventory Items (SKUs)
+//! - Stock Levels
+//! - Reorder Points
+//! - Supplier Relationships
+//! 
+//! Business Goals:
+//! - Never run out of stock
+//! - Minimize carrying costs
+//! - Automate reordering
+
+use cim_domain::prelude::*;
+
+pub const DOMAIN_NAME: &str = "cowboy-ai-inventory";
+pub const DOMAIN_VERSION: &str = "0.1.0";
+```
+
+## Step 3: Model Your State Machines
+
+Every aggregate in CIM is a state machine:
+
+```rust
+// src/aggregates/inventory_item.rs
+use cim_domain::{Aggregate, StateMachine, State, Transition};
+
+#[derive(Debug, Clone, State)]
+pub enum InventoryItemState {
+    // Initial state when item is created
+    Active {
+        sku: String,
+        name: String,
+        stock_level: u32,
+        reorder_point: u32,
+        reorder_quantity: u32,
+    },
+    // When stock is critically low
+    Critical {
+        sku: String,
+        name: String,
+        stock_level: u32,
+        pending_order: Option<String>,
+    },
+    // Item no longer carried
+    Discontinued {
+        sku: String,
+        reason: String,
+    },
+}
+
+impl StateMachine for InventoryItemState {
+    type Command = InventoryCommand;
+    type Event = InventoryEvent;
+    
+    fn apply_event(&mut self, event: Self::Event) {
+        match (self, event) {
+            // State transitions based on events
+            (Self::Active { stock_level, reorder_point, .. }, 
+             InventoryEvent::StockSold { quantity, .. }) => {
+                *stock_level -= quantity;
+                if *stock_level < *reorder_point {
+                    // Transition to Critical state
+                    *self = Self::Critical {
+                        // ... copy fields
+                    };
+                }
+            },
+            // ... more transitions
+        }
+    }
 }
 ```
 
-2. **Domain Event** - Something that happened:
+## Step 4: Create Context and Concept Maps
+
+Understanding relationships is crucial:
+
+```yaml
+# contexts/inventory-context.yaml
+context: Inventory Management
+concepts:
+  - name: SKU
+    type: ValueObject
+    description: "Unique product identifier"
+    relationships:
+      - has_many: StockMovements
+      - belongs_to: ProductCatalog
+      
+  - name: StockLevel
+    type: ValueObject
+    properties:
+      - current: Integer
+      - available: Integer  # current - reserved
+      - reserved: Integer
+      
+  - name: ReorderPoint
+    type: ValueObject
+    calculated_by: "lead_time * daily_usage + safety_stock"
+    
+  - name: Supplier
+    type: Entity
+    context: "Supplier Management"  # External context
+    
+relationships:
+  - InventoryItem supplies Product
+  - Supplier provides InventoryItem
+  - PurchaseOrder requests InventoryItem from Supplier
+```
+
+## Step 5: Design Workflow Graphs
+
+Visualize your business processes:
+
 ```rust
-// events/mod.rs
-pub enum PersonEvent {
-    Created { id: String, name: String, email: String },
-    JoinedOrganization { person_id: String, org_id: String },
+// src/workflows/reorder_workflow.rs
+use cim_domain::{Workflow, WorkflowBuilder};
+
+pub fn build_reorder_workflow() -> Workflow {
+    WorkflowBuilder::new("Automatic Reorder")
+        .start_with("Low Stock Detected")
+        .then("Check Supplier Availability")
+        .decision("Supplier Has Stock?")
+            .yes("Create Purchase Order")
+            .no("Find Alternative Supplier")
+        .merge()
+        .then("Send Order to Supplier")
+        .then("Await Confirmation")
+        .end_with("Update Pending Orders")
+        .build()
 }
 ```
 
-3. **Command Handler** - Business operation:
+## Step 6: Implement Your First Domain
+
+Now that you understand your domain:
+
+```bash
+# Install NATS for event messaging
+docker run -d --name nats -p 4222:4222 nats:latest -js
+
+# Create domain structure
+mkdir -p src/{aggregates,commands,events,policies,workflows,projections}
+```
+
+### Core Domain Implementation
+
 ```rust
-// handlers/commands.rs
-pub async fn create_person(
-    name: String,
-    email: String,
-) -> Result<String, Error> {
-    let person = Person::new(name, email);
-    store.save(person).await?;
-    Ok(person.id)
+// src/events.rs
+#[derive(Debug, Clone, Event)]
+pub enum InventoryEvent {
+    ItemCreated {
+        sku: String,
+        name: String,
+        initial_stock: u32,
+        reorder_point: u32,
+    },
+    StockReceived {
+        sku: String,
+        quantity: u32,
+        supplier: String,
+        batch_id: String,
+    },
+    StockSold {
+        sku: String,
+        quantity: u32,
+        order_id: String,
+    },
+    LowStockAlertTriggered {
+        sku: String,
+        current_level: u32,
+        reorder_point: u32,
+    },
 }
 ```
 
-## Step 4: Run Your First Workflow (2 minutes)
+## Step 7: Test Your Domain Logic
 
-Let's create a person and have them join an organization:
-
-```bash
-# Using the CLI tool (if using Rust starter)
-./target/debug/my-cim-project create-person "Alice Smith" "alice@example.com"
-# Output: Created person with ID: person_123abc
-
-./target/debug/my-cim-project create-org "Acme Corp"
-# Output: Created organization with ID: org_456def
-
-./target/debug/my-cim-project join-org person_123abc org_456def
-# Output: Alice Smith joined Acme Corp
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_stock_depletion_triggers_alert() {
+        let mut item = InventoryItemState::Active {
+            sku: "WIDGET-001".to_string(),
+            name: "Super Widget".to_string(),
+            stock_level: 25,
+            reorder_point: 20,
+            reorder_quantity: 100,
+        };
+        
+        // Sell 10 units
+        item.apply_event(InventoryEvent::StockSold {
+            sku: "WIDGET-001".to_string(),
+            quantity: 10,
+            order_id: "ORDER-123".to_string(),
+        });
+        
+        // Should transition to Critical state
+        matches!(item, InventoryItemState::Critical { .. });
+    }
+}
 ```
 
-## Step 5: See Events in Action
-
-The system automatically generated and processed these events:
-
-1. `PersonCreated` event
-2. `OrganizationCreated` event
-3. `PersonJoinedOrganization` event
-
-Check the event log:
+## Step 8: Deploy Your Domain
 
 ```bash
-# View recent events
-./target/debug/my-cim-project show-events --recent 10
+# Build your domain
+cargo build --release
+
+# Package for distribution
+cargo package
+
+# Deploy locally for testing
+export CIM_DOMAIN_PATH=./target/release
+cim domains load cowboy-ai-inventory
 ```
 
-## What Just Happened?
+## What You've Accomplished
 
-You've just:
-1. ✅ Set up a distributed messaging system (NATS)
-2. ✅ Created domain models (Person, Organization)
-3. ✅ Implemented event sourcing
-4. ✅ Executed commands that generate events
-5. ✅ Queried the current state
+1. ✅ **Discovered your domain** through Event Storming
+2. ✅ **Mapped contexts and concepts** to understand relationships
+3. ✅ **Designed state machines** that reflect business reality
+4. ✅ **Created workflow graphs** for business processes
+5. ✅ **Implemented a domain** that extends cim-domain
 
 ## Next Steps
 
-### 1. Add AI Capabilities
+### 1. Create More Domains
+
+Your business likely needs multiple domains:
 
 ```bash
-# Clone the Alchemist AI agent
-git clone https://github.com/thecowboyai/cim-agent-alchemist
-cd cim-agent-alchemist
-
-# Configure it to connect to your NATS instance
-echo "NATS_URL=nats://localhost:4222" > .env
-
-# Run the AI agent
-cargo run
+# Examples of domains you might need:
+cargo new --lib cowboy-ai-customers     # Customer management
+cargo new --lib cowboy-ai-orders        # Order processing
+cargo new --lib cowboy-ai-shipping      # Shipping & logistics
+cargo new --lib cowboy-ai-accounting    # Financial tracking
 ```
 
-Now you can ask questions in natural language:
-- "Show me all people in Acme Corp"
-- "What organizations exist?"
-- "Create a new person named Bob"
+### 2. Connect Domains with Context Maps
 
-### 2. Deploy to the Edge
-
-```bash
-# Clone CIM Leaf for edge deployment
-git clone https://github.com/thecowboyai/cim-leaf
-cd cim-leaf
-
-# Build for your edge device
-cargo build --release --target=aarch64-unknown-linux-gnu
+```yaml
+# context-map.yaml
+contexts:
+  - name: Inventory
+    type: Core
+    domains: [cowboy-ai-inventory]
+    
+  - name: Sales
+    type: Core
+    domains: [cowboy-ai-orders, cowboy-ai-customers]
+    
+  - name: Fulfillment
+    type: Supporting
+    domains: [cowboy-ai-shipping]
+    
+relationships:
+  - type: Customer-Supplier
+    upstream: Sales
+    downstream: Inventory
+    interface: "Order places demand on Inventory"
+    
+  - type: Conformist
+    upstream: Inventory
+    downstream: Fulfillment
+    interface: "Fulfillment conforms to Inventory availability"
 ```
 
-### 3. Add More Domains
-
-Explore available domains:
-- `cim-domain-finance` - Financial transactions
-- `cim-domain-inventory` - Inventory management
-- `cim-domain-workflow` - Business workflows
-- `cim-domain-documents` - Document management
-
-### 4. Create Visual Workflows
-
-```bash
-# Install the workflow designer
-git clone https://github.com/thecowboyai/cim-workflow-designer
-cd cim-workflow-designer
-npm install && npm start
-```
-
-## Common Patterns
-
-### Event-Driven Integration
+### 3. Design Cross-Domain Workflows
 
 ```rust
-// Subscribe to events from any domain
-event_bus.subscribe("PersonCreated", |event| {
-    println!("New person: {:?}", event);
-    // Trigger workflows, send notifications, etc.
-});
+// Complex workflow spanning multiple domains
+pub fn order_fulfillment_workflow() -> Workflow {
+    WorkflowBuilder::new("Order to Delivery")
+        .start_with("Order Received")             // Orders domain
+        .then("Check Inventory Availability")      // Inventory domain
+        .decision("All Items Available?")
+            .yes("Reserve Inventory")
+            .no("Backorder Unavailable Items")
+        .merge()
+        .then("Process Payment")                   // Accounting domain
+        .then("Create Shipping Label")             // Shipping domain
+        .then("Pick and Pack Items")               // Warehouse domain
+        .then("Ship to Customer")                  // Shipping domain
+        .end_with("Order Complete")
+        .build()
+}
 ```
 
-### Cross-Domain Queries
+### 4. Add Intelligence with Alchemist
 
-```rust
-// Query across domains using the knowledge graph
-let results = knowledge_graph.query(r#"
-    MATCH (p:Person)-[:WORKS_AT]->(o:Organization)
-    WHERE o.name = "Acme Corp"
-    RETURN p.name, p.email
-"#).await?;
-```
-
-### Policy-Based Automation
-
-```rust
-// Define business policies
-policy_engine.add_rule(
-    "auto_approve_small_purchases",
-    When::amount_less_than(1000),
-    Then::auto_approve(),
-);
-```
-
-## Troubleshooting
-
-### NATS Connection Failed
 ```bash
-# Check if NATS is running
-docker ps | grep nats-cim
-
-# View NATS logs
-docker logs nats-cim
+# Configure Alchemist to understand your domain
+cat > alchemist-config.yaml << 'EOF'
+domains:
+  - name: cowboy-ai-inventory
+    concepts:
+      - SKU: "Product identifier"
+      - StockLevel: "Current inventory count"
+      - ReorderPoint: "When to order more"
+    
+    intents:
+      - "What items are low on stock?"
+      - "Show me inventory for {sku}"
+      - "When should we reorder {product}?"
+      - "What's our total inventory value?"
+EOF
 ```
 
-### Domain Not Found
-```bash
-# List available domains
-ls ~/git/thecowboyai/cim-domain-*
+## Common Pitfalls to Avoid
 
-# Install a domain module
-git clone https://github.com/thecowboyai/cim-domain-finance
-```
+### 1. Starting with Technology
+❌ "Let's use Rust and NATS"
+✅ "Let's understand our inventory problem"
 
-### Events Not Processing
-```bash
-# Check event stream health
-curl http://localhost:8222/streaming/serverz
-```
+### 2. Skipping Event Storming
+❌ "I know the domain, let's code"
+✅ "Let's discover the domain with experts"
 
-## Learn More
+### 3. Creating Anemic Domains
+❌ Simple data structures with getters/setters
+✅ Rich state machines with behavior
 
-- **[Architecture Deep Dive](./architecture-deep-dive.md)** - Understand the internals
-- **[Domain Development Guide](./domain-development-guide.md)** - Build custom domains
-- **[CIM Comprehensive Manual](./cim_comprehensive_manual.md)** - Complete reference
-- **[Module Catalog](./cim_modules_catalog.md)** - Available components
+### 4. Ignoring Context Boundaries
+❌ One big domain for everything
+✅ Multiple focused domains with clear boundaries
+
+## Resources
+
+### Essential Reading
+- **[Event Storming Guide](./event-storming-guide.md)** - Deep dive into discovery
+- **[State Machine Patterns](./state-machine-patterns.md)** - CIM state machine design
+- **[Context Mapping Guide](./context-mapping-guide.md)** - Understanding boundaries
+
+### Example Domains
+- [cowboy-ai-inventory](https://github.com/thecowboyai/cowboy-ai-inventory)
+- [cowboy-ai-warehouse](https://github.com/thecowboyai/cowboy-ai-warehouse)
+- [cowboy-ai-logistics](https://github.com/thecowboyai/cowboy-ai-logistics)
+
+### Tools
+- [CIM Domain Generator](https://github.com/thecowboyai/cim-domain-generator)
+- [Event Storm Facilitator](https://github.com/thecowboyai/event-storm-tool)
+- [Workflow Designer](https://github.com/thecowboyai/cim-workflow-designer)
 
 ## Get Help
 
-- 📖 Documentation: This repository
-- 🐛 Issues: [GitHub Issues](https://github.com/thecowboyai/cim/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/thecowboyai/cim/discussions)
-- 🤖 AI Assistant: Use `cim-agent-alchemist` for interactive help
+- 📖 Documentation: [CIM Docs](https://docs.cim.io)
+- 🎯 Examples: [CIM Examples](https://github.com/thecowboyai/cim-examples)
+- 💬 Community: [Discord](https://discord.gg/cim)
+- 🐛 Issues: [GitHub](https://github.com/thecowboyai/cim/issues)
 
 ---
 
-**Congratulations!** You've successfully set up your first CIM information system. The power of CIM lies in its composability - start small and grow your system as your needs evolve.
+**Remember:** CIM is about understanding your business first, then expressing that understanding as living, reactive systems. Every domain you create should solve a real business problem.
 
-*Remember: In CIM, information flows like water - it finds its own level and connects naturally.*
+*"A CIM doesn't just process information - it understands it."*
