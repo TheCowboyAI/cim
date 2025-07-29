@@ -1,9 +1,0 @@
-relationships:
-  CowboyAI:
-    employs:
-      - steele:
-          title: Chief Science Officer
-      - david: 
-          title: Chief Operating Officer
-      - jace:
-          title: Chief Executive Officer

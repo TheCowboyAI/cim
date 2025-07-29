@@ -1,1 +1,0 @@
-These are Objects and Ideas that are secret, not the secrets themself.

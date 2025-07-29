@@ -1,0 +1,215 @@
+{
+  "cim_domain_knowledge_graph": {
+    "metadata": {
+      "version": "1.0.0",
+      "generated_date": "2025-01-29",
+      "description": "CIM Domain Knowledge Graph compiled from /doc/domain structure"
+    },
+    "domains": [
+      {
+        "name": "accounts",
+        "description": "Accounts in this context refer to a specific relationship where there is an Identifier between one of these entities: people, agent, organization, operator. These are determined by specific Policies applied to the Account based on Operator and Tenant."
+      },
+      {
+        "name": "agents",
+        "domain_type": "Technical Domain",
+        "description": "Agents refer to automatons that are operated by a user. These are autonomous entities within the CIM system that interact with models, behaviors, and sources. They operate under human supervision through NATS communication and are mostly implemented as WASM Modules."
+      },
+      {
+        "name": "ai_integration",
+        "domain_type": "Knowledge Domain",
+        "description": "Defines and manages AI system integration, capabilities, and interactions within the CIM system. This includes model orchestration, agent coordination, learning management, decision support, and safety protocols."
+      },
+      {
+        "name": "arguments",
+        "domain_type": "Knowledge Domain",
+        "description": "Defines and manages structured arguments, their validation, and logical relationships. Arguments are established definitions for or against certain proposals, with sources that can be weighted for trust level, preference, and accuracy."
+      },
+      {
+        "name": "axioms",
+        "domain_type": "Knowledge Domain",
+        "description": "Manages fundamental axioms, self-evident truths, and foundational principles within the CIM system. These are foundational truths that provide the basis for proofs and theories."
+      },
+      {
+        "name": "behaviors",
+        "description": "Behaviors are pure functionality that can be applied to a trigger. These are usually reactions to Events and are added to Policies as Capabilities. Capabilities are a structure for behaviors inside of a Module."
+      },
+      {
+        "name": "businessmodel",
+        "domain_type": "Business Domain",
+        "description": "Defines and manages business operations, models, and value propositions using the Business Model Canvas framework with 9 basic concepts: Customer Segments, Value Propositions, Channels, Customer Relationships, Revenue Streams, Key Resources, Key Activities, Key Partnerships, and Cost Structure."
+      },
+      {
+        "name": "claims",
+        "domain_type": "Knowledge Domain",
+        "description": "Manages claims, their assessment, and verification processes. Claims are arguments applied to specific contexts that must be verified by facts. Examples include simple claims like 'john is an active User' or complex claims about environmental impacts."
+      },
+      {
+        "name": "color",
+        "description": "No description provided"
+      },
+      {
+        "name": "distribution",
+        "domain_type": "Technical Domain",
+        "description": "Manages the distribution and communication of system components and data, including message routing, data distribution, component deployment, network topology, service discovery, load balancing, and fault tolerance."
+      },
+      {
+        "name": "environment",
+        "domain_type": "Technical Domain",
+        "description": "Defines and manages environmental context and influences within the CIM system, including environmental state tracking, resource monitoring, system constraints, external influences, performance metrics, and health indicators."
+      },
+      {
+        "name": "equipment",
+        "description": "No description provided"
+      },
+      {
+        "name": "ethics",
+        "domain_type": "Knowledge Domain",
+        "description": "Defines and manages ethical principles, moral frameworks, and value systems that guide system behavior and decision-making processes."
+      },
+      {
+        "name": "facts",
+        "domain_type": "Knowledge Domain",
+        "description": "Manages verified facts, their evidence, and relationships. Facts require rigorous verification with comprehensive evidence from reliable sources, and truth maintenance is ongoing."
+      },
+      {
+        "name": "funding",
+        "description": "Funding is the act of providing resources to finance a need, program, or project. While this is usually in the form of money, it can also take the form of effort or time from an organization or company."
+      },
+      {
+        "name": "goals",
+        "description": "Where you mark desired achievements and accomplishments for which to strive."
+      },
+      {
+        "name": "governance",
+        "domain_type": "Business Domain",
+        "description": "Defines and manages governance policies, compliance, and control mechanisms including policy management, compliance oversight, risk management, control frameworks, audit processes, and decision governance."
+      },
+      {
+        "name": "ideas",
+        "description": "Ideas are concepts we can define as a whole. Until we have fully defined them, they are just ideas. This serves as an effective list of things the company is thinking about as a whole."
+      },
+      {
+        "name": "information",
+        "domain_type": "Knowledge Domain",
+        "description": "Manages information structures, flows, and transformations. Information forms the foundation of knowledge, with quality control being essential for reliability."
+      },
+      {
+        "name": "knowledge",
+        "domain_type": "Knowledge Domain",
+        "description": "Defines and manages knowledge creation, organization, and utilization through knowledge representation, semantic modeling, ontology management, learning processes, and reasoning systems."
+      },
+      {
+        "name": "laws",
+        "domain_type": "Knowledge Domain",
+        "description": "Manages legal frameworks, regulatory compliance, and statutory requirements. Laws provide the regulatory framework where compliance is mandatory, jurisdiction matters, and risk management is essential."
+      },
+      {
+        "name": "location",
+        "description": "Manages locations based on a center point (Earth's center). Locations are stored as vectors with direction and distance, easily convertible to latitude, longitude, and altitude."
+      },
+      {
+        "name": "models",
+        "domain_type": "Technical Domain",
+        "description": "Manages computational models and their interactions. Models are digital representations of real-world things, created as statements and refined into various categories. They form the computational foundation of the CIM system.",
+        "subdomains": [
+          {
+            "name": "automata",
+            "description": "No additional description provided"
+          },
+          {
+            "name": "domain/boundedcontexts",
+            "description": "No description provided"
+          },
+          {
+            "name": "domain/subdomains",
+            "description": "No description provided"
+          }
+        ]
+      },
+      {
+        "name": "operators",
+        "description": "No description provided in readme"
+      },
+      {
+        "name": "organizations",
+        "domain_type": "Business Domain",
+        "description": "Defines and manages organizational structures, roles, and relationships. Clear roles and responsibilities are essential for effective operation and team collaboration."
+      },
+      {
+        "name": "people",
+        "description": "No description provided in readme"
+      },
+      {
+        "name": "persistence",
+        "domain_type": "Technical Domain",
+        "description": "Manages data storage, retrieval, and persistence across the CIM system through event sourcing, CQRS implementation, cache management, backup strategies, and recovery procedures."
+      },
+      {
+        "name": "policies",
+        "description": "Policies are Behaviors applied to specific States. States are defined as collections of Domain Events. When these collections reach a collective value, they can trigger reactions called Policies."
+      },
+      {
+        "name": "politics",
+        "description": "No description provided"
+      },
+      {
+        "name": "preferences",
+        "description": "No description provided"
+      },
+      {
+        "name": "proofs",
+        "domain_type": "Knowledge Domain",
+        "description": "Manages proof systems, verification processes, and validation methods. Proofs are fundamental to system trust, with verification ensuring reliability and validation maintaining integrity."
+      },
+      {
+        "name": "proposals",
+        "description": "No description provided"
+      },
+      {
+        "name": "refusals",
+        "description": "Simply stated as 'I won't do that.' - represents things the system absolutely won't do."
+      },
+      {
+        "name": "relationships",
+        "domain_type": "Knowledge Domain",
+        "description": "Defines and manages relationships between entities within the CIM system. This is a cross-cutting concern that affects all domains, with pattern recognition and impact assessment being critical."
+      },
+      {
+        "name": "secrets",
+        "description": "These are Objects and Ideas that are secret, not the secrets themselves."
+      },
+      {
+        "name": "security",
+        "domain_type": "Technical Domain",
+        "description": "Ensures system security, access control, and data protection across the CIM system using zero trust architecture, defense in depth, least privilege, and continuous compliance monitoring."
+      },
+      {
+        "name": "solutions",
+        "description": "No description provided"
+      },
+      {
+        "name": "sources",
+        "domain_type": "Knowledge Domain",
+        "description": "Manages information sources and their provenance, including information origin tracking, verification status, trust levels, update frequency, and access patterns."
+      },
+      {
+        "name": "tenants",
+        "description": "Tenants are Organizations functioning under an Operator. Operators run Equipment, and Tenants use the Resources of an Operator."
+      },
+      {
+        "name": "theories",
+        "domain_type": "Knowledge Domain",
+        "description": "Manages theoretical frameworks, hypotheses, and their evolution. Theories build on validated facts, with hypotheses guiding investigation and experiments validating theories."
+      },
+      {
+        "name": "things",
+        "description": "No description provided"
+      },
+      {
+        "name": "valuepropositions",
+        "description": "The value a business promises to deliver to customers. This includes addressing customer pains (problems) and gains (solutions), communicated directly through established channels to turn prospects into paying customers."
+      }
+    ]
+  }
+}
