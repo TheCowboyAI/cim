@@ -1,5 +1,5 @@
 {
-  description = "CIM Ontology Tool - A suite for extracting, managing, and analyzing ontologies";
+  description = "CIM - The Composable Information Machine";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -27,39 +27,9 @@
 
         rustToolchain = pkgs.pkgsBuildHost.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
 
-        # Define the main package
-        cim-ontology-tool = pkgs.rustPlatform.buildRustPackage {
-          pname = "cim-ontology-tool";
-          version = "0.1.0";
-
-          src = ./cim-ontology-tool;
-
-          cargoLock = {
-            lockFile = ./cim-ontology-tool/Cargo.lock;
-          };
-
-          buildInputs = with pkgs; [
-            openssl
-            pkg-config
-          ];
-
-          nativeBuildInputs = with pkgs; [
-            rustToolchain
-            pkg-config
-          ];
-
-          meta = with pkgs.lib; {
-            description = "An ontology extraction tool for Composable Information Machines (CIMs)";
-            homepage = "https://github.com/thecowboyai/cim";
-            license = licenses.mit;
-            maintainers = [];
-          };
-        };
       in {
         # Package outputs
         packages = {
-          cim-ontology-tool = cim-ontology-tool;
-          default = cim-ontology-tool;
         };
 
         # Development shell
@@ -84,16 +54,6 @@
           ];
 
           RUST_SRC_PATH = pkgs.rustPlatform.rustLibSrc;
-        };
-
-        # Check for CI
-        checks = {
-          inherit cim-ontology-tool;
-        };
-
-        # Make the binary available
-        apps.default = flake-utils.lib.mkApp {
-          drv = cim-ontology-tool;
         };
       }
     );
