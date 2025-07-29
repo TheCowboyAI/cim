@@ -4,15 +4,23 @@ Welcome to the Composable Information Machine documentation. This index provides
 
 ## 🚀 Getting Started
 
-- **[Quick Start Guide](./quick-start-guide.md)** - Get up and running in 15 minutes
+- **[Quick Start Guide](./quick-start-guide.md)** - Start with Event Storming and domain discovery
+- **[Event Storming Guide](./event-storming-guide.md)** - Discover your domain visually
 - **[CIM Overview](./readme_cim_overview.md)** - Understand what CIM is and why it matters
-- **[Module Catalog](./cim_modules_catalog.md)** - Browse available CIM modules
+
+## 🎨 Visual Design First
+
+- **[Event Storming Guide](./event-storming-guide.md)** - Discover domains with ExcaliDraw
+- **[Context Mapping Guide](./context-mapping-guide.md)** - Define boundaries and relationships
+- **[Workflow Graph Guide](./workflow-graph-guide.md)** - Design executable business processes
+- **[State Machine Patterns](./state-machine-patterns.md)** - Everything is a state machine
 
 ## 📚 Core Documentation
 
 - **[Comprehensive Manual](./cim_comprehensive_manual.md)** - Complete CIM reference manual
 - **[Architecture Deep Dive](./architecture-deep-dive.md)** - Detailed architectural exploration
 - **[Domain Knowledge Graph](./cim_domain_knowledge_graph.md)** - Visual representation of CIM domains
+- **[Module Catalog](./cim_modules_catalog.md)** - Browse available CIM modules
 
 ## 👨‍💻 Development Guides
 
@@ -84,22 +92,22 @@ Welcome to the Composable Information Machine documentation. This index provides
 
 ## 📖 Reading Paths
 
-### Path 1: Business Stakeholder
-1. [CIM Overview](./readme_cim_overview.md)
-2. [Domain Knowledge Graph](./cim_domain_knowledge_graph.md)
-3. [Use Cases](./cim_comprehensive_manual.md#use-cases)
+### Path 1: Business Discovery
+1. [Event Storming Guide](./event-storming-guide.md)
+2. [Context Mapping Guide](./context-mapping-guide.md)
+3. [Workflow Graph Guide](./workflow-graph-guide.md)
 
-### Path 2: Developer Getting Started
+### Path 2: Domain Implementation
 1. [Quick Start Guide](./quick-start-guide.md)
-2. [Domain Development Guide](./domain-development-guide.md)
-3. [API Reference](./api-reference.md)
+2. [State Machine Patterns](./state-machine-patterns.md)
+3. [Domain Development Guide](./domain-development-guide.md)
 
-### Path 3: System Architect
-1. [Architecture Deep Dive](./architecture-deep-dive.md)
-2. [Design Documents](./design/)
+### Path 3: System Architecture
+1. [CIM Overview](./readme_cim_overview.md)
+2. [Architecture Deep Dive](./architecture-deep-dive.md)
 3. [Deployment Guide](./deployment-guide.md)
 
-### Path 4: Deep Technical Dive
+### Path 4: Deep Technical Understanding
 1. [Comprehensive Manual](./cim_comprehensive_manual.md)
 2. [Conceptual Spaces Theory](./research/conceptual-spaces-theory.md)
 3. [Event Correlation](./design/event-correlation-causation.md)
