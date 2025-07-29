@@ -1,249 +1,169 @@
 # CIM Domain Development Guide
 
-Learn how to create custom domains for the Composable Information Machine, from concept to deployment.
+Build CIM domains using visual design and state machines. This guide shows how to create domains that extend `cim-domain` using a graph-first approach.
 
 ## Table of Contents
 
-1. [Understanding Domains](#understanding-domains)
-2. [Domain Design Process](#domain-design-process)
-3. [Implementation Guide](#implementation-guide)
-4. [Testing Domains](#testing-domains)
-5. [Domain Composition](#domain-composition)
-6. [Publishing Domains](#publishing-domains)
-7. [Real-World Examples](#real-world-examples)
+1. [Domain Development Philosophy](#domain-development-philosophy)
+2. [Visual Domain Design](#visual-domain-design)
+3. [State Machine Implementation](#state-machine-implementation)
+4. [Graph to Code Generation](#graph-to-code-generation)
+5. [Testing State Machines](#testing-state-machines)
+6. [Domain Composition](#domain-composition)
+7. [Publishing Domains](#publishing-domains)
 
-## Understanding Domains
+## Domain Development Philosophy
 
-### What is a Domain?
+### Graphs First, Code Second
 
-In CIM, a domain is a bounded context that encapsulates:
-- **Business Logic**: Rules and behaviors specific to a business area
-- **Data Models**: Entities, value objects, and aggregates
-- **Events**: Things that happen within the domain
-- **Commands**: Operations that change state
-- **Queries**: Ways to retrieve information
-- **Policies**: Business rules and constraints
+In CIM, domain development follows this flow:
+
+```
+1. Event Storming → Discover what happens
+2. Context Mapping → Define boundaries
+3. State Machine Design → Model behavior
+4. Graph Export → Create specifications
+5. AI Generation → Produce code
+```
+
+### What is a CIM Domain?
+
+A CIM domain is:
+- **A state machine collection** that models business behavior
+- **An extension of cim-domain** (e.g., `cowboy-ai-inventory`)
+- **Visually designed** using graphs before any code
+- **Event-driven** with clear state transitions
+- **AI-friendly** with graphs as specifications
 
 ### Domain Principles
 
-1. **Isolation**: Domains don't directly access each other's internals
-2. **Event-Driven**: Domains communicate through events only
-3. **Self-Contained**: Each domain is independently deployable
-4. **Business-Focused**: Technical concerns are secondary to business logic
+1. **Everything is a state machine** - Aggregates, workflows, policies
+2. **Graphs are the source of truth** - Code is generated from graphs
+3. **States are complete** - Each state contains all needed data
+4. **Transitions are explicit** - Events drive state changes
+5. **Invalid states are impossible** - By design, not validation
 
-## Domain Design Process
+## Visual Domain Design
 
-### Step 1: Identify the Bounded Context
+### Step 1: Start with Event Storming
 
-Start with Event Storming to discover your domain:
+Before creating any domain, you MUST complete Event Storming:
 
-```mermaid
-graph LR
-    subgraph "Event Storming"
-        A[Domain Events] --> B[Commands]
-        B --> C[Aggregates]
-        C --> D[Policies]
-        D --> E[Read Models]
-        
-        F[External Events] --> A
-        G[User Actions] --> B
-        H[Time-Based] --> A
-    end
-    
-    %% Styling
-    style A fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
-    style B fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style C fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
-    style D fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
-    style E fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+```bash
+# Required artifacts before proceeding:
+✓ events/inventory-event-storm.excalidraw
+✓ contexts/inventory-context-map.excalidraw
+✓ concepts/inventory-concepts.arrows
+✓ workflows/inventory-workflows.excalidraw
 ```
 
-### Step 2: Define Domain Language
+### Step 2: Design State Machines in ExcaliDraw
 
-Create a ubiquitous language for your domain:
+Create visual state machines for each aggregate:
 
-```yaml
-# domain-language.yaml
-domain: inventory
-terms:
-  - name: SKU
-    definition: Stock Keeping Unit - unique product identifier
-    aliases: [product_code, item_number]
-    
-  - name: Stock Level
-    definition: Current quantity available for sale
-    constraints: 
-      - Must be non-negative
-      - Updates must be atomic
-      
-  - name: Reorder Point
-    definition: Quantity threshold triggering reorder
-    related: [Stock Level, Lead Time]
+```
+Inventory Item State Machine
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ○ Start
+    │
+    ▼
+┌─────────────┐
+│   Active    │──────Stock Sold────▶┌────────────┐
+│ stock > min │                     │  Critical  │
+└─────────────┘◀───Stock Added──────│stock < min │
+    │                               └────────────┘
+    │                                     │
+    │Discontinue                          │Out of Stock
+    ▼                                     ▼
+┌─────────────┐                     ┌────────────┐
+│Discontinued │                     │Out of Stock│
+└─────────────┘                     └────────────┘
 ```
 
-### Step 3: Model Domain Events
+### Step 3: Define States with Complete Data
 
-Events are past-tense facts:
+In ExcaliDraw, annotate each state with its data:
 
-```rust
-// events.rs
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(tag = "type")]
-pub enum InventoryEvent {
-    // Item lifecycle
-    ItemCreated {
-        sku: String,
-        name: String,
-        initial_quantity: u32,
-    },
-    ItemDiscontinued {
-        sku: String,
-        reason: String,
-    },
-    
-    // Stock movements
-    StockReceived {
-        sku: String,
-        quantity: u32,
-        batch_id: String,
-        supplier: String,
-    },
-    StockSold {
-        sku: String,
-        quantity: u32,
-        order_id: String,
-    },
-    StockAdjusted {
-        sku: String,
-        old_quantity: u32,
-        new_quantity: u32,
-        reason: String,
-    },
-    
-    // Alerts
-    LowStockAlert {
-        sku: String,
-        current_quantity: u32,
-        reorder_point: u32,
-    },
-}
+```
+┌─────────────────────────┐
+│       Active            │
+├─────────────────────────┤
+│ sku: String            │
+│ name: String           │
+│ stock_level: u32       │
+│ reorder_point: u32     │
+│ reorder_quantity: u32  │
+│ last_updated: DateTime │
+└─────────────────────────┘
 ```
 
-### Step 4: Design Aggregates
+### Step 4: Map Events to Transitions
 
-Aggregates enforce business rules:
+Create a visual event-transition map:
 
-```rust
-// aggregates/inventory_item.rs
-pub struct InventoryItem {
-    sku: String,
-    name: String,
-    quantity: u32,
-    reorder_point: u32,
-    reorder_quantity: u32,
-    discontinued: bool,
-}
-
-impl InventoryItem {
-    pub fn receive_stock(&mut self, quantity: u32, batch_id: String) 
-        -> Result<Vec<InventoryEvent>, DomainError> {
-        if self.discontinued {
-            return Err(DomainError::ItemDiscontinued);
-        }
-        
-        let old_quantity = self.quantity;
-        self.quantity += quantity;
-        
-        let mut events = vec![
-            InventoryEvent::StockReceived {
-                sku: self.sku.clone(),
-                quantity,
-                batch_id,
-                supplier: "".to_string(), // Would come from command
-            }
-        ];
-        
-        // Check if we were below reorder point and now above
-        if old_quantity < self.reorder_point && 
-           self.quantity >= self.reorder_point {
-            // Cancel any pending reorders
-            events.push(InventoryEvent::ReorderCancelled {
-                sku: self.sku.clone(),
-            });
-        }
-        
-        Ok(events)
-    }
-    
-    pub fn sell(&mut self, quantity: u32, order_id: String) 
-        -> Result<Vec<InventoryEvent>, DomainError> {
-        if quantity > self.quantity {
-            return Err(DomainError::InsufficientStock {
-                requested: quantity,
-                available: self.quantity,
-            });
-        }
-        
-        self.quantity -= quantity;
-        
-        let mut events = vec![
-            InventoryEvent::StockSold {
-                sku: self.sku.clone(),
-                quantity,
-                order_id,
-            }
-        ];
-        
-        // Check if we need to reorder
-        if self.quantity < self.reorder_point {
-            events.push(InventoryEvent::LowStockAlert {
-                sku: self.sku.clone(),
-                current_quantity: self.quantity,
-                reorder_point: self.reorder_point,
-            });
-        }
-        
-        Ok(events)
-    }
-}
+```
+Event                  From State    To State        Conditions
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+StockReceived         Any Active    Active          quantity > 0
+StockSold            Active        Active/Critical  check level
+OutOfStockOccurred   Critical     OutOfStock       stock == 0
+Discontinued         Active        Discontinued     admin action
 ```
 
-## Implementation Guide
+### Step 5: Export Graphs for AI Processing
+
+```bash
+# Export all design artifacts
+excalidraw export states/inventory-item-states.excalidraw --format json
+arrows export concepts/inventory-aggregate.arrows --format cypher
+
+# Package for AI generation
+tar -czf inventory-domain-design.tar.gz \
+  events/ \
+  contexts/ \
+  concepts/ \
+  states/ \
+  workflows/
+```
+
+## State Machine Implementation
+
+### Creating Your Domain Project
+
+```bash
+# Name your domain following the pattern
+cargo new --lib cowboy-ai-inventory
+cd cowboy-ai-inventory
+
+# Project structure focused on state machines
+mkdir -p src/{states,events,commands,policies}
+mkdir -p design/{graphs,exports}
+```
 
 ### Project Structure
 
 ```
-cim-domain-inventory/
-├── Cargo.toml
-├── README.md
+cowboy-ai-inventory/
+├── design/                 # Visual designs (source of truth)
+│   ├── graphs/            # ExcaliDraw and Arrows files
+│   │   ├── event-storm.excalidraw
+│   │   ├── context-map.excalidraw
+│   │   ├── state-machines.excalidraw
+│   │   └── concepts.arrows
+│   └── exports/           # AI-readable exports
+│       ├── states.json
+│       ├── events.json
+│       └── relationships.cypher
 ├── src/
-│   ├── lib.rs              # Public API
-│   ├── aggregates/         # Domain aggregates
+│   ├── lib.rs            # Domain registration
+│   ├── states/           # State machine implementations
 │   │   ├── mod.rs
 │   │   └── inventory_item.rs
-│   ├── events/            # Domain events
-│   │   ├── mod.rs
-│   │   └── inventory.rs
-│   ├── commands/          # Command definitions
-│   │   ├── mod.rs
-│   │   └── inventory.rs
-│   ├── queries/           # Query definitions
-│   │   ├── mod.rs
-│   │   └── inventory.rs
-│   ├── policies/          # Business policies
-│   │   ├── mod.rs
-│   │   └── reorder.rs
-│   ├── projections/       # Read models
-│   │   ├── mod.rs
-│   │   └── stock_levels.rs
-│   └── errors.rs          # Domain errors
-├── tests/
-│   ├── unit/
-│   ├── integration/
-│   └── fixtures/
-└── examples/
-    ├── basic_usage.rs
-    └── advanced_scenarios.rs
+│   ├── events/           # Event definitions
+│   ├── commands/         # Command handlers
+│   └── policies/         # Policy state machines
+└── Cargo.toml
 ```
 
 ### Core Dependencies
@@ -251,324 +171,410 @@ cim-domain-inventory/
 ```toml
 # Cargo.toml
 [package]
-name = "cim-domain-inventory"
+name = "cowboy-ai-inventory"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-# Core CIM dependencies
+# Essential: extend cim-domain
 cim-domain = { git = "https://github.com/thecowboyai/cim-domain" }
-cim-core = { git = "https://github.com/thecowboyai/cim-core" }
 
-# Async runtime
-tokio = { version = "1", features = ["full"] }
+# State machine traits
 async-trait = "0.1"
-
-# Serialization
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-
-# Error handling
-thiserror = "1.0"
-anyhow = "1.0"
-
-# Logging
-tracing = "0.1"
 
 [dev-dependencies]
-# Testing
+# Property testing for state machines
 proptest = "1.0"
-fake = "2.5"
-tokio-test = "0.4"
 ```
 
-### Domain Registration
+### Implementing State Machines from Graphs
+
+The AI reads your graphs and generates base implementations:
 
 ```rust
-// lib.rs
-use cim_domain::{Domain, DomainBuilder};
+// src/states/inventory_item.rs
+// Generated from: design/graphs/state-machines.excalidraw
 
-pub fn register_inventory_domain() -> Domain {
-    DomainBuilder::new("inventory")
-        .with_aggregates(vec![
-            Box::new(InventoryItemFactory),
-        ])
-        .with_event_handlers(vec![
-            Box::new(StockLevelProjection),
-            Box::new(ReorderPolicy),
-        ])
-        .with_command_handlers(vec![
-            Box::new(CreateItemHandler),
-            Box::new(ReceiveStockHandler),
-            Box::new(SellStockHandler),
-        ])
-        .with_query_handlers(vec![
-            Box::new(GetStockLevelHandler),
-            Box::new(LowStockReportHandler),
-        ])
-        .build()
+use cim_domain::{State, StateMachine, Event};
+
+#[derive(Debug, Clone, State)]
+pub enum InventoryItemState {
+    // States from your visual design
+    Active {
+        sku: String,
+        name: String,
+        stock_level: u32,
+        reorder_point: u32,
+        reorder_quantity: u32,
+        last_updated: DateTime,
+    },
+    
+    Critical {
+        sku: String,
+        name: String,
+        stock_level: u32,
+        reorder_point: u32,
+        pending_order: Option<OrderId>,
+        entered_critical: DateTime,
+    },
+    
+    OutOfStock {
+        sku: String,
+        name: String,
+        since: DateTime,
+        backorders: Vec<BackorderId>,
+    },
+    
+    Discontinued {
+        sku: String,
+        discontinued_at: DateTime,
+        reason: String,
+        remaining_stock: u32,
+    },
 }
-```
 
-### Command Handling
-
-```rust
-// commands/handlers.rs
-pub struct ReceiveStockHandler;
-
-#[async_trait]
-impl CommandHandler for ReceiveStockHandler {
-    type Command = ReceiveStock;
-    type Aggregate = InventoryItem;
+impl StateMachine for InventoryItemState {
     type Event = InventoryEvent;
-    type Error = DomainError;
+    type Command = InventoryCommand;
     
-    async fn handle(
-        &self,
-        command: Self::Command,
-        store: &dyn EventStore,
-    ) -> Result<Vec<Self::Event>, Self::Error> {
-        // Load aggregate
-        let mut item = store
-            .load_aggregate::<InventoryItem>(&command.sku)
-            .await?;
-        
-        // Apply business logic
-        let events = item.receive_stock(
-            command.quantity,
-            command.batch_id,
-        )?;
-        
-        // Save events
-        store.save_events(&command.sku, &events).await?;
-        
-        Ok(events)
+    fn handle_command(&self, cmd: Self::Command) -> Result<Vec<Self::Event>, Error> {
+        // Pattern match on (State, Command) combinations
+        match (self, cmd) {
+            (Self::Active { stock_level, .. }, InventoryCommand::Sell { quantity }) => {
+                if quantity <= *stock_level {
+                    Ok(vec![InventoryEvent::StockSold { quantity }])
+                } else {
+                    Err(Error::InsufficientStock)
+                }
+            }
+            // ... other combinations from your transition map
+        }
+    }
+    
+    fn apply_event(&mut self, event: Self::Event) {
+        // Transitions from your state diagram
+        match (self, event) {
+            (Self::Active { stock_level, reorder_point, .. }, 
+             InventoryEvent::StockSold { quantity }) => {
+                *stock_level -= quantity;
+                if *stock_level < *reorder_point {
+                    // Transition to Critical
+                    *self = Self::Critical {
+                        // ... copy needed fields
+                    };
+                }
+            }
+            // ... other transitions
+        }
     }
 }
 ```
 
-### Query Implementation
+## Graph to Code Generation
+
+### How AI Agents Generate Code
+
+1. **Read Visual Designs**:
+   ```bash
+   cim ai analyze-domain \
+     --graphs design/graphs/ \
+     --output generated/
+   ```
+
+2. **Generate State Machines**:
+   ```bash
+   cim ai generate-states \
+     --input design/exports/states.json \
+     --output src/states/
+   ```
+
+3. **Create Event Definitions**:
+   ```bash
+   cim ai generate-events \
+     --storm design/graphs/event-storm.excalidraw \
+     --output src/events/
+   ```
+
+### AI Generation Process
+
+```mermaid
+graph LR
+    A[ExcaliDraw Graphs] --> B[AI Analysis]
+    B --> C[Pattern Recognition]
+    C --> D[Code Generation]
+    D --> E[State Machines]
+    D --> F[Event Types]
+    D --> G[Command Handlers]
+    
+    style A fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style B fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style E fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+```
+
+### Customizing Generated Code
+
+After AI generation, you add domain-specific logic:
 
 ```rust
-// queries/handlers.rs
-pub struct LowStockReportHandler;
+// src/states/inventory_item.rs
+// AI-generated base + your business logic
 
-#[async_trait]
-impl QueryHandler for LowStockReportHandler {
-    type Query = GetLowStockItems;
-    type Result = Vec<LowStockItem>;
-    type Error = QueryError;
+impl InventoryItemState {
+    // AI generated the state transitions
+    // You add business-specific validations
     
-    async fn handle(
-        &self,
-        query: Self::Query,
-        read_store: &dyn ReadModelStore,
-    ) -> Result<Self::Result, Self::Error> {
-        let items = read_store
-            .query("stock_levels")
-            .filter("quantity", "<", query.threshold)
-            .order_by("quantity", Ascending)
-            .limit(query.limit.unwrap_or(100))
-            .execute()
-            .await?;
-        
-        Ok(items)
+    pub fn validate_stock_level(&self) -> Result<(), DomainError> {
+        match self {
+            Self::Active { stock_level, reorder_point, .. } => {
+                if stock_level < reorder_point / 2 {
+                    warn!("Stock critically low: {}", stock_level);
+                }
+                Ok(())
+            }
+            Self::OutOfStock { backorders, .. } => {
+                if backorders.len() > 10 {
+                    Err(DomainError::TooManyBackorders)
+                } else {
+                    Ok(())
+                }
+            }
+            _ => Ok(())
+        }
     }
 }
 ```
 
-## Testing Domains
+## Testing State Machines
 
-### Unit Testing Aggregates
+### Visual Test Scenarios
 
-```rust
-#[cfg(test)]
-mod tests {
-    use super::*;
-    
-    #[test]
-    fn test_stock_sale_reduces_quantity() {
-        let mut item = InventoryItem::new("SKU123", "Widget", 100);
-        
-        let events = item.sell(10, "ORDER123").unwrap();
-        
-        assert_eq!(item.quantity(), 90);
-        assert_eq!(events.len(), 1);
-        matches!(events[0], InventoryEvent::StockSold { quantity: 10, .. });
-    }
-    
-    #[test]
-    fn test_insufficient_stock_returns_error() {
-        let mut item = InventoryItem::new("SKU123", "Widget", 5);
-        
-        let result = item.sell(10, "ORDER123");
-        
-        assert!(matches!(
-            result,
-            Err(DomainError::InsufficientStock { requested: 10, available: 5 })
-        ));
-    }
-}
+Create test scenarios as graphs in ExcaliDraw:
+
+```
+Test: Stock Depletion
+━━━━━━━━━━━━━━━━━━━━
+State: Active (stock=100)
+  │
+  ├─Sell 50─→ Active (stock=50)
+  │
+  ├─Sell 30─→ Critical (stock=20)
+  │
+  └─Sell 25─→ Error: Insufficient Stock
 ```
 
-### Property-Based Testing
+### Property-Based State Testing
 
 ```rust
 use proptest::prelude::*;
 
 proptest! {
     #[test]
-    fn stock_never_negative(
-        initial in 0u32..1000,
-        operations in prop::collection::vec(
-            (bool::ANY, 1u32..100),
-            0..50
-        )
+    fn state_transitions_are_valid(
+        initial_state in arb_inventory_state(),
+        events in prop::collection::vec(arb_inventory_event(), 0..100)
     ) {
-        let mut item = InventoryItem::new("SKU", "Item", initial);
+        let mut state = initial_state.clone();
+        let mut previous = initial_state;
         
-        for (is_receive, quantity) in operations {
-            if is_receive {
-                item.receive_stock(quantity, "BATCH").ok();
-            } else {
-                item.sell(quantity, "ORDER").ok();
+        for event in events {
+            if state.can_handle_event(&event) {
+                state.apply_event(event.clone());
+                
+                // Verify transition was valid
+                prop_assert!(previous.valid_transition_to(&state));
+                
+                // Verify state invariants
+                prop_assert!(state.invariants_hold());
+                
+                previous = state.clone();
             }
         }
-        
-        // Invariant: stock is never negative
-        // (enforced by domain logic)
-        prop_assert!(item.quantity() >= 0);
     }
 }
 ```
 
-### Integration Testing
+### State Machine Invariants
 
 ```rust
-#[tokio::test]
-async fn test_inventory_workflow() {
-    let cim = CIM::new()
-        .with_domain(register_inventory_domain())
-        .start()
-        .await
-        .unwrap();
-    
-    // Create item
-    let create_result = cim
-        .send_command(CreateItem {
-            sku: "WIDGET-001".to_string(),
-            name: "Super Widget".to_string(),
-            initial_quantity: 50,
-            reorder_point: 20,
-        })
-        .await
-        .unwrap();
-    
-    // Sell some stock
-    let sell_result = cim
-        .send_command(SellStock {
-            sku: "WIDGET-001".to_string(),
-            quantity: 35,
-            order_id: "ORDER-123".to_string(),
-        })
-        .await
-        .unwrap();
-    
-    // Should trigger low stock alert
-    let events = cim
-        .query_events()
-        .for_aggregate("WIDGET-001")
-        .event_type("LowStockAlert")
-        .execute()
-        .await
-        .unwrap();
-    
-    assert_eq!(events.len(), 1);
+impl InventoryItemState {
+    pub fn invariants_hold(&self) -> bool {
+        match self {
+            Self::Active { stock_level, reorder_point, .. } => {
+                // Active items must have positive reorder points
+                *reorder_point > 0
+            }
+            Self::Critical { stock_level, reorder_point, .. } => {
+                // Critical means below reorder point
+                *stock_level < *reorder_point
+            }
+            Self::OutOfStock { .. } => {
+                // Out of stock is always valid
+                true
+            }
+            Self::Discontinued { remaining_stock, .. } => {
+                // Can't have negative stock even when discontinued
+                *remaining_stock >= 0
+            }
+        }
+    }
 }
 ```
 
 ## Domain Composition
 
-### Cross-Domain Sagas
+### Composing State Machines Across Domains
+
+Domains interact through state machine orchestration:
+
+```
+Order Domain          Inventory Domain       Payment Domain
+━━━━━━━━━━━━         ━━━━━━━━━━━━━━━━      ━━━━━━━━━━━━━━
+OrderState           InventoryState         PaymentState
+  │                      │                      │
+  ├─PlaceOrder──────────▶├─CheckStock           │
+  │                      ├─────────┐            │
+  │                      │         ▼            │
+  │◀─StockReserved───────┤    [Reserved]        │
+  │                      │                      │
+  ├─ProcessPayment──────────────────────────────▶│
+  │                                             ├──Authorize
+  │                                             │
+  │◀─PaymentAuthorized──────────────────────────┤
+  ▼                                             ▼
+[Confirmed]                                 [Captured]
+```
+
+### Saga State Machines
+
+Sagas are also state machines that coordinate domains:
 
 ```rust
-// Saga: Order fulfillment across multiple domains
-pub struct OrderFulfillmentSaga {
-    order_id: String,
-    state: SagaState,
+// src/sagas/order_fulfillment.rs
+#[derive(Debug, Clone, State)]
+pub enum OrderFulfillmentState {
+    Started {
+        order_id: OrderId,
+        items: Vec<LineItem>,
+    },
+    
+    CheckingInventory {
+        order_id: OrderId,
+        items: Vec<LineItem>,
+        checked: Vec<SkuAvailability>,
+        remaining: Vec<Sku>,
+    },
+    
+    ReservingStock {
+        order_id: OrderId,
+        reservations: Vec<ReservationId>,
+    },
+    
+    ProcessingPayment {
+        order_id: OrderId,
+        amount: Money,
+        payment_method: PaymentMethod,
+    },
+    
+    Completed {
+        order_id: OrderId,
+        transaction_id: TransactionId,
+    },
+    
+    // Compensation states
+    CancellingReservations {
+        order_id: OrderId,
+        reason: String,
+        cancelled: Vec<ReservationId>,
+        remaining: Vec<ReservationId>,
+    },
+    
+    Failed {
+        order_id: OrderId,
+        reason: String,
+        compensated: bool,
+    },
 }
 
-impl Saga for OrderFulfillmentSaga {
-    async fn handle_event(&mut self, event: DomainEvent) -> Result<Vec<Command>> {
-        match (&self.state, event) {
-            // Order placed - check inventory
-            (SagaState::Started, OrderEvent::Placed { items, .. }) => {
-                self.state = SagaState::CheckingInventory;
-                Ok(items.into_iter().map(|item| {
-                    Command::Inventory(CheckAvailability {
-                        sku: item.sku,
-                        quantity: item.quantity,
-                    })
-                }).collect())
-            },
+impl StateMachine for OrderFulfillmentState {
+    type Event = SagaEvent;
+    type Command = CrossDomainCommand;
+    
+    fn handle_event(&mut self, event: Self::Event) {
+        match (self, event) {
+            // Progress through saga
+            (Self::CheckingInventory { remaining, .. }, 
+             SagaEvent::StockChecked { available: true, sku }) => {
+                remaining.retain(|s| s != &sku);
+                if remaining.is_empty() {
+                    *self = Self::ReservingStock { /* ... */ };
+                }
+            }
             
-            // Inventory checked - reserve stock
-            (SagaState::CheckingInventory, InventoryEvent::Available { .. }) => {
-                self.state = SagaState::ReservingStock;
-                Ok(vec![Command::Inventory(ReserveStock {
-                    order_id: self.order_id.clone(),
-                    items: vec![], // Would include items
-                })])
-            },
+            // Handle failures with compensation
+            (Self::ProcessingPayment { .. }, 
+             SagaEvent::PaymentFailed { reason }) => {
+                *self = Self::CancellingReservations {
+                    reason,
+                    // ... setup compensation
+                };
+            }
             
-            // Stock reserved - charge payment
-            (SagaState::ReservingStock, InventoryEvent::Reserved { .. }) => {
-                self.state = SagaState::ProcessingPayment;
-                Ok(vec![Command::Payment(ChargeCard {
-                    order_id: self.order_id.clone(),
-                    amount: 0.0, // Would calculate
-                })])
-            },
-            
-            // Handle compensations
-            (_, InventoryEvent::InsufficientStock { .. }) => {
-                self.state = SagaState::Cancelling;
-                Ok(vec![Command::Order(CancelOrder {
-                    order_id: self.order_id.clone(),
-                    reason: "Insufficient inventory".to_string(),
-                })])
-            },
-            
-            _ => Ok(vec![]),
+            // ... other transitions
         }
     }
 }
 ```
 
-### Policy Coordination
+### Policy State Machines
+
+Policies are state machines that react to events:
 
 ```rust
-// Policy: Automatic reordering
-pub struct AutoReorderPolicy;
+// src/policies/auto_reorder.rs
+#[derive(Debug, Clone, State)]
+pub enum ReorderPolicyState {
+    Monitoring {
+        sku: Sku,
+        current_level: u32,
+        reorder_point: u32,
+    },
+    
+    ReorderPending {
+        sku: Sku,
+        suggested_quantity: u32,
+        waiting_approval: bool,
+    },
+    
+    ReorderApproved {
+        sku: Sku,
+        quantity: u32,
+        purchase_order: Option<PoNumber>,
+    },
+    
+    ReorderInProgress {
+        sku: Sku,
+        purchase_order: PoNumber,
+        expected_delivery: Date,
+    },
+}
 
-impl Policy for AutoReorderPolicy {
-    async fn evaluate(&self, event: DomainEvent) -> Result<Vec<Command>> {
-        match event {
-            InventoryEvent::LowStockAlert { sku, current_quantity, reorder_point } => {
-                // Check supplier domain for availability
-                let supplier_check = Command::Supplier(CheckAvailability {
-                    sku: sku.clone(),
-                });
-                
-                // Create purchase order if available
-                let create_po = Command::Purchasing(CreatePurchaseOrder {
-                    sku,
-                    quantity: reorder_point * 2, // Simple reorder formula
-                });
-                
-                Ok(vec![supplier_check, create_po])
-            },
-            _ => Ok(vec![]),
+impl PolicyStateMachine for ReorderPolicyState {
+    fn evaluate(&mut self, event: DomainEvent) -> Vec<Command> {
+        match (self, event) {
+            (Self::Monitoring { current_level, reorder_point, .. },
+             InventoryEvent::StockSold { quantity }) => {
+                *current_level -= quantity;
+                if *current_level < *reorder_point {
+                    *self = Self::ReorderPending {
+                        // ... transition
+                    };
+                    vec![Command::RequestReorderApproval { /* ... */ }]
+                } else {
+                    vec![]
+                }
+            }
+            // ... other policy rules
         }
     }
 }
@@ -576,45 +582,51 @@ impl Policy for AutoReorderPolicy {
 
 ## Publishing Domains
 
-### Documentation Requirements
+### Visual Documentation
 
-Create comprehensive documentation:
+Your domain MUST include visual artifacts:
+
+```
+cowboy-ai-inventory/
+├── design/
+│   ├── README.md                    # Links to all diagrams
+│   ├── event-storm.excalidraw       # Discovery session
+│   ├── state-machines.excalidraw    # All state diagrams
+│   ├── context-map.excalidraw       # Domain boundaries
+│   └── workflows.excalidraw         # Business processes
+├── docs/
+│   ├── state-catalog.md            # All states documented
+│   ├── event-catalog.md            # All events with examples
+│   └── integration-guide.md        # How to connect domains
+```
+
+### State Machine Documentation
+
+Document each state machine:
 
 ```markdown
-# CIM Domain: Inventory
+# Inventory Item State Machine
 
-## Overview
-This domain manages inventory levels, stock movements, and reordering.
+## States
 
-## Events
-- `ItemCreated`: New inventory item added
-- `StockReceived`: Stock received from supplier
-- `StockSold`: Stock sold to customer
-- `LowStockAlert`: Stock below reorder point
+### Active
+- **Purpose**: Normal operating state
+- **Data**: sku, name, stock_level, reorder_point
+- **Invariants**: stock_level >= 0, reorder_point > 0
+- **Transitions**:
+  - → Critical (when stock_level < reorder_point)
+  - → Discontinued (by admin action)
 
-## Commands
-- `CreateItem`: Add new inventory item
-- `ReceiveStock`: Record stock receipt
-- `SellStock`: Record stock sale
-- `AdjustStock`: Manual stock adjustment
+### Critical
+- **Purpose**: Low stock warning state
+- **Entry Actions**: Trigger reorder policy
+- **Exit Actions**: Cancel pending orders if resolved
 
-## Queries
-- `GetStockLevel`: Current stock for SKU
-- `GetLowStockItems`: Items below reorder point
-- `GetStockMovements`: Stock movement history
+## Visual Diagram
+![State Machine](./design/exports/inventory-item-states.svg)
 
-## Integration Points
-- **Order Domain**: Responds to order events
-- **Supplier Domain**: Triggers purchase orders
-- **Warehouse Domain**: Coordinates with physical stock
-
-## Configuration
-```yaml
-inventory:
-  reorder_policy: automatic
-  low_stock_threshold: 0.2
-  safety_stock_days: 7
-```
+## Test Scenarios
+See: `design/tests/inventory-state-tests.excalidraw`
 ```
 
 ### Package Metadata
@@ -622,156 +634,269 @@ inventory:
 ```toml
 # Cargo.toml
 [package]
-name = "cim-domain-inventory"
+name = "cowboy-ai-inventory"  # Must follow pattern
 version = "0.1.0"
-authors = ["Your Name <you@example.com>"]
 edition = "2021"
-description = "Inventory management domain for CIM"
-documentation = "https://docs.rs/cim-domain-inventory"
-repository = "https://github.com/yourusername/cim-domain-inventory"
-license = "MIT OR Apache-2.0"
-keywords = ["cim", "domain", "inventory", "ddd", "event-sourcing"]
-categories = ["business", "event-driven"]
+description = "Inventory domain extending cim-domain"
+repository = "https://github.com/thecowboyai/cowboy-ai-inventory"
+license = "MIT"
 
-[badges]
-maintenance = { status = "actively-developed" }
+[dependencies]
+cim-domain = { git = "https://github.com/thecowboyai/cim-domain" }
+
+[package.metadata.cim]
+domain_type = "core"
+visual_designs = "design/"
+state_machines = ["InventoryItem", "ReorderPolicy"]
+compatible_with = ["cowboy-ai-orders", "cowboy-ai-warehouse"]
 ```
 
 ### Publishing Checklist
 
-- [ ] All tests pass
-- [ ] Documentation complete
-- [ ] Examples provided
-- [ ] README with quick start
-- [ ] CHANGELOG updated
-- [ ] Version bumped
-- [ ] License specified
-- [ ] CI/CD configured
+- [ ] Event Storm completed and exported
+- [ ] State machines designed visually
+- [ ] Context boundaries defined
+- [ ] Workflows documented
+- [ ] AI can parse all graphs
+- [ ] State invariants tested
+- [ ] Integration examples provided
+- [ ] Visual documentation complete
 
 ## Real-World Examples
 
-### Example 1: E-Commerce Inventory
+### Example 1: Multi-Location Retail
 
+Visual state machine for retail inventory across locations:
+
+```
+Store Inventory State Machine
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                ┌─────────────┐
+                │  In Transit │
+                └─────────────┘
+                      │ Received
+    ┌─────────────────┼─────────────────┐
+    ▼                 ▼                 ▼
+┌─────────┐    ┌─────────┐      ┌─────────┐
+│ On Floor│    │ In Back │      │ Display │
+│  Stock  │◀──▶│  Stock  │      │  Only   │
+└─────────┘    └─────────┘      └─────────┘
+    │               │                  │
+    └───────────────┴──────────────────┘
+                    │ Sold
+                    ▼
+              ┌─────────┐
+              │  Sold   │
+              └─────────┘
+```
+
+State definitions:
 ```rust
-// Complex inventory with variants
-pub struct ProductVariant {
-    sku: String,
-    parent_sku: String,
-    attributes: HashMap<String, String>, // size, color, etc.
-    stock: u32,
-}
-
-// Events for variant management
-pub enum VariantEvent {
-    VariantCreated {
-        sku: String,
-        parent_sku: String,
-        attributes: HashMap<String, String>,
+#[derive(State)]
+pub enum StoreInventoryState {
+    InTransit {
+        from_location: LocationId,
+        to_location: LocationId,
+        expected_arrival: DateTime,
+        tracking: TrackingNumber,
     },
-    StockTransferred {
-        from_sku: String,
-        to_sku: String,
+    OnFloor {
+        location: LocationId,
+        aisle: String,
+        shelf: String,
         quantity: u32,
+        last_counted: DateTime,
     },
+    // ... other states
 }
 ```
 
-### Example 2: Warehouse Management
+### Example 2: Perishable Goods
 
-```rust
-// Location-aware inventory
-pub struct WarehouseLocation {
-    warehouse_id: String,
-    zone: String,
-    rack: String,
-    shelf: String,
-    bin: String,
-}
+State machine with time-based transitions:
 
-pub struct LocationInventory {
-    sku: String,
-    location: WarehouseLocation,
-    quantity: u32,
-    lot_number: Option<String>,
-    expiration: Option<DateTime<Utc>>,
-}
+```
+Perishable Item Lifecycle
+━━━━━━━━━━━━━━━━━━━━━━━
+○ Start
+    │
+    ▼
+┌──────────┐  Near Expiry  ┌─────────────┐
+│  Fresh   │──────────────▶│  Discount   │
+│ 100-70%  │               │   70-30%    │
+└──────────┘               └─────────────┘
+                                  │
+                                  │ Approaching Expiry
+                                  ▼
+                           ┌─────────────┐
+                           │   Donate    │
+                           │   30-10%    │
+                           └─────────────┘
+                                  │
+                                  │ Expired
+                                  ▼
+                           ┌─────────────┐
+                           │   Dispose   │
+                           └─────────────┘
 ```
 
-### Example 3: Manufacturing
+### Example 3: Manufacturing Work-in-Progress
+
+Complex state machine for manufacturing:
 
 ```rust
-// Bill of Materials
-pub struct BillOfMaterials {
-    finished_good_sku: String,
-    components: Vec<Component>,
-}
-
-pub struct Component {
-    sku: String,
-    quantity_required: f64,
-    unit_of_measure: String,
-}
-
-// Manufacturing events
-pub enum ManufacturingEvent {
-    ProductionOrderCreated {
-        order_id: String,
-        finished_good_sku: String,
-        quantity: u32,
+#[derive(State)]
+pub enum ManufacturingState {
+    Planned {
+        bom: BillOfMaterials,
+        scheduled_start: DateTime,
     },
-    ComponentsConsumed {
-        order_id: String,
-        components: Vec<(String, f64)>,
+    
+    MaterialsStaged {
+        components: Vec<(ComponentId, Quantity)>,
+        staged_at: DateTime,
+        staging_location: LocationId,
     },
-    FinishedGoodsProduced {
-        order_id: String,
-        sku: String,
-        quantity: u32,
+    
+    InProduction {
+        workstation: WorkstationId,
+        operator: OperatorId,
+        started_at: DateTime,
+        completion_percentage: f32,
+    },
+    
+    QualityCheck {
+        produced_quantity: u32,
+        inspector: InspectorId,
+        defects_found: Vec<Defect>,
+    },
+    
+    Rework {
+        original_batch: BatchId,
+        rework_reason: String,
+        rework_count: u32,
+    },
+    
+    Complete {
+        batch_id: BatchId,
+        final_quantity: u32,
+        quality_grade: QualityGrade,
     },
 }
 ```
 
 ## Best Practices
 
-### 1. Domain Boundaries
-- Keep domains focused on a single business capability
-- Don't mix concerns (e.g., inventory and pricing)
-- Use events for cross-domain communication
+### 1. Visual Design First
+- ✅ Always start with Event Storming
+- ✅ Draw state machines before coding
+- ✅ Export graphs in AI-readable formats
+- ✅ Version control your visual designs
+- ❌ Never code without visual design
 
-### 2. Event Design
-- Make events self-contained
-- Include all necessary data
-- Use domain language in event names
-- Version events for evolution
+### 2. State Machine Design
+- ✅ Each state contains complete data
+- ✅ Transitions are explicit and named
+- ✅ Invalid states are impossible by design
+- ✅ State invariants are documented
+- ❌ No boolean flags instead of states
 
-### 3. Testing Strategy
-- Test business rules extensively
-- Use property-based testing for invariants
-- Test saga compensations
-- Verify event ordering
+### 3. Domain Naming
+- ✅ Follow pattern: `category-company-purpose`
+- ✅ Examples: `cowboy-ai-inventory`, `acme-corp-billing`
+- ❌ Generic names like `inventory-domain`
+- ❌ Tech-focused names like `rust-inventory`
 
-### 4. Performance
-- Keep aggregates small
-- Use projections for queries
-- Implement snapshotting for large event streams
-- Consider event archiving
+### 4. Graph Management
+```bash
+# Organize your graphs
+design/
+├── working/          # Active design sessions
+├── approved/         # Finalized designs
+├── archived/         # Old versions
+└── exports/          # AI-ready formats
+```
 
-### 5. Evolution
-- Plan for change from the start
-- Use event versioning
-- Maintain backward compatibility
-- Document breaking changes
+### 5. Testing State Machines
+- ✅ Test every state transition
+- ✅ Property test invariants
+- ✅ Visual test scenarios
+- ✅ Test impossible transitions
+- ❌ Only happy path testing
+
+### 6. Documentation
+- ✅ State catalogs with all states
+- ✅ Event catalogs with examples
+- ✅ Visual diagrams for everything
+- ✅ Integration guides for other domains
+- ❌ Code-only documentation
+
+## Anti-Patterns to Avoid
+
+### 1. Code-First Development
+```
+❌ Wrong: Write code → Create diagrams → Document
+✅ Right: Event Storm → Draw states → Generate code
+```
+
+### 2. Anemic State Machines
+```rust
+// ❌ Bad: Just data holders
+enum State {
+    Active,
+    Inactive,
+}
+
+// ✅ Good: Complete state with data
+enum State {
+    Active {
+        id: Id,
+        data: CompleteData,
+        entered_at: DateTime,
+    },
+    Inactive {
+        id: Id,
+        reason: DeactivationReason,
+        deactivated_at: DateTime,
+    },
+}
+```
+
+### 3. Hidden State Machines
+```rust
+// ❌ Bad: State machine hidden in booleans
+struct Order {
+    is_placed: bool,
+    is_paid: bool,
+    is_shipped: bool,
+}
+
+// ✅ Good: Explicit state machine
+enum OrderState {
+    Draft { items: Vec<Item> },
+    Placed { order_id: OrderId },
+    Paid { payment_id: PaymentId },
+    Shipped { tracking: TrackingNumber },
+}
+```
 
 ## Conclusion
 
-Building domains for CIM is about capturing business logic in a way that's:
-- **Maintainable**: Clear separation of concerns
-- **Testable**: Easy to verify business rules
-- **Composable**: Works well with other domains
-- **Evolvable**: Can adapt to changing requirements
+CIM domain development is fundamentally different from traditional coding:
 
-Start with a clear understanding of your business domain, implement incrementally, and let the domain model evolve with your understanding.
+1. **Graphs are the source of truth** - Not code
+2. **Everything is a state machine** - Not objects with methods
+3. **AI generates implementation** - You focus on business logic
+4. **Visual design is mandatory** - Not optional documentation
+
+Your role is to:
+- Understand the business through Event Storming
+- Design state machines that model reality
+- Create visual specifications
+- Let AI handle the implementation details
+
+Remember: In CIM, if you can't draw it, you don't understand it well enough to build it.
 
 ---
 
-*Next: [Deployment Guide](./deployment-guide.md) - Learn how to deploy CIM domains to production*
+*Next: [Deployment Guide](./deployment-guide.md) - Deploy your visual domains to production*
