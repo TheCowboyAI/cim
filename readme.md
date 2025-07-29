@@ -420,7 +420,7 @@ graph TB
 
 Ready to explore how CIM can transform your information landscape? 
 
-1. **Explore our [Domain Catalog](./doc/CIM_MODULES_CATALOG.md)** to see the building blocks available
+1. **Explore our [Domain Catalog](./doc/cim_modules_catalog.md)** to see the building blocks available
 2. **Review the [Knowledge Graph](./doc/cim_domain_knowledge_graph.json)** to understand how domains interconnect
 3. **Chat with our AI assistant** using `cim-agent-alchemist` to ask questions and explore possibilities
 4. **Start small** with a single domain and experience the difference

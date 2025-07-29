@@ -254,7 +254,7 @@ CIM addresses fundamental limitations of current enterprise systems:
 
 ## Next Steps
 
-1. Explore the [CIM Modules Catalog](./CIM_MODULES_CATALOG.md)
+1. Explore the [CIM Modules Catalog](./cim_modules_catalog.md)
 2. Review the [Domain Knowledge Graph](./cim_domain_knowledge_graph.json)
 3. Interact with the AI assistant using **cim-agent-alchemist**
 4. Join the CIM community and contribute to the ecosystem
