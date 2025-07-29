@@ -33,6 +33,16 @@ graph TB
     B -.-> F
     C -.-> G
     D -.-> H
+    
+    %% Styling
+    style A fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style B fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style C fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style D fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style E fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style F fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style G fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style H fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
 ```
 
 ## What is CIM?
@@ -57,6 +67,16 @@ graph LR
     
     H[Human Expert] -.->|Guides| D
     D -.->|Enhances| H
+    
+    %% Styling - information to intelligence flow
+    style A fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style B fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style C fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style D fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style E fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style F fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style G fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style H fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
 ```
 
 ## The Problem We Solve
@@ -122,6 +142,21 @@ graph TD
     A -.->|mapped to| H
     B -.->|exposed via| I
     G -.->|implemented as| M
+    
+    %% Styling - business concepts vs technical implementation
+    style A fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style B fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style C fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style D fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style E fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style F fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style G fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style H fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style I fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style J fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style K fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style L fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style M fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
 ```
 
 ## The CIM Approach
@@ -155,8 +190,19 @@ graph LR
         H --> L[Insight]
     end
     
-    style B fill:#f9f,stroke:#333,stroke-width:4px
-    style C fill:#bbf,stroke:#333,stroke-width:2px
+    %% Styling - event flow architecture
+    style A fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style B fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style C fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style D fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style E fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style F fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style G fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style H fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style I fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style J fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style K fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style L fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
 ```
 
 ### 3. Universal Composition
@@ -208,6 +254,23 @@ graph TB
     F --> G3
     F --> G4
     F --> G5
+    
+    %% Styling - input/process/output flow
+    style A1 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style A2 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style A3 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style A4 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style A5 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style B fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style C fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style D fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style E fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style F fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style G1 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style G2 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style G3 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style G4 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style G5 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
 ```
 
 ### 4. Technology Independence
@@ -249,8 +312,18 @@ graph LR
     D --> E3
     D --> E4
     
-    style C fill:#6f6,stroke:#333,stroke-width:4px
-    style D fill:#6f6,stroke:#333,stroke-width:4px
+    %% Styling - abstraction layer architecture
+    style A1 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style A2 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style A3 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style A4 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style B fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style C fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style D fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style E1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style E2 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style E3 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style E4 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
 ```
 
 ## The Power of Abstraction
@@ -267,9 +340,6 @@ graph TD
         E[Vendor B Format] --> F[New Integration]
         F --> G[Schema Migration]
         G --> H[Logic Rewrite]
-        
-        style G fill:#f66,stroke:#333,stroke-width:2px
-        style H fill:#f66,stroke:#333,stroke-width:2px
     end
     
     subgraph "The CIM Way"
@@ -280,10 +350,23 @@ graph TD
         L --> M
         
         M --> N[Stable Business Logic]
-        
-        style M fill:#6f6,stroke:#333,stroke-width:2px
-        style N fill:#6f6,stroke:#333,stroke-width:2px
     end
+    
+    %% Styling - old way vs CIM way comparison
+    style A fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style B fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style C fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style D fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style E fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style F fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style G fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style H fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style I fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style J fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style K fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style L fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style M fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style N fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
 ```
 
 **The Old Way:**
@@ -411,9 +494,34 @@ graph TB
     CS4 <--> K2
     CS2 <--> K3
     
-    style N fill:#f9f,stroke:#333,stroke-width:4px
-    style K1 fill:#9ff,stroke:#333,stroke-width:2px
-    style CS1 fill:#bbf,stroke:#333,stroke-width:2px
+    %% Styling - complete ecosystem layers
+    style U1 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style U2 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style U3 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style I1 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style I2 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style I3 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style E1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style E2 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style E3 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style N fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style ES fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style CS1 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style CS2 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style CS3 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style CS4 fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style D1 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style D2 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style D3 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style D4 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style D5 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style D6 fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style K1 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style K2 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style K3 fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style S1 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style S2 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style S3 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
 ```
 
 ## Getting Started
@@ -421,7 +529,7 @@ graph TB
 Ready to explore how CIM can transform your information landscape? 
 
 1. **Explore our [Domain Catalog](./doc/cim_modules_catalog.md)** to see the building blocks available
-2. **Review the [Knowledge Graph](./doc/cim_domain_knowledge_graph.json)** to understand how domains interconnect
+2. **Review the [Knowledge Graph](./doc/cim_domain_knowledge_graph.md)** to understand how domains interconnect
 3. **Chat with our AI assistant** using `cim-agent-alchemist` to ask questions and explore possibilities
 4. **Start small** with a single domain and experience the difference
 

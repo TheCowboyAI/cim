@@ -28,8 +28,17 @@ graph TD
         D --> J[Business Insights]
     end
     
-    style B fill:#bbf,stroke:#333,stroke-width:2px
-    style D fill:#fbf,stroke:#333,stroke-width:2px
+    %% Styling - information transformation flow
+    style A fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style B fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style C fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style D fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style E fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style F fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style G fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style H fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style I fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style J fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
 ```
 
 - Information exists independently of applications
@@ -77,8 +86,16 @@ graph LR
         I -->|Uses| D
     end
     
-    style E fill:#f9f,stroke:#333,stroke-width:4px
-    style I fill:#9ff,stroke:#333,stroke-width:2px
+    %% Styling - domain composition architecture
+    style A fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style B fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style C fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style D fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style E fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style F fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style G fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style H fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style I fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
 ```
 
 - Business domains as first-class constructs
@@ -99,10 +116,6 @@ graph LR
         
         D1 -.->|ETL| D2
         D2 -.->|Batch| D3
-        
-        style A fill:#f96,stroke:#333,stroke-width:2px
-        style B fill:#f96,stroke:#333,stroke-width:2px
-        style C fill:#f96,stroke:#333,stroke-width:2px
     end
     
     subgraph "CIM Architecture"
@@ -123,9 +136,22 @@ graph LR
         H <--> I
         H <--> J
         H <--> K
-        
-        style H fill:#6f6,stroke:#333,stroke-width:4px
     end
+    
+    %% Styling - traditional vs CIM comparison
+    style A fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style B fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style C fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style D1 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style D2 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style D3 fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style E fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style F fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style G fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style H fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style I fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style J fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style K fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
 ```
 
 **Traditional Systems:**
@@ -215,6 +241,26 @@ graph TB
     
     F <--> N
     G <--> N
+    
+    %% Styling - layered architecture
+    style A1 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style A2 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style A3 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style A4 fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style B fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style C fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style D fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style E fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style F fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style G fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style H fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style I fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style J fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style K fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style L fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style M fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style N fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style O fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
 ```
 
 ## Getting Started
@@ -255,7 +301,7 @@ CIM addresses fundamental limitations of current enterprise systems:
 ## Next Steps
 
 1. Explore the [CIM Modules Catalog](./cim_modules_catalog.md)
-2. Review the [Domain Knowledge Graph](./cim_domain_knowledge_graph.json)
+2. Review the [Domain Knowledge Graph](./cim_domain_knowledge_graph.md)
 3. Interact with the AI assistant using **cim-agent-alchemist**
 4. Join the CIM community and contribute to the ecosystem
 

@@ -44,8 +44,16 @@ graph TB
         I --> F
     end
     
-    style E fill:#f9f,stroke:#333,stroke-width:4px
-    style F fill:#9ff,stroke:#333,stroke-width:2px
+    %% Styling - traditional as gray, CIM as vibrant
+    style A fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style B fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style C fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style D fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style E fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style F fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style G fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style H fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style I fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
 ```
 
 ## Core Philosophy & Vision
@@ -91,6 +99,18 @@ graph LR
         F --> I[Zero CRUD]
         G --> J[AI Understanding]
     end
+    
+    %% Styling - traditional as gray, CIM as vibrant
+    style A fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style B fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style C fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style D fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style E fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style F fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style G fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style H fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style I fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style J fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
 ```
 
 **Key Principles:**
@@ -184,6 +204,23 @@ graph TB
     J --> M
     K --> N
     L --> M
+    
+    %% Styling - layers from infrastructure to interface
+    style A fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style B fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style C fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style D fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style E fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style F fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style G fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style H fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style I fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style J fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style K fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style L fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style M fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style N fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style O fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
 ```
 
 ### Key Architectural Patterns
@@ -247,6 +284,17 @@ graph TD
     F --> G[AI Reasoning]
     F --> H[Similarity Search]
     F --> I[Category Learning]
+    
+    %% Styling - information processing flow
+    style A fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style B fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style C fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style D fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style E fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style F fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style G fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style H fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style I fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
 ```
 
 ## Module Ecosystem
@@ -369,6 +417,17 @@ graph TB
         H ---|Related| I[Inventory]
         I ---|Affects| G
     end
+    
+    %% Styling - color space and business concepts
+    style A fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style B fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style C fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style D fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style E fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style F fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style G fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style H fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style I fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
 ```
 
 **Key Properties:**

@@ -70,11 +70,17 @@ graph LR
         
         G[NATS] -.->|Powers| E
         H[IPLD] -.->|Storage for| D
-        
-        style A fill:#f96,stroke:#333,stroke-width:2px
-        style B fill:#fc9,stroke:#333,stroke-width:2px
-        style D fill:#9cf,stroke:#333,stroke-width:2px
     end
+    
+    %% Styling - infrastructure flow
+    style A fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style B fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style C fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style D fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style E fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style F fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style G fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style H fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
 ```
 
 - **cim-core-domain**: Core domain models and abstractions
@@ -119,10 +125,16 @@ graph TB
         B -->|Located at| E
         C -->|Creates| D
         B -->|Creates| D
-        
-        style A fill:#f9f,stroke:#333,stroke-width:4px
-        style G fill:#9ff,stroke:#333,stroke-width:2px
     end
+    
+    %% Styling - domain hierarchy and relationships
+    style A fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style B fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style C fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style D fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style E fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style F fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style G fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
 ```
 
 - **cim-domain**: Domain Generics and traits for a CIM
@@ -180,11 +192,20 @@ graph TD
         D --> I[Content Addressing]
         E --> J[Event Sourcing]
         F --> K[Plugin System]
-        
-        style A fill:#f9f,stroke:#333,stroke-width:4px
-        style C fill:#bbf,stroke:#333,stroke-width:2px
-        style D fill:#bfb,stroke:#333,stroke-width:2px
     end
+    
+    %% Styling - module architecture layers
+    style A fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style B fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+    style C fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style D fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style E fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style F fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style G fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style H fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style I fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style J fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+    style K fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
 ```
 
 All modules follow a consistent pattern:
