@@ -1,0 +1,3 @@
+[submodule "modules/cim-network"]
+	path = modules/cim-network
+	url = https://github.com/thecowboyai/cim-network.git
