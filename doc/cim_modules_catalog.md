@@ -1,15 +1,21 @@
+
 # CIM Modules Catalog
 
 ## Overview
 This catalog presents all available modules for the Composable Information Machine (CIM) ecosystem, organized by functional categories.
 
+> **Note**: This catalog is synchronized with the module dependency graph at `/registry/modules-graph.json`. 
+> The graph tracks real-time git commits, versions, and dependencies.
+> Query the graph using: `./scripts/query-graph.sh`
+
 ```mermaid
 mindmap
   root((CIM Modules))
     Core System
-      cim-core-domain
+      cim-domain
       cim-component
       cim-infrastructure
+      cim-network
       cim-bridge
       cim-compose
       cim-start
@@ -45,6 +51,7 @@ mindmap
       cim-ipld
       cim-ipld-graph
       cim-subject
+      cim-flashstor
     Visualization
       cim-domain-bevy
       cim-viz-bevy
@@ -62,14 +69,16 @@ mindmap
 ```mermaid
 graph LR
     subgraph "Core Infrastructure Stack"
-        A[cim-start] -->|Uses| B[cim-core-domain]
+        A[cim-start] -->|Uses| B[cim-domain]
         B -->|Defines| C[cim-component]
         C -->|Deployed by| D[cim-infrastructure]
+        D -->|Networked by| N[cim-network]
         D -->|Connected via| E[cim-bridge]
         E -->|Composed with| F[cim-compose]
         
         G[NATS] -.->|Powers| E
         H[IPLD] -.->|Storage for| D
+        I[Leaf Nodes] -.->|Built on| N
     end
     
     %% Styling - infrastructure flow
@@ -77,18 +86,21 @@ graph LR
     style B fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
     style C fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
     style D fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style N fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
     style E fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
     style F fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
     style G fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
     style H fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
+    style I fill:#2D3436,stroke:#000,stroke-width:3px,color:#FFF
 ```
 
-- **cim-core-domain**: Core domain models and abstractions
+- **cim-start**: 🚀 **STARTING TEMPLATE FOR ALL NEW CIMs** - Clone this first!
+- **cim-domain**: Base domain models and abstractions for all CIM domains
 - **cim-component**: Core component definitions for the Composable Information Machine
 - **cim-infrastructure**: Infrastructure layer with NATS integration and persistence
+- **cim-network**: Network infrastructure definitions for IPv4/IPv6, routers, switches, VLANs, and nix-topology generation
 - **cim-bridge**: CIM Bridge to NATS messaging system
 - **cim-compose**: Composition utilities and helpers for CIM
-- **cim-start**: Starting template for a CIM
 
 ### 🤖 AI & Agent Systems
 - **alchemist**: Information Alchemy - The core AI reasoning system
@@ -137,7 +149,7 @@ graph TB
     style G fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
 ```
 
-- **cim-domain**: Domain Generics and traits for a CIM
+- **cim-domain**: Base domain models and abstractions for all CIM domains
 - **cim-domain-identity**: Identity Domain
 - **cim-domain-organization**: Organization domain for the Composable Information Machine
 - **cim-domain-person**: Person/People domain for the Composable Information Machine
@@ -153,11 +165,72 @@ graph TB
 - **cim-domain-graph**: CIM Specific Graphs
 
 ### 🔐 Security & Policy
-- **cim-security**: CIM Security Domain
-- **cim-domain-policy**: Policy domain for the Composable Information Machine
-- **cim-keys**: Offline Key Management for CIM
+
+```mermaid
+graph TB
+    subgraph "Security Architecture"
+        A[cim-domain-identity] -->|Provides| B[Identity Management]
+        C[cim-security] -->|Enforces| D[Access Control]
+        E[cim-domain-policy] -->|Defines| F[Business Rules]
+        G[cim-keys] -->|Manages| H[Cryptographic Keys]
+        
+        B --> I[Authentication]
+        D --> J[Authorization]
+        F --> K[Policy Enforcement]
+        H --> L[Signing & Verification]
+        
+        I --> M[Unified Security Layer]
+        J --> M
+        K --> M
+        L --> M
+    end
+    
+    %% Styling
+    style A fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style C fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style E fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style G fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style M fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+```
+
+- **cim-domain-identity**: Identity management and authentication foundation
+- **cim-security**: Security enforcement and access control mechanisms
+- **cim-domain-policy**: Business policy rules and enforcement
+- **cim-keys**: Cryptographic key management and digital signatures
+
+These modules work together to provide comprehensive security:
+1. **Identity** establishes who you are
+2. **Security** determines what you can access
+3. **Policy** defines business rules and constraints
+4. **Keys** enable cryptographic operations and verification
 
 ### 📡 Data & Storage
+
+```mermaid
+graph LR
+    subgraph "Storage Architecture"
+        A[cim-flashstor] -->|Connects to| B[Leaf Node Networks]
+        B -->|Provides| C[Object Storage]
+        
+        D[cim-ipld] -->|Content Addressing| E[Immutable Storage]
+        F[cim-ipld-graph] -->|Graph Storage| E
+        
+        G[cim-subject] -->|Routes| H[Storage Requests]
+        
+        C --> I[Distributed Storage Layer]
+        E --> I
+        H --> I
+    end
+    
+    %% Styling
+    style A fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style D fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style F fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style G fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style I fill:#FFE66D,stroke:#FCC419,stroke-width:3px,color:#000
+```
+
+- **cim-flashstor**: Network-attached object storage that connects to any leaf node network
 - **cim-ipld**: CIM library for IPLD (InterPlanetary Linked Data)
 - **cim-ipld-graph**: Graph Composition with IPLDs
 - **cim-subject**: Subject management and routing utilities
@@ -167,8 +240,34 @@ graph TB
 - **cim-viz-bevy**: Bevy-based visualization components for CIM
 
 ### 🌿 Edge Computing & Devices
-- **cim-leaf**: CIM Leaf Node
-- **cim-leaf-darwin**: CIM Leaf node for Darwin/macOS
+
+```mermaid
+graph LR
+    subgraph "Edge Architecture"
+        A[cim-network] -->|Defines infrastructure| B[cim-leaf]
+        A -->|Defines infrastructure| C[cim-leaf-darwin]
+        B -->|Hosts| D[Services]
+        C -->|Hosts| E[Services]
+        
+        F[cim-portal] -.->|Connects to| B
+        F -.->|Connects to| C
+        G[cim-stb] -.->|Edge device| B
+        
+        A -->|Generates| H[nix-topology]
+        H -->|Configures| B
+        H -->|Configures| C
+    end
+    
+    %% Styling
+    style A fill:#FF6B6B,stroke:#C92A2A,stroke-width:4px,color:#FFF
+    style B fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style C fill:#4ECDC4,stroke:#2B8A89,stroke-width:3px,color:#FFF
+    style H fill:#95E1D3,stroke:#63C7B8,stroke-width:2px,color:#000
+```
+
+- **cim-network**: Network infrastructure definitions that generate nix-topology configurations for CIM deployments
+- **cim-leaf**: CIM Leaf Node (uses cim-network for network configuration)
+- **cim-leaf-darwin**: CIM Leaf node for Darwin/macOS (uses cim-network for network configuration)
 - **cim-portal**: A portal module
 - **cim-stb**: CIM connected Set Top Box
 

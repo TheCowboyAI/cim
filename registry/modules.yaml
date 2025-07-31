@@ -1,0 +1,270 @@
+# CIM Module Registry
+# Auto-updated by GitHub Actions
+# Last updated: $(date -I)
+
+modules:
+  # Template
+  cim-start:
+    type: template
+    description: "Starting template for new CIM implementations"
+    repository: "https://github.com/thecowboyai/cim-start"
+    topics: ["cim", "cim-module", "template"]
+    category: core
+    status: template
+    
+  # Core Infrastructure
+  cim-domain:
+    type: core
+    description: "Base domain models and abstractions for CIM"
+    repository: "https://github.com/thecowboyai/cim-domain"
+    topics: ["cim", "cim-module", "core"]
+    category: core
+    status: production
+    
+  cim-infrastructure:
+    type: core
+    description: "Infrastructure layer with NATS integration"
+    repository: "https://github.com/thecowboyai/cim-infrastructure"
+    topics: ["cim", "cim-module", "core"]
+    category: infrastructure
+    status: development
+    
+  cim-network:
+    type: core
+    description: "Network topologies, structures, and functionality for CIM"
+    repository: "https://github.com/thecowboyai/cim-network"
+    topics: ["cim", "cim-module", "core", "network"]
+    category: infrastructure
+    status: development
+    
+  cim-bridge:
+    type: core
+    description: "Bridge between contexts (ECS ↔ DDD ↔ NATS)"
+    repository: "https://github.com/thecowboyai/cim-bridge"
+    topics: ["cim", "cim-module", "core"]
+    category: infrastructure
+    status: development
+    
+  # Security & Identity
+  cim-security:
+    type: core
+    description: "Security coordination and access control"
+    repository: "https://github.com/thecowboyai/cim-security"
+    topics: ["cim", "cim-module", "security"]
+    category: security
+    status: development
+    
+  cim-domain-identity:
+    type: domain
+    description: "Identity management and authentication"
+    repository: "https://github.com/thecowboyai/cim-domain-identity"
+    topics: ["cim", "cim-module", "domain", "security"]
+    category: security
+    status: development
+    
+  cim-domain-policy:
+    type: domain
+    description: "Business policy rules and enforcement"
+    repository: "https://github.com/thecowboyai/cim-domain-policy"
+    topics: ["cim", "cim-module", "domain", "security"]
+    category: security
+    status: development
+    
+  cim-keys:
+    type: core
+    description: "Cryptographic key management"
+    repository: "https://github.com/thecowboyai/cim-keys"
+    topics: ["cim", "cim-module", "security"]
+    category: security
+    status: development
+    
+  # Storage
+  cim-flashstor:
+    type: core
+    description: "Network-attached object storage for leaf nodes"
+    repository: "https://github.com/thecowboyai/cim-flashstor"
+    topics: ["cim", "cim-module", "storage"]
+    category: storage
+    status: development
+    
+  cim-ipld:
+    type: core
+    description: "IPLD content-addressed storage"
+    repository: "https://github.com/thecowboyai/cim-ipld"
+    topics: ["cim", "cim-module", "storage"]
+    category: storage
+    status: production
+    
+  cim-ipld-graph:
+    type: core
+    description: "Graph storage using IPLD"
+    repository: "https://github.com/thecowboyai/cim-ipld-graph"
+    topics: ["cim", "cim-module", "storage", "graph"]
+    category: storage
+    status: development
+    
+  # Business Domains
+  cim-domain-person:
+    type: domain
+    description: "Person/People domain"
+    repository: "https://github.com/thecowboyai/cim-domain-person"
+    topics: ["cim", "cim-module", "domain"]
+    category: business
+    status: development
+    
+  cim-domain-organization:
+    type: domain
+    description: "Organization structures and hierarchies"
+    repository: "https://github.com/thecowboyai/cim-domain-organization"
+    topics: ["cim", "cim-module", "domain"]
+    category: business
+    status: development
+    
+  cim-domain-document:
+    type: domain
+    description: "Document lifecycle and management"
+    repository: "https://github.com/thecowboyai/cim-domain-document"
+    topics: ["cim", "cim-module", "domain"]
+    category: business
+    status: development
+    
+  cim-domain-workflow:
+    type: domain
+    description: "Workflow definitions and execution"
+    repository: "https://github.com/thecowboyai/cim-domain-workflow"
+    topics: ["cim", "cim-module", "domain"]
+    category: business
+    status: development
+    
+  cim-domain-location:
+    type: domain
+    description: "Geographic and spatial data"
+    repository: "https://github.com/thecowboyai/cim-domain-location"
+    topics: ["cim", "cim-module", "domain"]
+    category: business
+    status: development
+    
+  # Knowledge & AI
+  cim-domain-conceptualspaces:
+    type: domain
+    description: "Conceptual spaces for semantic reasoning"
+    repository: "https://github.com/thecowboyai/cim-domain-conceptualspaces"
+    topics: ["cim", "cim-module", "domain", "ai"]
+    category: knowledge
+    status: development
+    
+  cim-conceptgraph:
+    type: core
+    description: "Conceptual relationship graphs"
+    repository: "https://github.com/thecowboyai/cim-conceptgraph"
+    topics: ["cim", "cim-module", "graph", "ai"]
+    category: knowledge
+    status: development
+    
+  cim-domain-agent:
+    type: domain
+    description: "AI agent capabilities and behaviors"
+    repository: "https://github.com/thecowboyai/cim-domain-agent"
+    topics: ["cim", "cim-module", "domain", "ai"]
+    category: ai
+    status: development
+    
+  cim-domain-dialog:
+    type: domain
+    description: "Conversational interaction management"
+    repository: "https://github.com/thecowboyai/cim-domain-dialog"
+    topics: ["cim", "cim-module", "domain", "ai"]
+    category: ai
+    status: development
+    
+  # Technical Domains
+  cim-domain-git:
+    type: domain
+    description: "Git version control integration"
+    repository: "https://github.com/thecowboyai/cim-domain-git"
+    topics: ["cim", "cim-module", "domain", "technical"]
+    category: technical
+    status: development
+    
+  cim-domain-nix:
+    type: domain
+    description: "Nix package manager integration"
+    repository: "https://github.com/thecowboyai/cim-domain-nix"
+    topics: ["cim", "cim-module", "domain", "technical"]
+    category: technical
+    status: development
+    
+  cim-domain-bevy:
+    type: domain
+    description: "Bevy ECS visualization integration"
+    repository: "https://github.com/thecowboyai/cim-domain-bevy"
+    topics: ["cim", "cim-module", "domain", "visualization"]
+    category: visualization
+    status: development
+    
+  # Graph Systems
+  cim-contextgraph:
+    type: core
+    description: "Context boundary management"
+    repository: "https://github.com/thecowboyai/cim-contextgraph"
+    topics: ["cim", "cim-module", "graph"]
+    category: graph
+    status: development
+    
+  cim-workflow-graph:
+    type: core
+    description: "Workflow execution as graphs"
+    repository: "https://github.com/thecowboyai/cim-workflow-graph"
+    topics: ["cim", "cim-module", "graph", "workflow"]
+    category: graph
+    status: development
+    
+  cim-domain-graph:
+    type: domain
+    description: "Graph operations and algorithms"
+    repository: "https://github.com/thecowboyai/cim-domain-graph"
+    topics: ["cim", "cim-module", "domain", "graph"]
+    category: graph
+    status: development
+    
+  # Edge & Devices
+  cim-leaf:
+    type: core
+    description: "CIM Leaf Node implementation"
+    repository: "https://github.com/thecowboyai/cim-leaf"
+    topics: ["cim", "cim-module", "edge"]
+    category: edge
+    status: development
+    
+  cim-leaf-darwin:
+    type: core
+    description: "CIM Leaf node for Darwin/macOS"
+    repository: "https://github.com/thecowboyai/cim-leaf-darwin"
+    topics: ["cim", "cim-module", "edge", "darwin"]
+    category: edge
+    status: development
+    
+  # Other Core Modules
+  cim-component:
+    type: core
+    description: "Component system for ECS architecture"
+    repository: "https://github.com/thecowboyai/cim-component"
+    topics: ["cim", "cim-module", "core"]
+    category: core
+    status: production
+    
+  cim-compose:
+    type: core
+    description: "Composition patterns and utilities"
+    repository: "https://github.com/thecowboyai/cim-compose"
+    topics: ["cim", "cim-module", "core"]
+    category: core
+    status: development
+    
+  cim-subject:
+    type: core
+    description: "Subject/event algebra for message routing"
+    repository: "https://github.com/thecowboyai/cim-subject"
+    topics: ["cim", "cim-module", "core", "messaging"]
+    category: infrastructure
+    status: production

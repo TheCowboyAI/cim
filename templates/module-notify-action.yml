@@ -1,0 +1,84 @@
+# GitHub Action template for CIM modules
+# Place this in each cim-* repository as .github/workflows/notify-cim-registry.yml
+
+name: Notify CIM Registry
+
+on:
+  push:
+    branches: [main]
+  release:
+    types: [published]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Get Module Info
+        id: module-info
+        run: |
+          # Extract module name from repository
+          MODULE_NAME="${GITHUB_REPOSITORY#*/}"
+          echo "module_name=$MODULE_NAME" >> $GITHUB_OUTPUT
+          
+          # Get latest commit hash
+          COMMIT_HASH="${GITHUB_SHA:0:7}"
+          echo "commit_hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
+          
+          # Try to get version from various sources
+          VERSION=""
+          if [ -f "Cargo.toml" ]; then
+            VERSION=$(grep -E '^version = ' Cargo.toml | head -1 | cut -d'"' -f2)
+          elif [ -f "package.json" ]; then
+            VERSION=$(jq -r '.version' package.json)
+          elif [ -f "cim.yaml" ]; then
+            VERSION=$(grep 'version:' cim.yaml | head -1 | awk '{print $2}' | tr -d '"')
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          
+          # Get commit message
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          echo "commit_message<<EOF" >> $GITHUB_OUTPUT
+          echo "$COMMIT_MSG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+      - name: Notify CIM Registry via NATS
+        if: vars.NATS_ENABLED == 'true'
+        uses: thecowboyai/nats-publish-action@v1
+        with:
+          server: ${{ secrets.NATS_SERVER }}
+          credentials: ${{ secrets.NATS_CREDS }}
+          subject: "cim.module.commit.${{ steps.module-info.outputs.module_name }}"
+          payload: |
+            {
+              "module": "${{ steps.module-info.outputs.module_name }}",
+              "repository": "${{ github.repository }}",
+              "commit": "${{ steps.module-info.outputs.commit_hash }}",
+              "version": "${{ steps.module-info.outputs.version }}",
+              "branch": "${{ github.ref_name }}",
+              "timestamp": "${{ github.event.head_commit.timestamp }}",
+              "author": "${{ github.event.head_commit.author.name }}",
+              "message": "${{ steps.module-info.outputs.commit_message }}",
+              "event_type": "${{ github.event_name }}"
+            }
+            
+      - name: Notify CIM Registry via Repository Dispatch
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.CIM_REGISTRY_TOKEN }}
+          repository: thecowboyai/cim
+          event-type: module-commit
+          client-payload: |
+            {
+              "module": "${{ steps.module-info.outputs.module_name }}",
+              "repository": "${{ github.repository }}",
+              "commit": "${{ steps.module-info.outputs.commit_hash }}",
+              "version": "${{ steps.module-info.outputs.version }}",
+              "branch": "${{ github.ref_name }}",
+              "timestamp": "${{ github.event.head_commit.timestamp }}",
+              "author": "${{ github.event.head_commit.author.name }}",
+              "event_type": "${{ github.event_name }}"
+            }

@@ -1,0 +1,281 @@
+{
+  "graph": {
+    "metadata": {
+      "version": "1.0.0",
+      "last_updated": "$(date -Iseconds)",
+      "total_modules": 38,
+      "production_ready": 4
+    },
+    "nodes": {
+      "cim-start": {
+        "id": "cim-start",
+        "type": "template",
+        "status": "template",
+        "repository": "https://github.com/thecowboyai/cim-start",
+        "git": {
+          "latest_commit": null,
+          "latest_tag": null,
+          "last_updated": null
+        },
+        "version": {
+          "current": "0.1.0",
+          "releases": []
+        },
+        "dependencies": [],
+        "dependents": []
+      },
+      "cim-domain": {
+        "id": "cim-domain",
+        "type": "core",
+        "status": "production",
+        "repository": "https://github.com/thecowboyai/cim-domain",
+        "git": {
+          "latest_commit": null,
+          "latest_tag": null,
+          "last_updated": null
+        },
+        "version": {
+          "current": "1.0.0",
+          "releases": ["1.0.0"]
+        },
+        "dependencies": [],
+        "dependents": [
+          "cim-domain-identity",
+          "cim-domain-person",
+          "cim-domain-organization",
+          "cim-domain-document",
+          "cim-domain-workflow",
+          "cim-domain-policy",
+          "cim-domain-location",
+          "cim-domain-agent",
+          "cim-domain-conceptualspaces",
+          "cim-domain-bevy",
+          "cim-domain-git",
+          "cim-domain-nix",
+          "cim-domain-dialog",
+          "cim-domain-graph"
+        ]
+      },
+      "cim-ipld": {
+        "id": "cim-ipld",
+        "type": "core",
+        "status": "production",
+        "repository": "https://github.com/thecowboyai/cim-ipld",
+        "git": {
+          "latest_commit": null,
+          "latest_tag": null,
+          "last_updated": null
+        },
+        "version": {
+          "current": "1.0.0",
+          "releases": ["1.0.0"]
+        },
+        "dependencies": [],
+        "dependents": ["cim-ipld-graph"]
+      },
+      "cim-component": {
+        "id": "cim-component",
+        "type": "core",
+        "status": "production",
+        "repository": "https://github.com/thecowboyai/cim-component",
+        "git": {
+          "latest_commit": null,
+          "latest_tag": null,
+          "last_updated": null
+        },
+        "version": {
+          "current": "1.0.0",
+          "releases": ["1.0.0"]
+        },
+        "dependencies": [],
+        "dependents": ["cim-compose", "cim-bridge"]
+      },
+      "cim-subject": {
+        "id": "cim-subject",
+        "type": "core",
+        "status": "production",
+        "repository": "https://github.com/thecowboyai/cim-subject",
+        "git": {
+          "latest_commit": null,
+          "latest_tag": null,
+          "last_updated": null
+        },
+        "version": {
+          "current": "1.0.0",
+          "releases": ["1.0.0"]
+        },
+        "dependencies": [],
+        "dependents": ["cim-bridge"]
+      },
+      "cim-infrastructure": {
+        "id": "cim-infrastructure",
+        "type": "core",
+        "status": "development",
+        "repository": "https://github.com/thecowboyai/cim-infrastructure",
+        "git": {
+          "latest_commit": null,
+          "latest_tag": null,
+          "last_updated": null
+        },
+        "version": {
+          "current": "0.1.0",
+          "releases": []
+        },
+        "dependencies": ["cim-domain"],
+        "dependents": ["cim-security", "cim-flashstor"]
+      },
+      "cim-network": {
+        "id": "cim-network",
+        "type": "core",
+        "status": "development",
+        "repository": "https://github.com/thecowboyai/cim-network",
+        "description": "Network infrastructure definitions for IPv4/IPv6, routers, switches, VLANs, and nix-topology generation",
+        "git": {
+          "latest_commit": null,
+          "latest_tag": null,
+          "last_updated": null
+        },
+        "version": {
+          "current": "0.1.0",
+          "releases": []
+        },
+        "dependencies": [],
+        "dependents": ["cim-leaf", "cim-leaf-darwin"]
+      },
+      "cim-bridge": {
+        "id": "cim-bridge",
+        "type": "core",
+        "status": "development",
+        "repository": "https://github.com/thecowboyai/cim-bridge",
+        "git": {
+          "latest_commit": null,
+          "latest_tag": null,
+          "last_updated": null
+        },
+        "version": {
+          "current": "0.1.0",
+          "releases": []
+        },
+        "dependencies": ["cim-subject", "cim-component", "cim-domain"],
+        "dependents": []
+      },
+      "cim-compose": {
+        "id": "cim-compose",
+        "type": "core",
+        "status": "development",
+        "repository": "https://github.com/thecowboyai/cim-compose",
+        "git": {
+          "latest_commit": null,
+          "latest_tag": null,
+          "last_updated": null
+        },
+        "version": {
+          "current": "0.1.0",
+          "releases": []
+        },
+        "dependencies": ["cim-component"],
+        "dependents": []
+      },
+      "cim-security": {
+        "id": "cim-security",
+        "type": "core",
+        "status": "development",
+        "repository": "https://github.com/thecowboyai/cim-security",
+        "git": {
+          "latest_commit": null,
+          "latest_tag": null,
+          "last_updated": null
+        },
+        "version": {
+          "current": "0.1.0",
+          "releases": []
+        },
+        "dependencies": ["cim-infrastructure", "cim-domain-identity", "cim-domain-policy", "cim-keys"],
+        "dependents": []
+      },
+      "cim-keys": {
+        "id": "cim-keys",
+        "type": "core",
+        "status": "development",
+        "repository": "https://github.com/thecowboyai/cim-keys",
+        "git": {
+          "latest_commit": null,
+          "latest_tag": null,
+          "last_updated": null
+        },
+        "version": {
+          "current": "0.1.0",
+          "releases": []
+        },
+        "dependencies": [],
+        "dependents": ["cim-security"]
+      },
+      "cim-flashstor": {
+        "id": "cim-flashstor",
+        "type": "core",
+        "status": "development",
+        "repository": "https://github.com/thecowboyai/cim-flashstor",
+        "git": {
+          "latest_commit": null,
+          "latest_tag": null,
+          "last_updated": null
+        },
+        "version": {
+          "current": "0.1.0",
+          "releases": []
+        },
+        "dependencies": ["cim-infrastructure"],
+        "dependents": []
+      },
+      "cim-ipld-graph": {
+        "id": "cim-ipld-graph",
+        "type": "core",
+        "status": "development",
+        "repository": "https://github.com/thecowboyai/cim-ipld-graph",
+        "git": {
+          "latest_commit": null,
+          "latest_tag": null,
+          "last_updated": null
+        },
+        "version": {
+          "current": "0.1.0",
+          "releases": []
+        },
+        "dependencies": ["cim-ipld"],
+        "dependents": ["cim-contextgraph", "cim-conceptgraph", "cim-workflow-graph"]
+      }
+    },
+    "edges": [
+      {"from": "cim-domain", "to": "cim-domain-identity", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-domain-person", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-domain-organization", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-domain-document", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-domain-workflow", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-domain-policy", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-domain-location", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-domain-agent", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-domain-conceptualspaces", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-domain-bevy", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-domain-git", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-domain-nix", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-domain-dialog", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-domain-graph", "type": "dependency"},
+      {"from": "cim-ipld", "to": "cim-ipld-graph", "type": "dependency"},
+      {"from": "cim-component", "to": "cim-compose", "type": "dependency"},
+      {"from": "cim-component", "to": "cim-bridge", "type": "dependency"},
+      {"from": "cim-subject", "to": "cim-bridge", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-bridge", "type": "dependency"},
+      {"from": "cim-domain", "to": "cim-infrastructure", "type": "dependency"},
+      {"from": "cim-infrastructure", "to": "cim-security", "type": "dependency"},
+      {"from": "cim-infrastructure", "to": "cim-flashstor", "type": "dependency"},
+      {"from": "cim-network", "to": "cim-leaf", "type": "dependency"},
+      {"from": "cim-network", "to": "cim-leaf-darwin", "type": "dependency"},
+      {"from": "cim-keys", "to": "cim-security", "type": "dependency"},
+      {"from": "cim-domain-identity", "to": "cim-security", "type": "dependency"},
+      {"from": "cim-domain-policy", "to": "cim-security", "type": "dependency"},
+      {"from": "cim-ipld-graph", "to": "cim-contextgraph", "type": "dependency"},
+      {"from": "cim-ipld-graph", "to": "cim-conceptgraph", "type": "dependency"},
+      {"from": "cim-ipld-graph", "to": "cim-workflow-graph", "type": "dependency"}
+    ]
+  }
+}

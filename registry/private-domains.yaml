@@ -1,0 +1,65 @@
+# Private Domain Registry
+# Tracks private CIM domain implementations
+# Last updated: $(date -I)
+
+private_domains:
+  financial_services:
+    - name: cim-domain-mortgage
+      description: "Private mortgage lending workflows"
+      owner: "private-lender-x"
+      status: "development"
+      modules_used:
+        - cim-domain-identity
+        - cim-domain-document
+        - cim-domain-workflow
+        - cim-security
+        - cim-flashstor
+      
+    - name: cim-domain-banking
+      description: "Core banking operations"
+      owner: "bank-y"
+      status: "planning"
+      
+  healthcare:
+    - name: cim-domain-patient-care
+      description: "Patient care coordination"
+      owner: "health-system-a"
+      status: "production"
+      modules_used:
+        - cim-domain-identity
+        - cim-domain-person
+        - cim-domain-document
+        - cim-domain-workflow
+        - cim-domain-policy
+        
+    - name: cim-domain-clinical-trials
+      description: "Clinical trial management"
+      owner: "pharma-b"
+      status: "development"
+      
+  manufacturing:
+    - name: cim-domain-production
+      description: "Production line management"
+      owner: "manufacturer-c"
+      status: "pilot"
+      modules_used:
+        - cim-domain-workflow
+        - cim-domain-location
+        - cim-flashstor
+        
+  retail:
+    - name: cim-domain-inventory
+      description: "Inventory and supply chain"
+      owner: "retailer-d"
+      status: "planning"
+      
+    - name: cim-domain-ecommerce
+      description: "E-commerce platform"
+      owner: "online-store-e"
+      status: "development"
+
+# Status definitions:
+# - planning: Initial design phase
+# - development: Active development
+# - pilot: Testing with limited scope
+# - production: Full production use

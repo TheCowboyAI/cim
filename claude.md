@@ -4,10 +4,28 @@ A continuously improving, distributed system that transforms scattered informati
 
 A CIM is an encapsulation of knowledge, specialized, and partitioned by Domain. A CIM is designed to compose many Domains and efficiently create workflows and transitions between them.
 
-You **MUST** READ AND FOLLOW ./rules/main.mdc
+You **MUST** READ AND FOLLOW ./.claude/INDEX.md
 You **MUST** read doc/progress/progress.json (creating it if it does not exist)
 
 ALL Work must create a node in the progress graph structure and update metrics accordingly.
+
+## Recent Updates (July 30, 2025)
+
+### Claude Directory Optimization ✅
+- **Reorganized .rules → .claude**: Created hierarchical structure for better context management
+- **Memory Management**: Integrated progress.json tracking with update protocols
+- **Context Switching**: Added contexts for client, leaf, cluster, super-cluster
+- **Standards & Patterns**: Organized 15+ patterns and 8+ standards documents
+- **Comprehensive Index**: Created INDEX.md for easy navigation
+
+### Network Module Development 🚧
+- **cim-network**: Created comprehensive network infrastructure module
+  - Compact network representation with CIDR patterns
+  - IPv4 private network detection (RFC 1918)
+  - Layer 2/3 abstractions (VLANs, IP planning)
+  - Network theory: Hopfield networks, pattern detection
+  - ContextGraph integration for visualization
+  - Network partitioning for security and growth
 
 ## Project Overview
 
@@ -158,6 +176,25 @@ When running demos, use the appropriate binary target for each domain.
 ## Task Orientation & Progress Tracking
 
 Based on progress.json, the project is **100% COMPLETE** with all 14 domains production-ready. Current focus is on:
+
+## Overall Progress: 35% Complete
+
+### Completed Milestones
+- [x] Create comprehensive documentation structure
+- [x] Document all 37 CIM modules with visual graphs
+- [x] Create theoretical foundation documents
+- [x] Design Claude conversation prompts
+- [x] Optimize .claude directory for AI assistance
+- [x] Create memory and context management system
+- [x] Develop cim-network module with advanced features
+
+### Next Priorities
+- [ ] Complete cim-network compilation and push to GitHub
+- [ ] Create cim-flashstor module
+- [ ] Core infrastructure implementation (cim-leaf, cim-host)
+- [ ] NATS messaging integration
+- [ ] Event sourcing implementation
+- [ ] Domain module templates
 
 ### Active Priorities (from progress.json)
 1. Production deployment preparation
