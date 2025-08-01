@@ -2,7 +2,7 @@
   "project": "Composable Information Machine (CIM)",
   "status": "IN_PROGRESS",
   "overall_completion": 40,
-  "last_updated": "2025-07-31",
+  "last_updated": "2025-08-01",
   "graph": {
     "nodes": [
       {
@@ -151,7 +151,7 @@
         "status": "IN_PROGRESS",
         "description": "Network infrastructure management module for routers, switches, VLANs, and container networks",
         "created": "2025-07-31",
-        "completion": 65,
+        "completion": 70,
         "phases": {
           "design": "COMPLETE",
           "planning": "COMPLETE",
@@ -160,10 +160,10 @@
           "integration": "IN_PROGRESS"
         },
         "metrics": {
-          "files_created": 53,
-          "tests_written": 54,
-          "tests_passing": 54,
-          "coverage_percent": 65
+          "files_created": 55,
+          "tests_written": 65,
+          "tests_passing": 65,
+          "coverage_percent": 70
         },
         "artifacts": [
           "modules/cim-network/doc/design/network-infrastructure-design.md",
@@ -176,7 +176,9 @@
           "modules/cim-network/src/domain/aggregates/router_configuration.rs",
           "modules/cim-network/src/domain/aggregates/switch_configuration.rs",
           "modules/cim-network/src/domain/configuration/cisco_ios.rs",
+          "modules/cim-network/src/domain/state_machines/network_theory.rs",
           "modules/cim-network/tests/unit/",
+          "modules/cim-network/tests/unit/network_theory_test.rs",
           "modules/cim-network/Cargo.toml (updated with cim-domain dependency)"
         ],
         "blockers": [],
@@ -326,6 +328,21 @@
     }
   },
   "recent_changes": [
+    {
+      "date": "2025-08-01",
+      "type": "module",
+      "description": "Extended cim-network with network theory and Markov chains",
+      "impact": "HIGH",
+      "details": [
+        "Created network_theory.rs extending cim-domain state machines",
+        "Implemented Markov chain state transitions with event weights",
+        "Added network reliability calculations and steady-state analysis",
+        "Created comprehensive test suite for network theory (11 tests)",
+        "Integrated event-weighted transitions for network scenarios",
+        "Added MTBF/MTTR prediction using Markov chains",
+        "Fixed TransitionHistory to be event query-based, not a resource"
+      ]
+    },
     {
       "date": "2025-07-31",
       "type": "module",
