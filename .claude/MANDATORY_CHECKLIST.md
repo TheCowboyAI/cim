@@ -66,6 +66,32 @@ cat /git/thecowboyai/cim/doc/progress/progress.json
 - [ ] List blockers if any
 - [ ] Update completion percentage realistically
 
+#### 8. Before EVERY Commit in cim-network Module
+- [ ] **UPDATE PROGRESS.JSON FIRST**
+  - [ ] Update completion percentage
+  - [ ] Update metrics (files_created, tests_written, tests_passing)
+  - [ ] Add new artifacts to the list
+  - [ ] Update next_steps
+- [ ] **Run tests**: `cargo test`
+- [ ] **Commit order**:
+  ```bash
+  # 1. Update progress FIRST
+  cd /git/thecowboyai/cim
+  # Edit doc/progress/progress.json
+  
+  # 2. Commit to cim-network submodule
+  cd modules/cim-network
+  git add -A
+  git commit -m "feat: ..."
+  git push origin main
+  
+  # 3. Commit to parent WITH progress.json
+  cd ../..
+  git add modules/cim-network doc/progress/progress.json
+  git commit -m "feat: Progress on cim-network..."
+  git push origin main
+  ```
+
 ## 📚 CONTEXT CLARIFICATION
 
 **Infrastructure Type** (client/leaf/cluster) ≠ **Bounded Context** (domain focus)
