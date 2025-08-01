@@ -8,6 +8,10 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    cim-network = {
+      url = "github:TheCowboyAI/cim-network";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -15,6 +19,7 @@
     nixpkgs,
     flake-utils,
     rust-overlay,
+    cim-network,
   }:
     flake-utils.lib.eachDefaultSystem
     (
@@ -26,11 +31,39 @@
         };
 
         rustToolchain = pkgs.pkgsBuildHost.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
+        
+        # Build cim-network package
+        cim-network-pkg = pkgs.rustPlatform.buildRustPackage {
+          pname = "cim-network";
+          version = "0.1.0";
+          
+          src = cim-network;
+          
+          cargoLock = {
+            lockFile = "${cim-network}/Cargo.lock";
+          };
+          
+          buildInputs = with pkgs; [
+            openssl
+          ];
+          
+          nativeBuildInputs = with pkgs; [
+            pkg-config
+          ];
+          
+          # Skip tests during build as they require NATS
+          doCheck = false;
+        };
 
       in {
         # Package outputs
         packages = {
+          cim-network = cim-network-pkg;
+          default = cim-network-pkg;
         };
+        
+        # NixOS Module
+        nixosModules.cim-network = ./nix/modules/cim-network.nix;
 
         # Development shell
         devShells.default = pkgs.mkShell {
@@ -51,6 +84,8 @@
             git
             act
             starship
+            # Include cim-network in dev shell
+            cim-network-pkg
           ];
 
           RUST_SRC_PATH = pkgs.rustPlatform.rustLibSrc;
