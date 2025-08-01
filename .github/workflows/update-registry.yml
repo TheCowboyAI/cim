@@ -1,0 +1,99 @@
+name: Update CIM Registry
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  repository_dispatch:
+    types: [module-updated]
+
+jobs:
+  update-registry:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Set up environment
+        run: |
+          echo "CURRENT_DATE=$(date -I)" >> $GITHUB_ENV
+          echo "CURRENT_DATETIME=$(date -Iseconds)" >> $GITHUB_ENV
+          
+      - name: Query CIM Modules
+        uses: actions/github-script@v7
+        id: query
+        with:
+          script: |
+            const org = 'thecowboyai';
+            const modules = [];
+            
+            // Search for all cim repositories
+            const repos = await github.paginate(
+              github.rest.search.repos,
+              {
+                q: `org:${org} cim in:name`,
+                sort: 'updated',
+                per_page: 100
+              }
+            );
+            
+            for (const repo of repos) {
+              if (repo.name === 'cim' || repo.name.startsWith('cim-')) {
+                // Get latest commit
+                const commits = await github.rest.repos.listCommits({
+                  owner: org,
+                  repo: repo.name,
+                  per_page: 1
+                });
+                
+                const latestCommit = commits.data[0];
+                
+                modules.push({
+                  name: repo.name,
+                  description: repo.description || '',
+                  url: repo.html_url,
+                  topics: repo.topics || [],
+                  updated: repo.updated_at,
+                  commit: latestCommit ? latestCommit.sha.substring(0, 7) : '',
+                  private: repo.private
+                });
+              }
+            }
+            
+            return modules;
+            
+      - name: Update Registry Files
+        run: |
+          # Create status.json
+          cat > registry/status.json << EOF
+          {
+            "last_updated": "${{ env.CURRENT_DATETIME }}",
+            "total_modules": ${{ steps.query.outputs.result.length }},
+            "status": "healthy"
+          }
+          EOF
+          
+      - name: Generate Changelog Entry
+        run: |
+          if [ ! -f registry/changelog.md ]; then
+            echo "# CIM Registry Changelog" > registry/changelog.md
+            echo "" >> registry/changelog.md
+          fi
+          
+          # Add new entry at the top
+          echo "## ${{ env.CURRENT_DATE }}" > registry/changelog.tmp
+          echo "- Registry updated at ${{ env.CURRENT_DATETIME }}" >> registry/changelog.tmp
+          echo "" >> registry/changelog.tmp
+          cat registry/changelog.md >> registry/changelog.tmp
+          mv registry/changelog.tmp registry/changelog.md
+          
+      - name: Commit Registry Updates
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'chore: update module registry ${{ env.CURRENT_DATE }}'
+          add: 'registry/'
+          default_author: github_actions

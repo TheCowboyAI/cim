@@ -40,10 +40,11 @@ This directory contains all instructions, patterns, and standards for Claude AI 
   - Layer architecture
   - Implementation checklist
 
-- **[instructions/conversation-model.md](./instructions/conversation-model.md)** - How to discuss CIM
-  - Core understanding requirements
-  - Conversation patterns
-  - Documentation standards
+- **[instructions/cim-conversation-model.md](./instructions/cim-conversation-model.md)** - CIM conversation model ⭐
+  - Living information paradigm
+  - Event-driven architecture patterns
+  - Semantic intelligence through geometry
+  - Documentation requirements
   - Anti-patterns to avoid
 
 - **[instructions/date-handling.md](./instructions/date-handling.md)** - Date handling rules
@@ -65,25 +66,46 @@ This directory contains all instructions, patterns, and standards for Claude AI 
   - Value object patterns
   - Cross-domain integration
 
-- **[patterns/ddd-ecs-isomorphic-mapping.md](./patterns/ddd-ecs-isomorphic-mapping.md)** - DDD-ECS integration
+- **[patterns/ddd-ecs-isomorphic-mapping.md](./patterns/ddd-ecs-isomorphic-mapping.md)** - DDD-ECS mapping overview
   - Mathematical isomorphism
   - Component mappings
   - Structure preservation
 
-- **[patterns/event-sourcing.md](./patterns/event-sourcing.md)** - Event sourcing patterns
+- **[patterns/ddd-ecs-integration.md](./patterns/ddd-ecs-integration.md)** - DDD-ECS detailed integration ⭐
+  - Complete isomorphic mapping details
+  - Bounded context mapping
+  - Aggregate consistency patterns
+  - Event sourcing integration
+  - Testing strategies
+
+- **[patterns/event-sourcing.md](./patterns/event-sourcing.md)** - Event sourcing overview
   - CID chain requirements
   - NATS JetStream integration
   - Testing patterns
+
+- **[patterns/event-sourcing-detailed.md](./patterns/event-sourcing-detailed.md)** - Detailed event sourcing ⭐
+  - MANDATORY correlation/causation requirements
+  - Persistable trait implementation
+  - NATS message headers
+  - Event stream validation
+  - Common pitfalls and correct patterns
 
 - **[patterns/conceptual-spaces.md](./patterns/conceptual-spaces.md)** - Semantic reasoning
   - Geometric knowledge representation
   - Distance metrics
   - AI integration
 
-- **[patterns/graph-patterns.md](./patterns/graph-patterns.md)** - Graph architecture
+- **[patterns/graph-patterns.md](./patterns/graph-patterns.md)** - Graph architecture overview
   - EventStore design
   - CQRS implementation
   - Bevy ECS integration
+
+- **[patterns/graph-mermaid-patterns.md](./patterns/graph-mermaid-patterns.md)** - Graph & Mermaid requirements ⭐
+  - MANDATORY Mermaid diagram inclusion
+  - Standard diagram types
+  - Dog-fooding visualization
+  - Performance patterns
+  - Testing diagram requirements
 
 - **[patterns/domain-assembly.md](./patterns/domain-assembly.md)** - **IMPORTANT: How to build CIMs**
   - Assembly-first approach
@@ -110,10 +132,12 @@ This directory contains all instructions, patterns, and standards for Claude AI 
   - Dependency management
   - Common issues
 
-- **[standards/nixos-environment.md](./standards/nixos-environment.md)** - NixOS guidelines
-  - Module structure
-  - Flakes support
-  - Debugging strategies
+- **[standards/nixos-development.md](./standards/nixos-development.md)** - NixOS development standards ⭐
+  - Module creation patterns
+  - Service configuration
+  - Flakes integration
+  - Testing strategies
+  - Common patterns and anti-patterns
 
 - **[standards/test-driven-development.md](./standards/test-driven-development.md)** - TDD requirements
   - Testing patterns

@@ -210,6 +210,311 @@ This document establishes standards for developing robust, scalable systems in R
 3. **Audit Logging**: Comprehensive event tracking
 4. **Access Monitoring**: Detect anomalous patterns
 
+## Error Handling
+
+- Use `Result<T, E>` for fallible operations
+- Define custom error types with `thiserror`
+- Provide context with error messages
+- Use `anyhow` for application-level errors
+- Chain errors with proper context using `?` operator
+- Avoid `unwrap()` except in tests or with SAFETY comments
+
+```rust
+#[derive(Debug, thiserror::Error)]
+pub enum DomainError {
+    #[error("Invalid state transition: {0}")]
+    InvalidTransition(String),
+    
+    #[error("Entity not found: {id}")]
+    NotFound { id: String },
+    
+    #[error("Aggregate version mismatch: expected {expected}, got {actual}")]
+    VersionMismatch { expected: u64, actual: u64 },
+}
+
+// Error propagation with context
+pub fn process_command(cmd: Command) -> Result<Vec<Event>, DomainError> {
+    let aggregate = load_aggregate(&cmd.aggregate_id)
+        .map_err(|e| DomainError::NotFound { 
+            id: cmd.aggregate_id.to_string() 
+        })?;
+    
+    aggregate.handle(cmd)
+}
+```
+
+## Testing
+
+- Write unit tests for all public APIs
+- Use property-based testing with `proptest`
+- Test error conditions explicitly
+- Use test fixtures for complex data
+- Follow AAA pattern: Arrange, Act, Assert
+- Use `#[tokio::test]` for async tests
+- Mock external dependencies with trait objects
+
+```rust
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use proptest::prelude::*;
+    
+    #[test]
+    fn test_domain_logic() {
+        // Arrange
+        let aggregate = TestFixture::default_aggregate();
+        let command = TestFixture::valid_command();
+        
+        // Act
+        let result = aggregate.handle(command);
+        
+        // Assert
+        assert!(result.is_ok());
+        let events = result.unwrap();
+        assert_eq!(events.len(), 1);
+        assert_matches!(events[0], Event::Created { .. });
+    }
+    
+    #[tokio::test]
+    async fn test_async_operation() {
+        let store = MockEventStore::new();
+        let result = store.load_events("test-id").await;
+        assert!(result.is_ok());
+    }
+    
+    proptest! {
+        #[test]
+        fn test_invariants(cmd: Command) {
+            let aggregate = GraphAggregate::new();
+            let result = aggregate.handle(cmd);
+            
+            // Invariant: version always increases
+            if result.is_ok() {
+                assert!(aggregate.version() > 0);
+            }
+        }
+    }
+}
+```
+
+## Documentation
+
+- Document all public APIs with rustdoc
+- Include examples in documentation
+- Use `#[doc(hidden)]` for internal APIs
+- Generate documentation with `cargo doc`
+- Include module-level documentation
+- Add `# Examples` and `# Errors` sections
+- Use intra-doc links for cross-references
+
+```rust
+//! # Graph Aggregate Module
+//!
+//! This module provides the core domain logic for graph operations.
+//!
+//! ## Example
+//!
+//! ```rust
+//! use cim_graph::GraphAggregate;
+//!
+//! let mut graph = GraphAggregate::new("my-graph");
+//! let event = graph.add_node(NodeType::Concept)?;
+//! ```
+
+/// Adds a new node to the graph.
+///
+/// # Arguments
+///
+/// * `node_type` - The type of node to add
+///
+/// # Returns
+///
+/// Returns a `NodeAdded` event on success.
+///
+/// # Errors
+///
+/// Returns `DomainError::InvalidState` if the graph is sealed.
+///
+/// # Example
+///
+/// ```
+/// # use cim_graph::{GraphAggregate, NodeType};
+/// # let mut graph = GraphAggregate::new("test");
+/// let event = graph.add_node(NodeType::Concept)?;
+/// # Ok::<(), Box<dyn std::error::Error>>(())
+/// ```
+pub fn add_node(&mut self, node_type: NodeType) -> Result<NodeAdded, DomainError> {
+    // Implementation
+}
+```
+
+## Type System Usage
+
+- Leverage Rust's type system for domain modeling
+- Use newtypes for domain concepts
+- Prefer enum variants over boolean flags
+- Use phantom types for compile-time guarantees
+
+```rust
+// Newtype pattern for domain types
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct GraphId(Uuid);
+
+impl GraphId {
+    pub fn new() -> Self {
+        Self(Uuid::new_v4())
+    }
+}
+
+// State machines with phantom types
+pub struct Graph<S> {
+    id: GraphId,
+    _state: PhantomData<S>,
+}
+
+pub struct Draft;
+pub struct Published;
+
+impl Graph<Draft> {
+    pub fn publish(self) -> Graph<Published> {
+        Graph {
+            id: self.id,
+            _state: PhantomData,
+        }
+    }
+}
+
+// Only published graphs can be queried
+impl Graph<Published> {
+    pub fn query(&self, q: Query) -> QueryResult {
+        // Implementation
+    }
+}
+```
+
+## Async/Await Patterns
+
+- Use `tokio` for async runtime
+- Prefer `async-trait` for async traits
+- Handle cancellation with `tokio::select!`
+- Use `Arc<Mutex<T>>` sparingly, prefer message passing
+
+```rust
+#[async_trait]
+pub trait EventStore: Send + Sync {
+    async fn append(&self, events: Vec<Event>) -> Result<(), StoreError>;
+    async fn load(&self, id: &str) -> Result<Vec<Event>, StoreError>;
+}
+
+// Graceful shutdown
+pub async fn run_service(mut shutdown: Receiver<()>) {
+    loop {
+        tokio::select! {
+            _ = process_next_item() => {
+                // Continue processing
+            }
+            _ = shutdown.recv() => {
+                info!("Shutting down gracefully");
+                break;
+            }
+        }
+    }
+}
+```
+
+## Performance Guidelines
+
+- Use `&str` instead of `String` for function parameters
+- Prefer `Vec<T>` capacity hints with `with_capacity`
+- Use `Cow<'a, str>` for potentially owned strings
+- Profile before optimizing
+- Consider `SmallVec` for small collections
+
+```rust
+// Efficient string handling
+pub fn process_name<'a>(name: &'a str) -> Cow<'a, str> {
+    if name.contains(' ') {
+        Cow::Owned(name.replace(' ', "_"))
+    } else {
+        Cow::Borrowed(name)
+    }
+}
+
+// Pre-allocate collections
+pub fn collect_nodes(&self) -> Vec<Node> {
+    let mut nodes = Vec::with_capacity(self.estimated_size());
+    // Fill nodes
+    nodes
+}
+```
+
+## Dependency Management
+
+- Keep dependencies minimal
+- Use `cargo-outdated` to track updates
+- Pin versions for production
+- Prefer well-maintained crates
+- Audit dependencies with `cargo-audit`
+
+```toml
+[dependencies]
+# Core dependencies only
+tokio = { version = "1.43", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "2.0"
+
+[dev-dependencies]
+# Test dependencies
+proptest = "1.6"
+tokio-test = "0.4"
+```
+
+## Common Patterns
+
+### Builder Pattern
+```rust
+#[derive(Default)]
+pub struct GraphBuilder {
+    name: Option<String>,
+    config: Option<GraphConfig>,
+}
+
+impl GraphBuilder {
+    pub fn name(mut self, name: impl Into<String>) -> Self {
+        self.name = Some(name.into());
+        self
+    }
+    
+    pub fn build(self) -> Result<Graph, BuildError> {
+        Ok(Graph {
+            name: self.name.ok_or(BuildError::MissingName)?,
+            config: self.config.unwrap_or_default(),
+        })
+    }
+}
+```
+
+### Type State Pattern
+```rust
+pub struct Request<S> {
+    data: RequestData,
+    _state: PhantomData<S>,
+}
+
+pub struct Pending;
+pub struct Validated;
+
+impl Request<Pending> {
+    pub fn validate(self) -> Result<Request<Validated>, ValidationError> {
+        // Validation logic
+        Ok(Request {
+            data: self.data,
+            _state: PhantomData,
+        })
+    }
+}
+```
+
 ## Code Examples
 
 ### Basic ECS System

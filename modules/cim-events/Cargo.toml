@@ -1,0 +1,51 @@
+[package]
+name = "cim-events"
+version = "0.1.0"
+edition = "2021"
+authors = ["The CowboyAI Team"]
+description = "Event store with CID chains using NATS JetStream for CIM"
+license = "Apache-2.0"
+repository = "https://github.com/thecowboyai/cim"
+
+[dependencies]
+# Core async runtime
+tokio = { version = "1.35", features = ["full"] }
+async-trait = "0.1"
+
+# NATS and JetStream
+async-nats = "0.33"
+
+# CIM modules from GitHub
+cim-subject = { git = "https://github.com/thecowboyai/cim-subject" }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# CID and IPFS
+cid = "0.11"
+multihash = "0.19"
+ipfs-api = { version = "0.17", optional = true }
+
+# Error handling
+thiserror = "1.0"
+
+# Utils
+uuid = { version = "1.6", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+sha2 = "0.10"
+futures = "0.3"
+
+# Tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[dev-dependencies]
+# Testing
+tokio-test = "0.4"
+proptest = "1.4"
+rstest = "0.18"
+
+[features]
+default = []
+ipfs = ["ipfs-api"]

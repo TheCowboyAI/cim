@@ -1,0 +1,52 @@
+[package]
+name = "cim-projections"
+version = "0.1.0"
+edition = "2021"
+authors = ["The CowboyAI Team"]
+description = "CQRS projection implementation for CIM read models"
+license = "Apache-2.0"
+repository = "https://github.com/thecowboyai/cim"
+
+[dependencies]
+# Core async runtime
+tokio = { version = "1.35", features = ["full"] }
+async-trait = "0.1"
+
+# CIM modules
+cim-events = { path = "../cim-events" }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Error handling
+thiserror = "1.0"
+
+# Async streams
+futures = "0.3"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# Database support (optional)
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "json", "chrono"], optional = true }
+redis = { version = "0.24", features = ["tokio-comp"], optional = true }
+
+# Utils
+uuid = { version = "1.6", features = ["v4", "serde"] }
+
+[dev-dependencies]
+# Testing
+tokio-test = "0.4"
+proptest = "1.4"
+rstest = "0.18"
+
+[features]
+default = []
+postgres = ["sqlx"]
+redis = ["dep:redis"]
+all-stores = ["postgres", "redis"]

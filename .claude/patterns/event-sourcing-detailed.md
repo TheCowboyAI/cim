@@ -1,13 +1,8 @@
----
-description: We are an Event Driven Architecture
-globs:
-alwaysApply: true
----
-# Event Sourcing in CIM
+# Detailed Event Sourcing Patterns
 
-## Event Persistence
+## Event Persistence with Persistable Trait
 
-Persistence is optional - just implement the `Persistable` trait where needed:
+Persistence is optional - implement the `Persistable` trait only where needed:
 
 ```rust
 pub trait Persistable {
@@ -22,9 +17,9 @@ impl Persistable for PaymentProcessed { /* ... */ }
 struct CacheInvalidated { /* ... */ } // No persistence
 ```
 
-## Event Correlation and Causation Requirements
+## MANDATORY: Event Correlation and Causation
 
-### MANDATORY: All Events Must Include Correlation/Causation IDs
+### Core Requirements
 
 Every event, command, and query in the system MUST include correlation and causation IDs:
 
@@ -43,13 +38,15 @@ pub struct EventMetadata {
 }
 ```
 
-### Correlation/Causation Rules:
+### Correlation/Causation Rules
+
 1. **Root Messages**: `MessageId = CorrelationId = CausationId` (self-correlation)
 2. **Caused Messages**: Inherit `CorrelationId` from parent, `CausationId = parent.MessageId`
 3. **All NATS Messages**: Must include correlation headers (X-Correlation-ID, X-Causation-ID)
 4. **Event Streams**: Must validate correlation chains and detect cycles
 
-### Implementation Pattern:
+### Implementation Pattern
+
 ```rust
 // ALWAYS use MessageFactory for creating messages
 let root_cmd = MessageFactory::create_root(CreateOrder { ... });
@@ -59,11 +56,7 @@ let caused_event = MessageFactory::create_caused_by(OrderCreated { ... }, &root_
 let bad = Event { correlation_id: Uuid::new_v4(), ... }; // ❌ WRONG
 ```
 
-See `/doc/design/event-correlation-causation-algebra.md` for complete specification.
-
-## Event Design Principles
-
-### 1. Event Structure with CID Chains
+## Event Structure with CID Chains
 
 ```rust
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -89,46 +82,38 @@ pub struct DomainEvent {
 }
 ```
 
-### 2. Event Naming Conventions
+## NATS Message Headers
 
-Follow past-tense naming that reflects business outcomes:
-
-✅ **Good Event Names**
-- `NodeAdded`
-- `EdgeConnected`
-- `GraphPublished`
-- `ConceptSpaceCalculated`
-
-❌ **Bad Event Names**
-- `AddNode` (command, not event)
-- `NodeData` (not descriptive)
-- `UpdateGraph` (too generic)
-
-### 3. Event Payload Design
+All NATS messages MUST include these headers:
 
 ```rust
-// Events should be self-contained and immutable
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct NodeAdded {
-    pub node_id: NodeId,
-    pub node_type: NodeType,
-    pub initial_position: Position3D,
-    pub components: Vec<ComponentData>, // Snapshot, not references
-    pub metadata: HashMap<String, Value>,
-}
+impl NatsEventPublisher {
+    pub async fn publish_event(&self, event: DomainEvent) -> Result<()> {
+        let headers = Headers::new()
+            .add("X-Event-ID", event.event_id.to_string())
+            .add("X-Correlation-ID", event.correlation_id.to_string())
+            .add("X-Causation-ID", event.causation_id.to_string())
+            .add("X-Aggregate-ID", event.aggregate_id.to_string())
+            .add("X-Sequence", event.sequence.to_string())
+            .add("X-Event-Type", &event.event_type);
 
-// For large data, use CID references
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct LargeDatasetProcessed {
-    pub dataset_id: DatasetId,
-    pub result_cid: Cid, // Points to NATS Object Store
-    pub summary: ProcessingSummary,
+        let subject = format!("events.{}.{}", 
+            event.aggregate_type(), 
+            event.aggregate_id
+        );
+
+        self.client
+            .publish_with_headers(subject, headers, event.to_bytes()?)
+            .await?;
+
+        Ok(())
+    }
 }
 ```
 
 ## Event Store Integration
 
-### 1. NATS JetStream Configuration
+### NATS JetStream Configuration
 
 ```rust
 // Stream per aggregate type
@@ -149,7 +134,7 @@ pub async fn create_event_stream(js: &jetstream::Context) -> Result<Stream> {
 }
 ```
 
-### 2. Event Publishing Pattern
+### Event Publishing Pattern
 
 ```rust
 impl EventStore {
@@ -171,14 +156,15 @@ impl EventStore {
             // Calculate event CID
             let event_cid = calculate_cid(&event, previous_cid)?;
 
-            // Publish to NATS
-            let subject = format!("events.{}.{}",
-                event.aggregate_type(),
+            // Publish to NATS with required headers
+            let headers = create_event_headers(&event);
+            let subject = format!("events.{}.{}", 
+                event.aggregate_type(), 
                 aggregate_id
             );
 
             self.jetstream
-                .publish(subject, event.to_bytes()?)
+                .publish_with_headers(subject, headers, event.to_bytes()?)
                 .await?;
 
             previous_cid = Some(event_cid);
@@ -189,9 +175,42 @@ impl EventStore {
 }
 ```
 
-## Event Sourcing Patterns
+## Event Stream Validation
 
-### 1. Aggregate Loading
+```rust
+pub struct EventStreamValidator {
+    correlation_tracker: HashMap<CorrelationId, HashSet<MessageId>>,
+}
+
+impl EventStreamValidator {
+    pub fn validate_event(&mut self, event: &DomainEvent) -> Result<()> {
+        // Validate correlation chain
+        self.validate_correlation_chain(event)?;
+        
+        // Detect cycles
+        self.detect_causation_cycles(event)?;
+        
+        // Verify CID chain
+        self.verify_cid_integrity(event)?;
+        
+        Ok(())
+    }
+    
+    fn validate_correlation_chain(&mut self, event: &DomainEvent) -> Result<()> {
+        let messages = self.correlation_tracker
+            .entry(event.correlation_id.clone())
+            .or_insert_with(HashSet::new);
+            
+        if !messages.insert(event.event_id.clone()) {
+            return Err(Error::DuplicateMessage(event.event_id.clone()));
+        }
+        
+        Ok(())
+    }
+}
+```
+
+## Aggregate Loading with Validation
 
 ```rust
 pub async fn load_aggregate<A: Aggregate>(
@@ -203,8 +222,12 @@ pub async fn load_aggregate<A: Aggregate>(
         .await?;
 
     let mut aggregate = A::default();
+    let mut validator = EventStreamValidator::new();
 
     for event in events {
+        // Validate event stream integrity
+        validator.validate_event(&event)?;
+        
         // Verify CID chain
         verify_cid_chain(&event, &aggregate.last_cid)?;
 
@@ -216,12 +239,12 @@ pub async fn load_aggregate<A: Aggregate>(
 }
 ```
 
-### 2. Snapshot Strategy
+## Snapshot Strategy
 
 ```rust
 // Snapshot every N events or time period
 pub struct SnapshotPolicy {
-    pub event_threshold: u64,  // e.g., every 100 events
+    pub event_threshold: u64,     // e.g., every 100 events
     pub time_threshold: Duration, // e.g., every hour
 }
 
@@ -237,10 +260,12 @@ impl EventStore {
                 .put_object(snapshot)
                 .await?;
 
+            // Store with correlation metadata
             self.store_snapshot_reference(
                 aggregate.id(),
                 snapshot_cid,
                 aggregate.version(),
+                aggregate.last_correlation_id(),
             ).await?;
         }
         Ok(())
@@ -248,49 +273,7 @@ impl EventStore {
 }
 ```
 
-### 3. Event Replay and Projection
-
-```rust
-pub trait Projection: Send + Sync {
-    type Event;
-
-    async fn handle_event(&mut self, event: Self::Event) -> Result<()>;
-
-    async fn get_checkpoint(&self) -> Option<EventSequence>;
-
-    async fn save_checkpoint(&mut self, sequence: EventSequence) -> Result<()>;
-}
-
-// Replay events to rebuild projections
-pub async fn replay_projection<P: Projection>(
-    event_store: &EventStore,
-    projection: &mut P,
-    from_sequence: Option<EventSequence>,
-) -> Result<()> {
-    let start = from_sequence
-        .or(projection.get_checkpoint().await)
-        .unwrap_or(EventSequence(0));
-
-    let mut consumer = event_store
-        .consumer_from_sequence(start)
-        .await?;
-
-    while let Some(event) = consumer.next().await? {
-        projection.handle_event(event).await?;
-
-        // Checkpoint periodically
-        if event.sequence % 100 == 0 {
-            projection.save_checkpoint(event.sequence).await?;
-        }
-    }
-
-    Ok(())
-}
-```
-
-## Best Practices
-
-### 1. Event Versioning
+## Event Versioning
 
 ```rust
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -307,14 +290,18 @@ pub enum NodeEvent {
 impl From<NodeEvent> for DomainEvent {
     fn from(event: NodeEvent) -> Self {
         match event {
-            NodeEvent::V1(e) => e.into(), // Convert old format
+            NodeEvent::V1(e) => {
+                // Convert old format, preserving correlation
+                let v2 = upgrade_v1_to_v2(e);
+                v2.into()
+            },
             NodeEvent::V2(e) => e.into(),
         }
     }
 }
 ```
 
-### 2. Idempotency
+## Idempotency with NATS
 
 ```rust
 // Use event IDs for idempotency
@@ -325,7 +312,9 @@ impl EventStore {
     ) -> Result<()> {
         // NATS deduplication window handles this
         let headers = Headers::new()
-            .add("Nats-Msg-Id", event.event_id.to_string());
+            .add("Nats-Msg-Id", event.event_id.to_string())
+            .add("X-Correlation-ID", event.correlation_id.to_string())
+            .add("X-Causation-ID", event.causation_id.to_string());
 
         self.jetstream
             .publish_with_headers(subject, headers, payload)
@@ -334,7 +323,7 @@ impl EventStore {
 }
 ```
 
-### 3. Error Handling
+## Error Types
 
 ```rust
 #[derive(Debug, thiserror::Error)]
@@ -347,43 +336,46 @@ pub enum EventSourcingError {
 
     #[error("Event replay failed: {0}")]
     ReplayError(String),
-}
-```
-
-## Testing Event Sourcing
-
-```rust
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[tokio::test]
-    async fn test_event_cid_chain() {
-        let mut store = InMemoryEventStore::new();
-
-        let event1 = create_test_event(1);
-        let event2 = create_test_event(2);
-
-        store.append_events(vec![event1.clone()]).await.unwrap();
-        store.append_events(vec![event2.clone()]).await.unwrap();
-
-        let events = store.get_all_events().await.unwrap();
-
-        assert_eq!(events[1].previous_cid, Some(events[0].event_cid));
-        assert!(verify_cid_chain(&events).is_ok());
-    }
+    
+    #[error("Invalid correlation chain: {0}")]
+    InvalidCorrelation(String),
+    
+    #[error("Causation cycle detected: {0}")]
+    CausationCycle(String),
+    
+    #[error("Missing required header: {0}")]
+    MissingHeader(String),
 }
 ```
 
 ## Common Pitfalls to Avoid
 
-❌ **Mutable Events**
+### ❌ Missing Correlation/Causation
+```rust
+// WRONG - Missing required IDs
+let event = DomainEvent {
+    correlation_id: None, // NOT ALLOWED
+    causation_id: None,   // NOT ALLOWED
+    ..
+};
+```
+
+### ❌ Creating Messages Without Factory
+```rust
+// WRONG - Direct construction
+let event = Event { 
+    correlation_id: Uuid::new_v4(), 
+    ..
+};
+```
+
+### ❌ Mutable Events
 ```rust
 // WRONG - Events must be immutable
 event.timestamp = SystemTime::now();
 ```
 
-❌ **Business Logic in Event Handlers**
+### ❌ Business Logic in Event Handlers
 ```rust
 // WRONG - Apply should only update state
 fn apply_event(&mut self, event: Event) {
@@ -393,17 +385,35 @@ fn apply_event(&mut self, event: Event) {
 }
 ```
 
-❌ **Storing Entity References**
+## Correct Patterns
+
+### ✅ Always Use MessageFactory
 ```rust
-// WRONG - Store data, not references
-struct NodeAdded {
-    node: Arc<Node>, // Will break on replay!
-}
+// CORRECT
+let root = MessageFactory::create_root(command);
+let event = MessageFactory::create_caused_by(domain_event, &root);
 ```
 
-✅ **Correct Patterns**
-- Events are immutable records of what happened
-- Business logic in command handlers only
-- Events contain data snapshots, not references
-- CID chains ensure integrity
-- Projections handle read model updates
+### ✅ Include All Headers
+```rust
+// CORRECT
+let headers = Headers::new()
+    .add("X-Correlation-ID", event.correlation_id.to_string())
+    .add("X-Causation-ID", event.causation_id.to_string());
+```
+
+### ✅ Validate Event Streams
+```rust
+// CORRECT
+validator.validate_correlation_chain(&event)?;
+validator.verify_cid_integrity(&event)?;
+```
+
+### ✅ Immutable Event Storage
+```rust
+// CORRECT
+struct NodeAdded {
+    node_data: NodeSnapshot, // Data snapshot, not reference
+    position: Position3D,
+    components: Vec<ComponentData>,
+}

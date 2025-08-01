@@ -1,9 +1,4 @@
----
-description: CIM Conversation Model and Documentation Standards
-globs:
-alwaysApply: true
----
-# CIM Conversation Model
+# CIM Conversation Model and Documentation Standards
 
 ## Core Understanding Requirements
 

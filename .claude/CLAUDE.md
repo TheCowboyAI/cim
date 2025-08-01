@@ -131,3 +131,33 @@ When working on CIM components:
 - JWT-based authentication
 - Subject-based authorization
 - Audit logging for all operations
+
+## Critical Patterns and Standards
+
+### Core Implementation Patterns
+Refer to these essential patterns when implementing CIM features:
+
+1. **[instructions/cim-conversation-model.md](./instructions/cim-conversation-model.md)** - Living information paradigm
+   - Events as first-class citizens
+   - No CRUD operations allowed
+   - Semantic intelligence through geometry
+
+2. **[patterns/event-sourcing-detailed.md](./patterns/event-sourcing-detailed.md)** - MANDATORY event patterns
+   - All events MUST have correlation and causation IDs
+   - Use Persistable trait for business-critical events
+   - Follow NATS header requirements
+
+3. **[patterns/graph-mermaid-patterns.md](./patterns/graph-mermaid-patterns.md)** - Visualization requirements
+   - MANDATORY Mermaid diagrams in all graph modules
+   - Dog-fooding: visualize CIM development itself
+   - Standard diagram types for consistency
+
+4. **[patterns/ddd-ecs-integration.md](./patterns/ddd-ecs-integration.md)** - Domain modeling
+   - Isomorphic mapping between DDD and ECS
+   - Bounded context enforcement
+   - Aggregate consistency patterns
+
+5. **[standards/nixos-development.md](./standards/nixos-development.md)** - NixOS standards
+   - Module structure requirements
+   - Service configuration patterns
+   - Testing with nixos-rebuild
