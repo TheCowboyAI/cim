@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Launch Zed editor with proper nix environment
+
+# This script works around direnv's limitation with GUI apps
+exec nix develop --command zed "$@"

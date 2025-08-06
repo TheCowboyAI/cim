@@ -90,7 +90,11 @@ cd cim
 # Enter the CIM architect environment
 nix develop
 
-# You'll see a welcome message with available tools and resources
+# Or use direnv (automatically loads when you cd into the directory)
+direnv allow
+
+# Note: For GUI editors like Zed with direnv, use:
+./scripts/zed  # or 'nix develop -c zed'
 ```
 
 ### 2. Understand CIM Principles
