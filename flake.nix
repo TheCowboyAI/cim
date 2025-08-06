@@ -1,5 +1,5 @@
 {
-  description = "CIM - The Composable Information Machine";
+  description = "CIM - The Composable Information Machine: Architectural Blueprint & Assembly Guide for Domain-Specific Business Systems";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -8,7 +8,8 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # CIM domain modules
+    # CIM ecosystem references - these are examples of CIM modules
+    # that can be composed together to build domain-specific systems
     cim-domain-nix = {
       url = "github:thecowboyai/cim-domain-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -17,11 +18,6 @@
       url = "github:thecowboyai/cim-domain-git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Standalone CIM modules (commented until they have flake.nix)
-    # cim-network = {
-    #   url = "github:TheCowboyAI/cim-network";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
   };
 
   outputs = {
@@ -47,90 +43,87 @@
         rustToolchain = pkgs.pkgsBuildHost.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
 
       in {
-        # Package outputs (simplified for now)
-        packages = {
-          # Will add packages once modules are ready
-        };
-        
-        # Container images (disabled for now)
-        # containers = import ./nix/containers { inherit pkgs lib; };
-        
-        # NixOS Module
-        nixosModules = {
-          default = import ./nix/modules;
-          cim-events = import ./nix/modules/cim-events.nix;
-          cim-projections = import ./nix/modules/cim-projections.nix;
-        };
 
-        # Development shell
+        # Development shell for CIM research, design, and assembly
         devShells.default = pkgs.mkShell {
+          name = "cim-architect";
+          
           buildInputs = with pkgs; [
-            rustToolchain
-            rust-analyzer
-            cargo-edit
-            cargo-expand
-            cargo-udeps
-            cargo-whatfeatures
-            openssl
-            openssl.dev
-            pkg-config
-            zlib.dev
-            nodejs
-            direnv
-            zsh
-            git
-            act
-            starship
+            # Documentation and design tools
+            mdbook
+            plantuml
+            graphviz
+            pandoc
+            asciidoctor
             
-            # CIM domain tools (add when their builds are fixed)
-            # cim-domain-nix.packages.${system}.default
-            # cim-domain-git.packages.${system}.default
+            # Diagram and visualization
+            mermaid-cli
+            drawio
             
-            # Additional Nix tools
-            nix-prefetch-git
+            # Nix ecosystem tools for CIM assembly
+            nix
             nixpkgs-fmt
             nixos-generators
+            nix-prefetch-git
+            nix-tree
+            nix-diff
+            
+            # Git for version control
+            git
+            gh
+            
+            # JSON/YAML tools for configuration
+            jq
+            yq
+            
+            # Container tools for deployment strategies
+            docker-compose
+            kubectl
+            k9s
+            
+            # Development utilities
+            direnv
+            starship
+            bat
+            ripgrep
+            fd
+            
+            # Language support for examples
+            rustToolchain
+            nodejs
+            python3
+            go
           ];
 
-          RUST_SRC_PATH = pkgs.rustPlatform.rustLibSrc;
-          
           shellHook = ''
-            echo "🚀 Welcome to CIM development environment!"
-            echo ""
-            echo "Available commands:"
-            echo "  nix build          - Build all CIM packages"
-            echo "  nix run .#<pkg>    - Run a specific package"
-            echo "  nix develop        - Enter development shell"
-            echo ""
-            echo "Nix integration available via:"
-            echo "  cim-domain-nix     - Nix domain modeling"
-            echo "  cim-domain-git     - Git integration"
-            echo ""
-          '';
-        };
-        
-        # Additional development shells
-        devShells.integration = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            rustToolchain
-            # Integration test dependencies
-            nats-server
-            postgresql
-            redis
-            docker-compose
-          ];
-          
-          shellHook = ''
-            echo "Integration testing environment"
-            echo "Starting local services..."
-            docker-compose -f tests/docker-compose.yml up -d
+            ${"\033[1;36m"}╔═══════════════════════════════════════════════════════════════╗${"\033[0m"}
+            ${"\033[1;36m"}║${"\033[0m"}  ${"\033[1;33m"}🧬 Welcome to the CIM Architectural Blueprint Environment${"\033[0m"}  ${"\033[1;36m"}║${"\033[0m"}
+            ${"\033[1;36m"}╚═══════════════════════════════════════════════════════════════╝${"\033[0m"}
+            
+            ${"\033[1;32m"}This repository serves as the DNA for building domain-specific CIMs.${"\033[0m"}
+            
+            ${"\033[1;34m"}📚 Key Resources:${"\033[0m"}
+              • ${"\033[0;36m"}doc/${"\033[0m"} - Architectural documentation and design principles
+              • ${"\033[0;36m"}examples/${"\033[0m"} - Example CIM assemblies and patterns
+              • ${"\033[0;36m"}nix/${"\033[0m"} - Nix expressions for CIM module composition
+              • ${"\033[0;36m"}.claude/${"\033[0m"} - AI assistant patterns for CIM development
+            
+            ${"\033[1;34m"}🛠️  Available Tools:${"\033[0m"}
+              • ${"\033[0;33m"}mdbook${"\033[0m"} - Build the CIM handbook
+              • ${"\033[0;33m"}plantuml${"\033[0m"} - Create architectural diagrams
+              • ${"\033[0;33m"}nix flake${"\033[0m"} - Explore CIM module flakes
+              • ${"\033[0;33m"}gh${"\033[0m"} - Browse CIM ecosystem repositories
+            
+            ${"\033[1;34m"}🚀 Getting Started:${"\033[0m"}
+              1. Review ${"\033[0;36m"}doc/cim_comprehensive_manual.md${"\033[0m"}
+              2. Explore ${"\033[0;36m"}doc/design/${"\033[0m"} for architectural patterns
+              3. Check ${"\033[0;36m"}examples/${"\033[0m"} for domain implementation examples
+              4. Visit ${"\033[0;36m"}github.com/thecowboyai/cim-start${"\033[0m"} to begin building
+            
+            ${"\033[1;35m"}Remember: CIM is not just code - it's a way of thinking about${"\033[0m"}
+            ${"\033[1;35m"}         business domains as composable information systems.${"\033[0m"}
           '';
         };
       }
-    )
-    // {
-      # Flake-level attributes (simplified for now)
-      # nixosConfigurations = { };
-      # templates = { };
-    };
+    );
 }
