@@ -116,6 +116,7 @@
             echo "🛠️  Available Tools:"
             echo "  • hx (helix) - Modern terminal editor with LSP"
             echo "  • micro - Simple terminal editor (ctrl-q to quit)"
+            echo "  • ./scripts/zed - Launch Zed editor (GUI)"
             echo "  • plantuml - Create architectural diagrams"
             echo "  • nix flake - Explore CIM module flakes"
             echo "  • gh - Browse CIM ecosystem repositories"
@@ -137,7 +138,7 @@
             if [ ! -f ~/.config/helix/config.toml ]; then
               echo ""
               echo "💡 Editor Tips:"
-              echo "   • For Zed editor: Download from https://zed.dev/download"
+              echo "   • Zed: Use './scripts/zed' or 'nix run nixpkgs#zed-editor'"
               echo "   • For VS Code keybindings in Helix:"
               echo "     cp examples/helix-vscode-config.toml ~/.config/helix/config.toml"
             fi
