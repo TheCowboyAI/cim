@@ -88,6 +88,11 @@
             ripgrep
             fd
             
+            # Text editors with LSP support
+            # zed-editor # Not in nixpkgs stable yet - install separately
+            helix        # Terminal editor with LSP (configurable keybindings)
+            micro        # Simple terminal editor as fallback
+            
             # Language support for examples
             # rustToolchain  # Already defined but not needed for blueprint
             nodejs
@@ -109,7 +114,8 @@
             echo "  • .claude/ - AI assistant patterns for CIM development"
             echo ""
             echo "🛠️  Available Tools:"
-            echo "  • mdbook - Build the CIM handbook"
+            echo "  • hx (helix) - Modern terminal editor with LSP"
+            echo "  • micro - Simple terminal editor (ctrl-q to quit)"
             echo "  • plantuml - Create architectural diagrams"
             echo "  • nix flake - Explore CIM module flakes"
             echo "  • gh - Browse CIM ecosystem repositories"
@@ -123,6 +129,18 @@
             echo "Remember: CIM is not just code - it's a way of thinking about"
             echo "         business domains as composable information systems."
             echo ""
+            
+            # Create helix config directory if it doesn't exist
+            mkdir -p ~/.config/helix
+            
+            # Check if user wants VS Code keybindings for helix
+            if [ ! -f ~/.config/helix/config.toml ]; then
+              echo ""
+              echo "💡 Editor Tips:"
+              echo "   • For Zed editor: Download from https://zed.dev/download"
+              echo "   • For VS Code keybindings in Helix:"
+              echo "     cp examples/helix-vscode-config.toml ~/.config/helix/config.toml"
+            fi
           '';
         };
       }

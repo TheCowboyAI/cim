@@ -1,0 +1,74 @@
+# Helix configuration with VS Code-like keybindings
+# Place this file at ~/.config/helix/config.toml
+
+theme = "onedark"  # VS Code-like theme
+
+[editor]
+line-number = "relative"
+mouse = true
+middle-click-paste = true
+cursorline = true
+auto-pairs = true
+auto-completion = true
+idle-timeout = 400
+completion-trigger-len = 2
+true-color = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+
+[editor.lsp]
+display-messages = true
+display-inlay-hints = true
+
+[editor.indent-guides]
+render = true
+character = "┊"
+
+[keys.normal]
+# VS Code-like keybindings
+"C-s" = ":w"                    # Save
+"C-S-s" = ":wa"                 # Save all
+"C-z" = "undo"                  # Undo
+"C-S-z" = "redo"                # Redo
+"C-x" = ["select_mode", "delete_selection", "normal_mode"]  # Cut
+"C-c" = ["select_mode", "yank", "normal_mode"]              # Copy
+"C-v" = "paste_after"           # Paste
+"C-a" = "select_all"            # Select all
+"C-f" = "search"                # Find
+"C-h" = "search_replace"        # Replace (Ctrl+H like VS Code)
+"C-d" = "extend_to_line_bounds" # Select line (similar to VS Code)
+"C-/" = "toggle_comments"       # Toggle comment
+"C-S-k" = "delete_line"         # Delete line
+"A-up" = "move_line_up"         # Move line up
+"A-down" = "move_line_down"     # Move line down
+"C-g" = "goto_line"             # Go to line
+"C-p" = "file_picker"           # Quick open file
+"C-S-p" = "command_palette"     # Command palette
+"F2" = "rename_symbol"          # Rename symbol
+"F12" = "goto_definition"       # Go to definition
+"C-F12" = "goto_implementation" # Go to implementation
+"S-F12" = "goto_reference"      # Find all references
+"C-space" = "completion"        # Trigger completion
+"C-w" = ":bc"                   # Close buffer
+"C-tab" = "goto_next_buffer"    # Next tab
+"C-S-tab" = "goto_previous_buffer" # Previous tab
+
+[keys.insert]
+# Keep VS Code muscle memory in insert mode
+"C-s" = ["normal_mode", ":w"]   # Save and return to insert
+"C-z" = ["normal_mode", "undo", "insert_mode"]
+"C-S-z" = ["normal_mode", "redo", "insert_mode"]
+"C-v" = "paste_after"
+"C-space" = "completion"
+
+[keys.select]
+# VS Code-like selection operations
+"C-c" = ["yank", "normal_mode"] # Copy selection
+"C-x" = ["delete_selection", "normal_mode"] # Cut selection
+"C-v" = ["delete_selection", "paste_after", "normal_mode"] # Replace selection
