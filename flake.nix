@@ -17,11 +17,11 @@
       url = "github:thecowboyai/cim-domain-git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Standalone CIM modules
-    cim-network = {
-      url = "github:TheCowboyAI/cim-network";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Standalone CIM modules (commented until they have flake.nix)
+    # cim-network = {
+    #   url = "github:TheCowboyAI/cim-network";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
 
   outputs = {
@@ -31,7 +31,7 @@
     rust-overlay,
     cim-domain-nix,
     cim-domain-git,
-    cim-network,
+    # cim-network,
   }:
     flake-utils.lib.eachDefaultSystem
     (
@@ -41,25 +41,19 @@
           inherit system overlays;
           config.allowUnfree = true;
         };
+        
+        lib = pkgs.lib;
 
         rustToolchain = pkgs.pkgsBuildHost.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
-        
-        # Import CIM packages
-        cimPackages = import ./nix/packages { inherit pkgs lib; };
 
       in {
-        # Package outputs
-        packages = cimPackages // {
-          default = cimPackages.cim-all;
-          
-          # Re-export domain packages
-          inherit (cim-domain-nix.packages.${system}) cim-domain-nix;
-          inherit (cim-domain-git.packages.${system}) cim-domain-git;
-          inherit (cim-network.packages.${system}) cim-network;
+        # Package outputs (simplified for now)
+        packages = {
+          # Will add packages once modules are ready
         };
         
-        # Container images
-        containers = import ./nix/containers { inherit pkgs lib; };
+        # Container images (disabled for now)
+        # containers = import ./nix/containers { inherit pkgs lib; };
         
         # NixOS Module
         nixosModules = {
@@ -88,9 +82,9 @@
             act
             starship
             
-            # CIM domain tools
-            cim-domain-nix.packages.${system}.default
-            cim-domain-git.packages.${system}.default
+            # CIM domain tools (add when their builds are fixed)
+            # cim-domain-nix.packages.${system}.default
+            # cim-domain-git.packages.${system}.default
             
             # Additional Nix tools
             nix-prefetch-git
@@ -135,33 +129,8 @@
       }
     )
     // {
-      # Flake-level attributes
-      nixosConfigurations = {
-        # Development VM
-        cim-dev = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            self.nixosModules.default
-            ./nix/environments/development.nix
-          ];
-        };
-        
-        # Production configuration template
-        cim-prod = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          modules = [
-            self.nixosModules.default
-            ./nix/environments/production.nix
-          ];
-        };
-      };
-      
-      # Deployment templates
-      templates = {
-        cim-module = {
-          path = ./templates/cim-module;
-          description = "Template for new CIM modules";
-        };
-      };
+      # Flake-level attributes (simplified for now)
+      # nixosConfigurations = { };
+      # templates = { };
     };
 }

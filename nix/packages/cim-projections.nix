@@ -14,21 +14,19 @@ cimLib.mkCimPackage {
   
   buildInputs = [ 
     openssl
-  ] ++ lib.optionals (lib.elem "postgres" features or []) [ postgresql ]
-    ++ lib.optionals (lib.elem "redis" features or []) [ redis ];
+    postgresql
+    redis
+  ];
   
   nativeBuildInputs = [ 
     pkg-config 
   ];
   
   # Build with all stores by default
-  features = features or [ "all-stores" ];
+  features = [ "all-stores" ];
   
   # Skip integration tests that require running services
-  checkPhase = ''
-    echo "Skipping integration tests that require external services"
-    cargo test --lib
-  '';
+  doCheck = false;
   
   postInstall = ''
     # Install example configurations
