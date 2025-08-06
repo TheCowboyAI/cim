@@ -50,15 +50,15 @@
           
           buildInputs = with pkgs; [
             # Documentation and design tools
-            mdbook
+            # mdbook      # Commented out - build from source if needed
             plantuml
             graphviz
             pandoc
-            asciidoctor
+            # asciidoctor # Commented out - use pandoc instead
             
             # Diagram and visualization
-            mermaid-cli
-            drawio
+            # mermaid-cli  # Has dependency issues
+            # drawio       # GUI app, not suitable for shell
             
             # Nix ecosystem tools for CIM assembly
             nix
@@ -77,9 +77,9 @@
             yq
             
             # Container tools for deployment strategies
-            docker-compose
-            kubectl
-            k9s
+            # docker-compose  # Commented out - requires Docker daemon
+            # kubectl         # Commented out - not needed for blueprint
+            # k9s            # Commented out - not needed for blueprint
             
             # Development utilities
             direnv
@@ -89,39 +89,40 @@
             fd
             
             # Language support for examples
-            rustToolchain
+            # rustToolchain  # Already defined but not needed for blueprint
             nodejs
             python3
-            go
+            # go  # Commented out - add if needed
           ];
 
           shellHook = ''
-            ${"\033[1;36m"}╔═══════════════════════════════════════════════════════════════╗${"\033[0m"}
-            ${"\033[1;36m"}║${"\033[0m"}  ${"\033[1;33m"}🧬 Welcome to the CIM Architectural Blueprint Environment${"\033[0m"}  ${"\033[1;36m"}║${"\033[0m"}
-            ${"\033[1;36m"}╚═══════════════════════════════════════════════════════════════╝${"\033[0m"}
-            
-            ${"\033[1;32m"}This repository serves as the DNA for building domain-specific CIMs.${"\033[0m"}
-            
-            ${"\033[1;34m"}📚 Key Resources:${"\033[0m"}
-              • ${"\033[0;36m"}doc/${"\033[0m"} - Architectural documentation and design principles
-              • ${"\033[0;36m"}examples/${"\033[0m"} - Example CIM assemblies and patterns
-              • ${"\033[0;36m"}nix/${"\033[0m"} - Nix expressions for CIM module composition
-              • ${"\033[0;36m"}.claude/${"\033[0m"} - AI assistant patterns for CIM development
-            
-            ${"\033[1;34m"}🛠️  Available Tools:${"\033[0m"}
-              • ${"\033[0;33m"}mdbook${"\033[0m"} - Build the CIM handbook
-              • ${"\033[0;33m"}plantuml${"\033[0m"} - Create architectural diagrams
-              • ${"\033[0;33m"}nix flake${"\033[0m"} - Explore CIM module flakes
-              • ${"\033[0;33m"}gh${"\033[0m"} - Browse CIM ecosystem repositories
-            
-            ${"\033[1;34m"}🚀 Getting Started:${"\033[0m"}
-              1. Review ${"\033[0;36m"}doc/cim_comprehensive_manual.md${"\033[0m"}
-              2. Explore ${"\033[0;36m"}doc/design/${"\033[0m"} for architectural patterns
-              3. Check ${"\033[0;36m"}examples/${"\033[0m"} for domain implementation examples
-              4. Visit ${"\033[0;36m"}github.com/thecowboyai/cim-start${"\033[0m"} to begin building
-            
-            ${"\033[1;35m"}Remember: CIM is not just code - it's a way of thinking about${"\033[0m"}
-            ${"\033[1;35m"}         business domains as composable information systems.${"\033[0m"}
+            echo "╔═══════════════════════════════════════════════════════════════╗"
+            echo "║  🧬 Welcome to the CIM Architectural Blueprint Environment  ║"
+            echo "╚═══════════════════════════════════════════════════════════════╝"
+            echo ""
+            echo "This repository serves as the DNA for building domain-specific CIMs."
+            echo ""
+            echo "📚 Key Resources:"
+            echo "  • doc/ - Architectural documentation and design principles"
+            echo "  • examples/ - Example CIM assemblies and patterns"
+            echo "  • nix/ - Nix expressions for CIM module composition"
+            echo "  • .claude/ - AI assistant patterns for CIM development"
+            echo ""
+            echo "🛠️  Available Tools:"
+            echo "  • mdbook - Build the CIM handbook"
+            echo "  • plantuml - Create architectural diagrams"
+            echo "  • nix flake - Explore CIM module flakes"
+            echo "  • gh - Browse CIM ecosystem repositories"
+            echo ""
+            echo "🚀 Getting Started:"
+            echo "  1. Review doc/cim_comprehensive_manual.md"
+            echo "  2. Explore doc/design/ for architectural patterns"
+            echo "  3. Check examples/ for domain implementation examples"
+            echo "  4. Visit github.com/thecowboyai/cim-start to begin building"
+            echo ""
+            echo "Remember: CIM is not just code - it's a way of thinking about"
+            echo "         business domains as composable information systems."
+            echo ""
           '';
         };
       }
