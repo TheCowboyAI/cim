@@ -6,7 +6,7 @@ modules:
   # Template
   cim-start:
     type: template
-    description: "Starting template for new CIM implementations"
+    description: "Starting template for a Composable Information Machine (CIM) with domain-driven development capabilities"
     repository: "https://github.com/thecowboyai/cim-start"
     topics: ["cim", "cim-module", "template"]
     category: core
@@ -15,7 +15,7 @@ modules:
   # Core Infrastructure
   cim-domain:
     type: core
-    description: "Base domain models and abstractions for CIM"
+    description: "A Rust library for Domain-Driven Design (DDD) with a complete persistence layer and NATS JetStream integration"
     repository: "https://github.com/thecowboyai/cim-domain"
     topics: ["cim", "cim-module", "core"]
     category: core
@@ -23,7 +23,7 @@ modules:
     
   cim-infrastructure:
     type: core
-    description: "Infrastructure layer with NATS integration"
+    description: "Infrastructure layer with NATS integration and persistence"
     repository: "https://github.com/thecowboyai/cim-infrastructure"
     topics: ["cim", "cim-module", "core"]
     category: infrastructure
@@ -31,7 +31,7 @@ modules:
     
   cim-network:
     type: core
-    description: "Network topologies, structures, and functionality for CIM"
+    description: "Network infrastructure management for the Composable Information Machine"
     repository: "https://github.com/thecowboyai/cim-network"
     topics: ["cim", "cim-module", "core", "network"]
     category: infrastructure
@@ -39,7 +39,7 @@ modules:
     
   cim-bridge:
     type: core
-    description: "Bridge between contexts (ECS ↔ DDD ↔ NATS)"
+    description: "CIM Bridge to Nats"
     repository: "https://github.com/thecowboyai/cim-bridge"
     topics: ["cim", "cim-module", "core"]
     category: infrastructure
@@ -48,7 +48,7 @@ modules:
   # Security & Identity
   cim-security:
     type: core
-    description: "Security coordination and access control"
+    description: "Core security abstractions for the Composable Information Machine (CIM)"
     repository: "https://github.com/thecowboyai/cim-security"
     topics: ["cim", "cim-module", "security"]
     category: security
@@ -56,7 +56,7 @@ modules:
     
   cim-domain-identity:
     type: domain
-    description: "Identity management and authentication"
+    description: "Identity Domain for managing identities, relationships, and verification workflows within the Composable Information Machine (CIM) system"
     repository: "https://github.com/thecowboyai/cim-domain-identity"
     topics: ["cim", "cim-module", "domain", "security"]
     category: security
@@ -64,7 +64,7 @@ modules:
     
   cim-domain-policy:
     type: domain
-    description: "Business policy rules and enforcement"
+    description: "Policy domain manages rules, permissions, compliance requirements, and automated enforcement in the CIM system"
     repository: "https://github.com/thecowboyai/cim-domain-policy"
     topics: ["cim", "cim-module", "domain", "security"]
     category: security
@@ -72,7 +72,7 @@ modules:
     
   cim-keys:
     type: core
-    description: "Cryptographic key management"
+    description: "A comprehensive Rust cryptographic key management library with advanced security features"
     repository: "https://github.com/thecowboyai/cim-keys"
     topics: ["cim", "cim-module", "security"]
     category: security
@@ -81,7 +81,7 @@ modules:
   # Storage
   cim-flashstor:
     type: core
-    description: "Network-attached object storage for leaf nodes"
+    description: "CIM Implementation for Asus Flashstor and MinIO"
     repository: "https://github.com/thecowboyai/cim-flashstor"
     topics: ["cim", "cim-module", "storage"]
     category: storage
@@ -89,7 +89,7 @@ modules:
     
   cim-ipld:
     type: core
-    description: "IPLD content-addressed storage"
+    description: "Content-addressed storage for the Composable Information Machine using IPLD"
     repository: "https://github.com/thecowboyai/cim-ipld"
     topics: ["cim", "cim-module", "storage"]
     category: storage
@@ -97,7 +97,7 @@ modules:
     
   cim-ipld-graph:
     type: core
-    description: "Graph storage using IPLD"
+    description: "Graph Composition with IPLDs"
     repository: "https://github.com/thecowboyai/cim-ipld-graph"
     topics: ["cim", "cim-module", "storage", "graph"]
     category: storage
@@ -106,7 +106,7 @@ modules:
   # Business Domains
   cim-domain-person:
     type: domain
-    description: "Person/People domain"
+    description: "Person/People domain for the Composable Information Machine"
     repository: "https://github.com/thecowboyai/cim-domain-person"
     topics: ["cim", "cim-module", "domain"]
     category: business
@@ -114,7 +114,7 @@ modules:
     
   cim-domain-organization:
     type: domain
-    description: "Organization structures and hierarchies"
+    description: "Organization domain extension for CIM Document system, providing specialized functionality for organizational structure management, governance, compliance, resource allocation, and strategic planning"
     repository: "https://github.com/thecowboyai/cim-domain-organization"
     topics: ["cim", "cim-module", "domain"]
     category: business
@@ -122,7 +122,7 @@ modules:
     
   cim-domain-document:
     type: domain
-    description: "Document lifecycle and management"
+    description: "Document domain manages content creation, versioning, collaboration, and intelligent document processing"
     repository: "https://github.com/thecowboyai/cim-domain-document"
     topics: ["cim", "cim-module", "domain"]
     category: business
@@ -130,7 +130,7 @@ modules:
     
   cim-domain-workflow:
     type: domain
-    description: "Workflow definitions and execution"
+    description: "Workflow domain for the Composable Information Machine"
     repository: "https://github.com/thecowboyai/cim-domain-workflow"
     topics: ["cim", "cim-module", "domain"]
     category: business
@@ -138,7 +138,7 @@ modules:
     
   cim-domain-location:
     type: domain
-    description: "Geographic and spatial data"
+    description: "Location domain for the Composable Information Machine (CIM)"
     repository: "https://github.com/thecowboyai/cim-domain-location"
     topics: ["cim", "cim-module", "domain"]
     category: business
@@ -147,7 +147,7 @@ modules:
   # Knowledge & AI
   cim-domain-conceptualspaces:
     type: domain
-    description: "Conceptual spaces for semantic reasoning"
+    description: "Implements Gärdenfors' theory of conceptual spaces for semantic reasoning and knowledge representation"
     repository: "https://github.com/thecowboyai/cim-domain-conceptualspaces"
     topics: ["cim", "cim-module", "domain", "ai"]
     category: knowledge
@@ -155,7 +155,7 @@ modules:
     
   cim-conceptgraph:
     type: core
-    description: "Conceptual relationship graphs"
+    description: "Semantic graph implementation composing context graphs with conceptual spaces"
     repository: "https://github.com/thecowboyai/cim-conceptgraph"
     topics: ["cim", "cim-module", "graph", "ai"]
     category: knowledge
@@ -163,7 +163,7 @@ modules:
     
   cim-domain-agent:
     type: domain
-    description: "AI agent capabilities and behaviors"
+    description: "Agent management domain for the Composable Information Machine"
     repository: "https://github.com/thecowboyai/cim-domain-agent"
     topics: ["cim", "cim-module", "domain", "ai"]
     category: ai
@@ -171,7 +171,7 @@ modules:
     
   cim-domain-dialog:
     type: domain
-    description: "Conversational interaction management"
+    description: "CIM Dialog system to manage conversations"
     repository: "https://github.com/thecowboyai/cim-domain-dialog"
     topics: ["cim", "cim-module", "domain", "ai"]
     category: ai
@@ -180,7 +180,7 @@ modules:
   # Technical Domains
   cim-domain-git:
     type: domain
-    description: "Git version control integration"
+    description: "A Rust library for Git repository introspection and analysis within the Composable Information Machine (CIM) ecosystem"
     repository: "https://github.com/thecowboyai/cim-domain-git"
     topics: ["cim", "cim-module", "domain", "technical"]
     category: technical
@@ -188,7 +188,7 @@ modules:
     
   cim-domain-nix:
     type: domain
-    description: "Nix package manager integration"
+    description: "Domain-Driven Design module for comprehensive Nix ecosystem integration within the CIM (Composable Information Machine) architecture"
     repository: "https://github.com/thecowboyai/cim-domain-nix"
     topics: ["cim", "cim-module", "domain", "technical"]
     category: technical
@@ -196,7 +196,7 @@ modules:
     
   cim-domain-bevy:
     type: domain
-    description: "Bevy ECS visualization integration"
+    description: "Bevy Domain Specific module"
     repository: "https://github.com/thecowboyai/cim-domain-bevy"
     topics: ["cim", "cim-module", "domain", "visualization"]
     category: visualization
@@ -205,7 +205,7 @@ modules:
   # Graph Systems
   cim-contextgraph:
     type: core
-    description: "Context boundary management"
+    description: "Base Context Graph module for a Composable Information Machine (CIM)"
     repository: "https://github.com/thecowboyai/cim-contextgraph"
     topics: ["cim", "cim-module", "graph"]
     category: graph
@@ -213,7 +213,7 @@ modules:
     
   cim-workflow-graph:
     type: core
-    description: "Workflow execution as graphs"
+    description: "A powerful workflow graph implementation that bridges the CIM workflow domain with ContextGraph format"
     repository: "https://github.com/thecowboyai/cim-workflow-graph"
     topics: ["cim", "cim-module", "graph", "workflow"]
     category: graph
@@ -221,7 +221,7 @@ modules:
     
   cim-domain-graph:
     type: domain
-    description: "Graph operations and algorithms"
+    description: "The Graph Domain is the core visualization and interaction layer for the Composable Information Machine (CIM)"
     repository: "https://github.com/thecowboyai/cim-domain-graph"
     topics: ["cim", "cim-module", "domain", "graph"]
     category: graph
@@ -230,7 +230,7 @@ modules:
   # Edge & Devices
   cim-leaf:
     type: core
-    description: "CIM Leaf Node implementation"
+    description: "CIM Leaf Node implementation (repository status: not accessible)"
     repository: "https://github.com/thecowboyai/cim-leaf"
     topics: ["cim", "cim-module", "edge"]
     category: edge
@@ -238,7 +238,7 @@ modules:
     
   cim-leaf-darwin:
     type: core
-    description: "CIM Leaf node for Darwin/macOS"
+    description: "A GitHub template for deploying Composable Information Machine (CIM) leaf nodes on macOS using nix-darwin"
     repository: "https://github.com/thecowboyai/cim-leaf-darwin"
     topics: ["cim", "cim-module", "edge", "darwin"]
     category: edge
@@ -247,7 +247,7 @@ modules:
   # Other Core Modules
   cim-component:
     type: core
-    description: "Component system for ECS architecture"
+    description: "A foundational type-erased component system for the Content Identity Matrix (CIM), providing the building blocks for Entity Component System (ECS) patterns"
     repository: "https://github.com/thecowboyai/cim-component"
     topics: ["cim", "cim-module", "core"]
     category: core
@@ -255,7 +255,7 @@ modules:
     
   cim-compose:
     type: core
-    description: "Composition patterns and utilities"
+    description: "Graph composition library for the Composable Information Machine"
     repository: "https://github.com/thecowboyai/cim-compose"
     topics: ["cim", "cim-module", "core"]
     category: core
@@ -263,7 +263,7 @@ modules:
     
   cim-subject:
     type: core
-    description: "Subject/event algebra for message routing"
+    description: "A foundational module for subject-based message routing, correlation tracking, and algebraic operations in distributed domain-driven systems using NATS messaging"
     repository: "https://github.com/thecowboyai/cim-subject"
     topics: ["cim", "cim-module", "core", "messaging"]
     category: infrastructure
